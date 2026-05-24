@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -108,4 +108,3 @@
 </body>
 </html>
 
-```
