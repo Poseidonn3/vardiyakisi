@@ -19,46 +19,46 @@
         <!-- ANA MENÜ -->
         <div id="section-menu" class="app-section active space-y-4">
             <h1 class="text-2xl font-extrabold text-blue-600 mb-6">Vardiya Akış Paneli</h1>
-            <button onclick="showSection('takvim-aylar')" class="w-full p-6 bg-white rounded-3xl shadow-sm text-left">📅 Aylık Vardiya Takvimi</button>
-            <button onclick="showSection('izin-hesap')" class="w-full p-6 bg-white rounded-3xl shadow-sm text-left">✈️ İzin Planlayıcı</button>
-            <button onclick="showSection('mesai-hesap')" class="w-full p-6 bg-white rounded-3xl shadow-sm text-left">💰 Mesai ve Ek Kazanç</button>
+            <button onclick="showSection('takvim-aylar')" class="w-full p-6 bg-white rounded-3xl shadow-sm text-left border border-slate-100 hover:border-blue-200 transition-all">📅 Aylık Vardiya Takvimi</button>
+            <button onclick="showSection('izin-hesap')" class="w-full p-6 bg-white rounded-3xl shadow-sm text-left border border-slate-100 hover:border-purple-200 transition-all">✈️ İzin Planlayıcı</button>
+            <button onclick="showSection('mesai-hesap')" class="w-full p-6 bg-white rounded-3xl shadow-sm text-left border border-slate-100 hover:border-emerald-200 transition-all">💰 Mesai ve Ek Kazanç</button>
         </div>
 
         <!-- TAKVİM AY LİSTESİ -->
         <div id="section-takvim-aylar" class="app-section space-y-4">
-            <button onclick="showSection('menu')" class="text-blue-600 font-bold">← Geri</button>
+            <button onclick="showSection('menu')" class="text-slate-500 font-bold text-sm">← Geri</button>
             <div id="month-list" class="grid grid-cols-3 gap-2"></div>
         </div>
 
         <!-- TAKVİM DETAY -->
         <div id="section-takvim-detay" class="app-section space-y-4">
-            <button onclick="showSection('takvim-aylar')" class="text-blue-600 font-bold">← Ay Seçimine Dön</button>
+            <button onclick="showSection('takvim-aylar')" class="text-slate-500 font-bold text-sm">← Geri</button>
             <h2 id="month-name" class="text-xl font-bold"></h2>
-            <div id="calendar-grid" class="grid grid-cols-7 gap-1 text-center"></div>
+            <div id="calendar-grid" class="grid grid-cols-7 gap-1 text-center bg-white p-4 rounded-3xl shadow-sm"></div>
         </div>
 
         <!-- İZİN HESAPLA -->
         <div id="section-izin-hesap" class="app-section space-y-4">
-            <button onclick="showSection('menu')" class="text-purple-600 font-bold">← Geri</button>
-            <input type="date" id="start-date" class="w-full p-4 rounded-xl border">
-            <input type="number" id="izin-gun" placeholder="İzin günü sayısı" class="w-full p-4 rounded-xl border">
-            <button onclick="hesaplaIzin()" class="w-full py-4 bg-purple-600 text-white rounded-xl font-bold">Hesapla</button>
-            <div id="izin-sonuc" class="p-4 bg-purple-100 rounded-xl hidden"></div>
+            <button onclick="showSection('menu')" class="text-slate-500 font-bold text-sm">← Geri</button>
+            <input type="date" id="start-date" class="w-full p-4 rounded-2xl border border-slate-200">
+            <input type="number" id="izin-gun" placeholder="İzin günü sayısı" class="w-full p-4 rounded-2xl border border-slate-200">
+            <button onclick="hesaplaIzin()" class="w-full py-4 bg-purple-600 text-white rounded-2xl font-bold">Hesapla</button>
+            <div id="izin-sonuc" class="p-4 bg-purple-50 text-purple-700 rounded-2xl hidden text-center font-bold"></div>
         </div>
 
         <!-- MESAİ HESAPLA -->
         <div id="section-mesai-hesap" class="app-section space-y-4">
-            <button onclick="showSection('menu')" class="text-emerald-600 font-bold">← Geri</button>
-            <input type="number" id="mesai-saat" placeholder="Toplam Mesai Saati" class="w-full p-4 rounded-xl border">
-            <input type="number" id="mesai-ucret" placeholder="Saatlik Ücret (TL)" class="w-full p-4 rounded-xl border">
+            <button onclick="showSection('menu')" class="text-slate-500 font-bold text-sm">← Geri</button>
+            <input type="number" id="mesai-saat" placeholder="Toplam Mesai Saati" class="w-full p-4 rounded-2xl border border-slate-200">
+            <input type="number" id="mesai-ucret" placeholder="Saatlik Ücret (TL)" class="w-full p-4 rounded-2xl border border-slate-200">
             <div class="grid grid-cols-4 gap-2">
-                <button onclick="setMultiplier(1.5)" class="mult-btn py-2 bg-emerald-600 text-white rounded-lg text-xs">1.5x</button>
-                <button onclick="setMultiplier(2.0)" class="mult-btn py-2 bg-slate-200 rounded-lg text-xs">2.0x</button>
-                <button onclick="setMultiplier(1.0)" class="mult-btn py-2 bg-slate-200 rounded-lg text-xs">1.0x</button>
-                <input type="number" id="mesai-carpan" oninput="customMultiplierInput()" class="w-full text-center p-2 rounded-lg border" placeholder="Değer gir">
+                <button onclick="setMultiplier(1.5)" class="mult-btn py-3 bg-emerald-600 text-white rounded-xl text-xs font-bold">1.5x</button>
+                <button onclick="setMultiplier(2.0)" class="mult-btn py-3 bg-slate-200 rounded-xl text-xs font-bold">2.0x</button>
+                <button onclick="setMultiplier(1.0)" class="mult-btn py-3 bg-slate-200 rounded-xl text-xs font-bold">1.0x</button>
+                <input type="number" id="mesai-carpan" oninput="customMultiplierInput()" class="w-full text-center p-2 rounded-xl border border-slate-200 text-xs font-bold" placeholder="Değer gir">
             </div>
-            <button onclick="hesaplaMesai()" class="w-full py-4 bg-emerald-600 text-white rounded-xl font-bold">Hesapla</button>
-            <div id="mesai-sonuc" class="p-4 bg-emerald-100 rounded-xl hidden"></div>
+            <button onclick="hesaplaMesai()" class="w-full py-4 bg-emerald-600 text-white rounded-2xl font-bold">Hesapla</button>
+            <div id="mesai-sonuc" class="p-4 bg-emerald-50 text-emerald-700 rounded-2xl hidden text-center font-bold"></div>
         </div>
     </div>
 
@@ -77,7 +77,7 @@
             const aylar = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
             aylar.forEach((m, i) => {
                 const btn = document.createElement('button');
-                btn.className = "p-4 bg-white rounded-xl shadow-sm text-sm font-bold";
+                btn.className = "p-4 bg-white rounded-2xl shadow-sm text-xs font-bold border border-slate-100 hover:border-blue-200";
                 btn.innerText = m;
                 btn.onclick = () => showCalendar(i, m);
                 container.appendChild(btn);
@@ -104,8 +104,8 @@
                 const dateObj = new Date(2026, mIndex, d);
                 const shift = getShift(dateObj);
                 const div = document.createElement('div');
-                div.className = "p-2 text-[10px] rounded-lg " + (shift === 'Gündüz' ? 'bg-emerald-100' : shift === 'Gece' ? 'bg-indigo-100' : 'bg-amber-100');
-                div.innerHTML = `${d}<br>${shift}`;
+                div.className = "p-1 py-3 text-[9px] rounded-lg " + (shift === 'Gündüz' ? 'bg-emerald-50 text-emerald-700' : shift === 'Gece' ? 'bg-indigo-50 text-indigo-700' : 'bg-slate-100 text-slate-500');
+                div.innerHTML = `${d}<br><span class="font-bold">${shift}</span>`;
                 grid.appendChild(div);
             }
         }
@@ -136,7 +136,7 @@
             const s = document.getElementById('mesai-sonuc');
             if(!isNaN(saat) && !isNaN(ucret)) {
                 s.classList.remove('hidden');
-                s.innerText = "Toplam: " + (saat * ucret * selectedMultiplier).toFixed(2) + " TL";
+                s.innerText = "Toplam Kazanç: " + (saat * ucret * selectedMultiplier).toFixed(2) + " TL";
             }
         }
     </script>
