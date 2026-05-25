@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="tr" class="scroll-smooth">
 <head>
@@ -115,7 +115,7 @@
                 <div class="text-left flex-1">
                     <span class="text-3xl block mb-2 drop-shadow-sm">💰</span>
                     <h2 class="font-bold text-lg text-slate-800 dark:text-slate-100">Mesai ve Ek Kazanç</h2>
-                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">Özel çarpanlı hakediş tablosu</p>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">Yol/Yemek destekli hakediş</p>
                 </div>
                 <div class="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold group-hover:translate-x-2 transition-transform shrink-0">→</div>
             </button>
@@ -126,7 +126,6 @@
             <button onclick="showSection('menu')" class="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 font-bold text-sm transition-colors glass-card px-5 py-3 rounded-full shadow-sm border border-slate-200/60 dark:border-slate-700/50 w-max active:scale-95">
                 <span>←</span> Ana Menü
             </button>
-            <!-- Aylar ekranı daraltıldığında iç içe girmesin diye grid yapılandırıldı -->
             <div id="month-list" class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4"></div>
         </div>
 
@@ -160,9 +159,9 @@
                 </div>
             </div>
 
-            <!-- Takvim Izgarası (Taşmayı engelleyici yapı eklendi) -->
-            <div class="glass-card p-3 sm:p-5 rounded-3xl shadow-sm border border-slate-200/60 dark:border-slate-700/50">
-                <div id="calendar-grid" class="grid grid-cols-7 gap-1 sm:gap-1.5 text-center w-full"></div>
+            <!-- Takvim Izgarası -->
+            <div class="glass-card p-2 sm:p-4 rounded-3xl shadow-sm border border-slate-200/60 dark:border-slate-700/50">
+                <div id="calendar-grid" class="grid grid-cols-7 gap-1 sm:gap-2 text-center w-full"></div>
             </div>
 
             <!-- O Ayın Tatillerini Gösteren Kutu -->
@@ -176,7 +175,7 @@
 
         <!-- İZİN HESAPLAYICI -->
         <div id="section-izin-hesap" class="app-section space-y-5">
-            <button onclick="showSection('menu')" class="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 font-bold text-sm transition-colors glass-card px-5 py-3 rounded-full shadow-sm border border-slate-200/60 dark:border-slate-700/50 w-max active:scale-95">
+            <button onclick="showSection('menu')" class="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 font-bold text-sm transition-colors glass-card px-5 py-2.5 rounded-full shadow-sm border border-slate-200/60 dark:border-slate-700/50 w-max active:scale-95">
                 <span>←</span> Ana Menü
             </button>
             
@@ -201,28 +200,55 @@
 
         <!-- MESAİ VE KAZANÇ HESAPLAYICI -->
         <div id="section-mesai-hesap" class="app-section space-y-5">
-            <button onclick="showSection('menu')" class="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 font-bold text-sm transition-colors glass-card px-5 py-3 rounded-full shadow-sm border border-slate-200/60 dark:border-slate-700/50 w-max active:scale-95">
+            <button onclick="showSection('menu')" class="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 font-bold text-sm transition-colors glass-card px-5 py-2.5 rounded-full shadow-sm border border-slate-200/60 dark:border-slate-700/50 w-max active:scale-95">
                 <span>←</span> Ana Menü
             </button>
             
             <div class="glass-card p-5 sm:p-6 rounded-3xl shadow-sm border border-slate-200/60 dark:border-slate-700/50 space-y-5">
-                <div class="w-full">
-                    <label class="block text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 ml-1">Toplam Mesai Saati</label>
-                    <input type="number" id="mesai-saat" placeholder="Örn: 12.5" step="0.5" class="w-full px-4 py-3.5 bg-slate-50/50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-700 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none transition-all text-sm font-bold text-slate-700 dark:text-slate-200 shadow-inner block">
+                
+                <!-- ANA MESAİ ALANLARI -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="w-full">
+                        <label class="block text-[10px] sm:text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 ml-1">Mesai Saati</label>
+                        <input type="number" id="mesai-saat" placeholder="Örn: 12.5" step="0.5" class="w-full px-3 sm:px-4 py-3.5 bg-slate-50/50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-700 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none transition-all text-sm font-bold text-slate-700 dark:text-slate-200 shadow-inner block">
+                    </div>
+                    
+                    <div class="w-full">
+                        <label class="block text-[10px] sm:text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 ml-1">Saatlik Ücret</label>
+                        <input type="number" id="mesai-ucret" placeholder="Örn: 150₺" class="w-full px-3 sm:px-4 py-3.5 bg-slate-50/50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-700 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none transition-all text-sm font-bold text-slate-700 dark:text-slate-200 shadow-inner block">
+                    </div>
+                </div>
+
+                <!-- YENİ: ADETLİ YOL VE YEMEK ALANLARI -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-slate-200/60 dark:border-slate-700/60 pt-5 mt-2">
+                    
+                    <!-- Yol Kartı -->
+                    <div class="bg-slate-50/50 dark:bg-slate-800/30 p-3.5 rounded-2xl border border-slate-200/60 dark:border-slate-700/50">
+                        <label class="block text-[10px] sm:text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 ml-1 flex items-center gap-1">🚗 Yol Desteği <span class="text-[9px] lowercase opacity-70 font-medium">(İsteğe bağlı)</span></label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="number" id="mesai-yol-ucret" placeholder="₺/Gün" class="w-full px-3 py-3 bg-white/60 dark:bg-slate-900/60 rounded-xl border border-slate-200/80 dark:border-slate-700/80 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none transition-all text-xs font-bold text-slate-700 dark:text-slate-200 shadow-sm block">
+                            <input type="number" id="mesai-yol-gun" placeholder="Adet/Gün" class="w-full px-3 py-3 bg-white/60 dark:bg-slate-900/60 rounded-xl border border-slate-200/80 dark:border-slate-700/80 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none transition-all text-xs font-bold text-slate-700 dark:text-slate-200 shadow-sm block">
+                        </div>
+                    </div>
+                    
+                    <!-- Yemek Kartı -->
+                    <div class="bg-slate-50/50 dark:bg-slate-800/30 p-3.5 rounded-2xl border border-slate-200/60 dark:border-slate-700/50">
+                        <label class="block text-[10px] sm:text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 ml-1 flex items-center gap-1">🍔 Yemek Desteği <span class="text-[9px] lowercase opacity-70 font-medium">(İsteğe bağlı)</span></label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="number" id="mesai-yemek-ucret" placeholder="₺/Gün" class="w-full px-3 py-3 bg-white/60 dark:bg-slate-900/60 rounded-xl border border-slate-200/80 dark:border-slate-700/80 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none transition-all text-xs font-bold text-slate-700 dark:text-slate-200 shadow-sm block">
+                            <input type="number" id="mesai-yemek-gun" placeholder="Adet/Gün" class="w-full px-3 py-3 bg-white/60 dark:bg-slate-900/60 rounded-xl border border-slate-200/80 dark:border-slate-700/80 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none transition-all text-xs font-bold text-slate-700 dark:text-slate-200 shadow-sm block">
+                        </div>
+                    </div>
+
                 </div>
                 
-                <div class="w-full">
-                    <label class="block text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 ml-1">Saatlik Ücret (TL)</label>
-                    <input type="number" id="mesai-ucret" placeholder="Örn: 150" class="w-full px-4 py-3.5 bg-slate-50/50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-700 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none transition-all text-sm font-bold text-slate-700 dark:text-slate-200 shadow-inner block">
-                </div>
-                
-                <div class="w-full">
+                <div class="border-t border-slate-200/60 dark:border-slate-700/60 pt-5 mt-2">
                     <label class="block text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 ml-1">Mesai Çarpanı Seçimi</label>
                     <div class="grid grid-cols-4 gap-2">
                         <button onclick="setMultiplier(1.5)" id="btn-mult-1.5" class="mult-btn py-3.5 bg-emerald-600 text-white rounded-xl text-xs sm:text-sm font-black shadow-md transition-all">1.5x</button>
                         <button onclick="setMultiplier(2.0)" id="btn-mult-2.0" class="mult-btn py-3.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl text-xs sm:text-sm font-bold border border-slate-200 dark:border-slate-700 transition-all">2.0x</button>
                         <button onclick="setMultiplier(1.0)" id="btn-mult-1.0" class="mult-btn py-3.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl text-xs sm:text-sm font-bold border border-slate-200 dark:border-slate-700 transition-all">1.0x</button>
-                        <input type="number" id="mesai-carpan" oninput="customMultiplierInput()" step="0.1" class="w-full text-center px-1 py-3.5 bg-slate-50/50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-700 text-xs sm:text-sm font-bold outline-none focus:bg-white dark:focus:bg-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500 text-slate-700 dark:text-slate-200 block" placeholder="Özel">
+                        <input type="number" id="mesai-carpan" oninput="customMultiplierInput()" step="0.1" class="w-full text-center px-1 py-3 bg-slate-50/50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-700 text-xs sm:text-sm font-bold outline-none focus:bg-white dark:focus:bg-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500 text-slate-700 dark:text-slate-200 block" placeholder="Özel">
                     </div>
                 </div>
                 
@@ -230,7 +256,7 @@
                     Kazancı Hesapla
                 </button>
                 
-                <div id="mesai-sonuc" class="p-5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 rounded-2xl hidden text-center border border-emerald-200 dark:border-emerald-800/60 shadow-sm mt-4"></div>
+                <div id="mesai-sonuc" class="p-5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 rounded-2xl hidden text-center border border-emerald-200 dark:border-emerald-800/60 shadow-sm mt-4 transition-all"></div>
             </div>
         </div>
     </div>
@@ -294,14 +320,13 @@
             if(id === 'takvim-aylar') renderMonths();
         }
 
-        // AY BUTONLARI (TAŞMAYA KARŞI GÜNCELLENDİ)
+        // AY BUTONLARI
         function renderMonths() {
             const container = document.getElementById('month-list');
             container.innerHTML = "";
             const aylar = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
             aylar.forEach((m, i) => {
                 const btn = document.createElement('button');
-                // padding düşürüldü, metin ortalandı
                 btn.className = "py-3.5 px-2 glass-card rounded-2xl shadow-sm text-sm font-bold text-slate-700 dark:text-slate-200 border border-slate-200/60 dark:border-slate-700/60 hover:border-blue-400 active:scale-95 transition-all w-full flex items-center justify-center";
                 btn.innerText = m;
                 btn.onclick = () => showCalendar(i, m);
@@ -319,7 +344,7 @@
             return cycle[idx < 0 ? idx + 6 : idx];
         }
 
-        // TAKVİM ÇİZİMİ (İÇ İÇE GİRMEYİ ENGELLEYEN YAPI)
+        // TAKVİM ÇİZİMİ
         function showCalendar(mIndex, mName) {
             activeMonthIndex = mIndex;
             activeMonthName = mName;
@@ -332,15 +357,14 @@
             
             let cGunduz = 0, cGece = 0, cIzin = 0;
             
-            // Başlık fontları küçültüldü
             grid.innerHTML = `
-                <div class="text-[9px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Pt</div>
-                <div class="text-[9px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Sa</div>
-                <div class="text-[9px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Ça</div>
-                <div class="text-[9px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Pe</div>
-                <div class="text-[9px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Cu</div>
-                <div class="text-[9px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Ct</div>
-                <div class="text-[9px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Pa</div>
+                <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Pt</div>
+                <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Sa</div>
+                <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Ça</div>
+                <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Pe</div>
+                <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Cu</div>
+                <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Ct</div>
+                <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Pa</div>
             `;
             
             const daysInMonth = new Date(2026, mIndex + 1, 0).getDate();
@@ -358,8 +382,7 @@
                 if (holidayName) monthlyHolidays.push({ day: d, name: holidayName });
 
                 const div = document.createElement('div');
-                // Sabit h-16 kaldırıldı, padding düşürüldü, w-full ve overflow-hidden eklendi.
-                let baseClass = "relative flex flex-col items-center justify-center py-2 sm:py-3 rounded-xl border border-transparent shadow-sm w-full overflow-hidden ";
+                let baseClass = "relative flex flex-col items-center justify-center py-2.5 sm:py-3.5 rounded-[10px] border border-transparent shadow-sm w-full h-[52px] sm:h-16 ";
                 let shiftClass = shift === 'Gündüz' ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400' : 
                                  shift === 'Gece' ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400' : 
                                  'bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400';
@@ -368,8 +391,7 @@
                 if(holidayName) baseClass += " !border-rose-300 dark:!border-rose-500/50 ";
 
                 div.className = baseClass + shiftClass;
-                // truncate (taşan metni ... yapar veya keser) classı eklendi. Yazı boyutları dinamik yapıldı.
-                div.innerHTML = `${holidayIndicator}<span class="text-[11px] sm:text-xs font-bold leading-none mb-1 sm:mb-1.5">${d}</span><span class="text-[8px] sm:text-[9px] font-black tracking-tighter w-full text-center truncate px-0.5 uppercase">${shift}</span>`;
+                div.innerHTML = `${holidayIndicator}<span class="text-[12px] sm:text-sm font-bold leading-none mb-1">${d}</span><span class="text-[9px] sm:text-[10px] font-black w-full text-center leading-none uppercase px-0.5">${shift}</span>`;
                 grid.appendChild(div);
             }
 
@@ -389,6 +411,7 @@
             } else holidayBox.classList.add('hidden');
         }
 
+        // ICS AKTAR
         function exportIcs() {
             const daysCount = new Date(2026, activeMonthIndex + 1, 0).getDate();
             let ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//VardiyaAkisi//TR", "CALSCALE:GREGORIAN"];
@@ -423,6 +446,7 @@
             document.body.removeChild(link);
         }
 
+        // İZİN HESAPLAYICI
         function hesaplaIzin() {
             const startStr = document.getElementById('start-date').value;
             const gun = parseInt(document.getElementById('izin-gun').value);
@@ -443,6 +467,7 @@
             sonucKutusu.innerHTML = `<div class="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest text-purple-500 dark:text-purple-400 mb-2">İşe Başlama Tarihi</div><div class="text-xl sm:text-2xl font-black truncate">${start.toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>`;
         }
 
+        // MESAİ ÇARPAN SEÇİMİ
         function setMultiplier(val) {
             selectedMultiplier = val;
             document.getElementById('mesai-carpan').value = val;
@@ -456,34 +481,57 @@
 
         function updateMultButtons(isCustom = false) {
             document.querySelectorAll('.mult-btn').forEach(btn => {
-                btn.className = "mult-btn py-3.5 sm:py-4 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 rounded-2xl text-xs sm:text-sm font-bold transition-all";
+                btn.className = "mult-btn py-3.5 sm:py-4 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition-all";
             });
             if (!isCustom) {
                 const activeBtn = document.getElementById(`btn-mult-${selectedMultiplier.toFixed(1)}`);
-                if (activeBtn) activeBtn.className = "mult-btn py-3.5 sm:py-4 bg-emerald-600 border border-emerald-600 text-white rounded-2xl text-xs sm:text-sm font-black shadow-lg shadow-emerald-500/30 transition-all";
+                if (activeBtn) activeBtn.className = "mult-btn py-3.5 sm:py-4 bg-emerald-600 border border-emerald-600 text-white rounded-xl sm:rounded-2xl text-xs sm:text-sm font-black shadow-lg shadow-emerald-500/30 transition-all";
             }
         }
 
+        // MESAİ HESAPLAMA (YOL/YEMEK GÜN VE ADET BAZLI)
         function hesaplaMesai() {
             const saat = parseFloat(document.getElementById('mesai-saat').value);
             const ucret = parseFloat(document.getElementById('mesai-ucret').value);
+            
+            // Yol Hesabı
+            const yolUcret = parseFloat(document.getElementById('mesai-yol-ucret').value) || 0;
+            const yolGun = parseFloat(document.getElementById('mesai-yol-gun').value) || 0;
+            const toplamYol = yolUcret * yolGun;
+            
+            // Yemek Hesabı
+            const yemekUcret = parseFloat(document.getElementById('mesai-yemek-ucret').value) || 0;
+            const yemekGun = parseFloat(document.getElementById('mesai-yemek-gun').value) || 0;
+            const toplamYemek = yemekUcret * yemekGun;
+            
             const sonucKutusu = document.getElementById('mesai-sonuc');
 
             if(isNaN(saat) || isNaN(ucret)) {
                 sonucKutusu.classList.remove('hidden');
-                sonucKutusu.innerHTML = `<span class="text-rose-600 dark:text-rose-400 font-bold text-sm">Lütfen geçerli değer girin.</span>`;
+                sonucKutusu.innerHTML = `<span class="text-rose-600 dark:text-rose-400 font-bold text-sm">Lütfen mesai saati ve saatlik ücret girin.</span>`;
                 sonucKutusu.className = "p-5 bg-rose-50 dark:bg-rose-900/20 rounded-2xl text-center border border-rose-200 dark:border-rose-900/50 mt-4";
                 return;
             }
 
-            const toplam = saat * ucret * selectedMultiplier;
+            const mesaiKazanci = saat * ucret * selectedMultiplier;
+            const genelToplam = mesaiKazanci + toplamYol + toplamYemek;
+            
+            let ekstraMetin = "";
+            let yolMetin = toplamYol > 0 ? `${yolUcret}₺×${yolGun} Yol` : '';
+            let yemekMetin = toplamYemek > 0 ? `${yemekUcret}₺×${yemekGun} Yemek` : '';
+
+            if (toplamYol > 0 || toplamYemek > 0) {
+                ekstraMetin = ` <br>+ ${yolMetin} ${(toplamYol > 0 && toplamYemek > 0) ? '&' : ''} ${yemekMetin}`;
+            }
             
             sonucKutusu.classList.remove('hidden');
             sonucKutusu.className = "p-6 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/40 dark:to-teal-900/40 text-emerald-900 dark:text-emerald-100 rounded-2xl text-center border border-emerald-200 dark:border-emerald-700/50 shadow-sm mt-4";
             sonucKutusu.innerHTML = `
-                <div class="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-2">Toplam Ek Hakediş</div>
-                <div class="text-3xl sm:text-4xl font-black mb-2 truncate">${toplam.toLocaleString('tr-TR', { minimumFractionDigits: 2 })} ₺</div>
-                <div class="text-[10px] sm:text-xs text-emerald-700/80 dark:text-emerald-300/80 font-bold">(${saat} Saat × ${ucret} TL × ${selectedMultiplier} Çarpan)</div>
+                <div class="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-2">Toplam Hakediş Tutarı</div>
+                <div class="text-3xl sm:text-4xl font-black mb-2 truncate">${genelToplam.toLocaleString('tr-TR', { minimumFractionDigits: 2 })} ₺</div>
+                <div class="text-[10px] sm:text-[11px] text-emerald-700/90 dark:text-emerald-300/90 font-bold mt-2 pt-2 border-t border-emerald-200/50 dark:border-emerald-800/50 inline-block leading-relaxed">
+                    [(${saat}s × ${ucret}₺ × ${selectedMultiplier})${ekstraMetin}]
+                </div>
             `;
         }
     </script>
