@@ -13,7 +13,7 @@
         .app-section.active { display: block; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen pb-20">
+<body class
 
     <div class="max-w-md mx-auto w-full px-4 pt-6">
         <!-- ANA MENÜ -->
