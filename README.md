@@ -89,7 +89,7 @@
 <body class="bg-slate-50 dark:bg-darkbg text-slate-800 dark:text-slate-100 min-h-screen pb-12 transition-colors duration-500 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50/80 via-slate-50 to-slate-100 dark:from-slate-900 dark:via-darkbg dark:to-darkbg">
 
     <!-- GENİŞLETİLMİŞ KONTEYNER: Ekranı Daha İyi Doldurur -->
-    <div class="max-w-[500px] mx-auto w-full px-4 sm:px-6 pt-6 sm:pt-8">
+    <div class="max-w-[430px] mx-auto w-full px-4 sm:pt-8">
         
         <!-- ÜST BAŞLIK VE TEMA/AYARLAR -->
         <header class="mb-6 flex items-center justify-between">
@@ -765,7 +765,8 @@ body
 }
 
 /* Başlık taşmasını engelle */
-header{
+header
+{
     margin-top:10px;
     min-height:70px;
     align-items:center;
@@ -818,17 +819,16 @@ header h1{
 }
 
 /* iOS font render */
-body
-}
--webkit-font-smoothing:antialiased;
-text-rendering:optimizeLegibility;
+    body{
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
 }
 
 /* zoom bozulmasını engelle */
-input,
-select,
-textarea{
-font-size:16px !important;
+    input,
+    select,
+    textarea{
+    font-size:16px !important;
 }
     </script>
 </body>
