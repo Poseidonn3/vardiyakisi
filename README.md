@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="tr" class="scroll-smooth">
 <head>
@@ -8,13 +7,13 @@
     
     <!-- PWA & Mobil Uyumluluk -->
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#060b14">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3652/3652191.png">
     
     <!-- Tailwind CSS ve Google Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
@@ -23,7 +22,9 @@
                 extend: { 
                     fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
                     colors: {
-                        darkbg: '#090f1a', /* Daha derin ve premium bir siyah/lacivert tonu */
+                        darkbg: '#050a14', /* Ekran görüntüsüne uygun daha derin bir ton */
+                        darkcard: '#0a1122',
+                        darkborder: 'rgba(255, 255, 255, 0.08)'
                     }
                 } 
             }
@@ -35,7 +36,7 @@
             font-family: 'Plus Jakarta Sans', sans-serif; 
             -webkit-tap-highlight-color: transparent; 
             -webkit-font-smoothing: antialiased;
-            overscroll-behavior-y: none; /* Web sıçramasını engeller, native his verir */
+            overscroll-behavior-y: none; 
         }
         .app-section { display: none; animation: slideUpFade 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
         .app-section.active { display: block; }
@@ -46,7 +47,7 @@
         }
         
         ::placeholder { color: #94a3b8; opacity: 1; }
-        .dark ::placeholder { color: #475569; }
+        .dark ::placeholder { color: #64748b; }
         
         input[type="date"], input[type="number"], select { 
             -webkit-appearance: none; 
@@ -54,57 +55,79 @@
             min-width: 0; 
             box-sizing: border-box;
         }
-        .dark input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.7; }
+        .dark input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.5; }
         ::-webkit-scrollbar { display: none; }
         
-        /* Cam Efekti - Tam Ekran Premium Hissiyatı */
+        /* Modernize Edilmiş Premium Kartlar */
         .glass-card {
             background: rgba(255, 255, 255, 0.90);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
         .dark .glass-card {
-            background: rgba(15, 23, 42, 0.65);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            background: rgba(10, 17, 34, 0.6);
+            border: 1px solid var(--darkborder);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Inputlar İçin Modern Stil */
+        .modern-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            outline: none;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: #334155;
+            display: block;
+        }
+        .dark .modern-input {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #f1f5f9;
+        }
+        .modern-input:focus {
+            background: #ffffff;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+        .dark .modern-input:focus {
+            background: rgba(15, 23, 42, 0.8);
+            border-color: #6366f1;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
         }
         
         .progress-bar-fill {
             transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
-        /* Modal Animasyonları */
-        .modal-overlay {
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            animation: fadeIn 0.2s ease-out;
-        }
-        .modal-content {
-            animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+        
+        .modal-overlay { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); animation: fadeIn 0.2s ease-out; }
+        .modal-content { animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes popIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-darkbg text-slate-800 dark:text-slate-100 min-h-screen pb-10 transition-colors duration-500 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100/50 via-slate-50 to-slate-100 dark:from-indigo-900/20 dark:via-darkbg dark:to-darkbg">
+<body class="bg-slate-50 dark:bg-darkbg text-slate-800 dark:text-slate-100 min-h-screen pb-10 transition-colors duration-500 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100/40 via-slate-50 to-slate-100 dark:from-indigo-900/10 dark:via-darkbg dark:to-darkbg">
 
-    <!-- EKRANI TAM DOLDURAN YAPI: px-2.5 ile kenarlardaki ölü boşluklar minimuma indirildi -->
-    <div class="max-w-[600px] mx-auto w-full px-2.5 sm:px-6 pt-5 sm:pt-8">
+    <div class="max-w-[600px] mx-auto w-full px-4 sm:px-6 pt-6 sm:pt-8">
         
-        <!-- ÜST BAŞLIK VE TEMA/AYARLAR -->
-        <header class="mb-5 px-1.5 flex items-center justify-between">
+        <!-- ÜST BAŞLIK -->
+        <header class="mb-6 px-1 flex items-center justify-between">
             <div>
-                <h1 class="text-3xl font-black tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent pb-0.5">Vardiya Akışı</h1>
-                <p class="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] mt-0.5">Premium Asistan</p>
+                <h1 class="text-3xl font-black tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-300 bg-clip-text text-transparent pb-0.5">Vardiya Akışı</h1>
+                <p class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] mt-0.5 opacity-80">Premium Asistan</p>
             </div>
             <div class="flex gap-2">
-                <button onclick="showSection('ayarlar')" class="w-11 h-11 rounded-2xl bg-white/80 dark:bg-slate-800/80 shadow-sm border border-slate-200/50 dark:border-slate-700/50 hover:scale-105 active:scale-95 transition-all duration-300 backdrop-blur-md flex items-center justify-center">
-                    <span class="text-[22px] leading-none text-slate-600 dark:text-slate-300">⚙️</span>
+                <button onclick="showSection('ayarlar')" class="w-11 h-11 rounded-full glass-card hover:scale-105 active:scale-95 transition-all flex items-center justify-center">
+                    <span class="text-[20px] text-slate-600 dark:text-slate-300 opacity-80">⚙️</span>
                 </button>
-                <button onclick="toggleTheme()" class="w-11 h-11 rounded-2xl bg-white/80 dark:bg-slate-800/80 shadow-sm border border-slate-200/50 dark:border-slate-700/50 hover:scale-105 active:scale-95 transition-all duration-300 backdrop-blur-md flex items-center justify-center">
-                    <span id="theme-icon" class="text-[22px] leading-none">🌙</span>
+                <button onclick="toggleTheme()" class="w-11 h-11 rounded-full glass-card hover:scale-105 active:scale-95 transition-all flex items-center justify-center">
+                    <span id="theme-icon" class="text-[20px] opacity-80">🌙</span>
                 </button>
             </div>
         </header>
@@ -112,76 +135,70 @@
         <!-- ANA MENÜ -->
         <div id="section-menu" class="app-section active space-y-4">
             
-            <!-- Bugünün Özeti Akıllı Kartı -->
-            <div class="p-5 sm:p-6 rounded-[28px] shadow-lg shadow-blue-500/20 dark:shadow-none bg-gradient-to-br from-blue-600 to-indigo-700 text-white relative overflow-hidden">
+            <!-- Bugünün Özeti -->
+            <div class="p-6 rounded-[28px] shadow-lg shadow-blue-500/20 dark:shadow-none bg-gradient-to-br from-blue-600 to-indigo-700 dark:from-blue-600/90 dark:to-indigo-800/90 text-white relative overflow-hidden">
                 <div class="absolute -right-6 -top-6 w-36 h-36 bg-white/10 rounded-full blur-2xl"></div>
                 <div class="absolute -left-6 -bottom-6 w-28 h-28 bg-black/15 rounded-full blur-xl"></div>
                 <div class="relative z-10">
-                    <div class="flex justify-between items-center">
+                    <div class="flex justify-between items-center border-b border-white/10 pb-4 mb-4">
                         <div class="flex-1 min-w-0">
-                            <p class="text-[10.5px] sm:text-xs font-black uppercase tracking-[0.15em] text-blue-100/90 mb-1" id="today-date-text">Bugün</p>
+                            <p class="text-[10px] sm:text-xs font-black uppercase tracking-[0.15em] text-blue-100/90 mb-1" id="today-date-text">Bugün</p>
                             <h2 class="text-[26px] leading-tight font-black tracking-tight" id="today-shift-text">Yükleniyor...</h2>
-                            <div id="today-hours" class="mt-2.5 hidden inline-block px-3 py-1 bg-black/20 rounded-[10px] text-[11px] font-bold tracking-widest backdrop-blur-sm border border-white/10"></div>
+                            <div id="today-hours" class="mt-2.5 hidden inline-block px-3.5 py-1.5 bg-white/10 rounded-[12px] text-[11px] font-bold tracking-widest backdrop-blur-sm border border-white/10"></div>
                         </div>
-                        <div class="w-[60px] h-[60px] rounded-[20px] bg-white/15 flex-shrink-0 flex items-center justify-center text-[32px] backdrop-blur-md border border-white/20 ml-3 transition-all shadow-inner" id="today-icon">
+                        <div class="w-[64px] h-[64px] rounded-[22px] bg-white/10 flex-shrink-0 flex items-center justify-center text-[34px] backdrop-blur-md border border-white/20 ml-3 shadow-inner" id="today-icon">
                             ⏳
                         </div>
                     </div>
                     
-                    <!-- Gelecek Radarı -->
-                    <div id="future-radar" class="mt-5 pt-4 border-t border-white/15 flex justify-between items-center text-[11px] font-bold text-blue-50 hidden">
-                        <span id="tomorrow-shift-text" class="pr-2 tracking-wide">🔜 Yarın: -</span>
-                        <span id="next-leave-text" class="shrink-0 bg-white/10 px-3 py-1.5 rounded-xl border border-white/5">🏖️ İzin: -</span>
+                    <div id="future-radar" class="flex justify-between items-center text-[11.5px] font-bold text-blue-50 hidden">
+                        <span id="tomorrow-shift-text" class="tracking-wide flex items-center gap-1.5 opacity-90">🔜 Yarın: -</span>
+                        <span id="next-leave-text" class="shrink-0 bg-white/15 px-3.5 py-1.5 rounded-full border border-white/10">🏖️ İzin: -</span>
                     </div>
 
-                    <!-- Uyku / Dinlenme Tavsiyesi -->
-                    <div id="sleep-advisor" class="mt-3.5 py-2.5 px-3.5 bg-black/10 rounded-[14px] text-[11px] font-semibold text-white/90 flex items-center gap-2.5 border border-white/10 hidden backdrop-blur-md shadow-sm">
-                        <span id="sleep-advisor-icon" class="text-sm">🛌</span>
-                        <span id="sleep-advisor-text" class="tracking-wide">Biyolojik saat önerisi yükleniyor...</span>
+                    <div id="sleep-advisor" class="mt-4 py-3 px-4 bg-black/20 rounded-[16px] text-[11.5px] font-semibold text-white/90 flex items-center gap-3 border border-white/10 hidden backdrop-blur-md">
+                        <span id="sleep-advisor-icon" class="text-lg">🛌</span>
+                        <span id="sleep-advisor-text" class="tracking-wide leading-relaxed">Yükleniyor...</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Menü Butonları Izgarası (Genişletilmiş ve Temiz Görünüm) -->
-            <div class="grid grid-cols-2 gap-3">
-                <button onclick="showSection('takvim-aylar')" class="w-full py-5 px-3 glass-card rounded-[24px] hover:border-blue-400 active:scale-[0.98] transition-all text-center flex flex-col items-center justify-center group">
-                    <span class="text-[34px] mb-2.5 drop-shadow-sm group-hover:scale-110 transition-transform">📅</span>
-                    <h2 class="font-extrabold text-[13.5px] text-slate-800 dark:text-slate-100 tracking-tight">Aylık Takvim</h2>
+            <!-- Menü Izgarası (Tek Satır Metin Garantili, Daha Minimalist) -->
+            <div class="grid grid-cols-2 gap-3.5 pt-2">
+                <button onclick="showSection('takvim-aylar')" class="w-full py-6 px-3 glass-card rounded-[24px] active:scale-[0.98] transition-all text-center flex flex-col items-center justify-center group">
+                    <span class="text-[36px] mb-3 group-hover:scale-110 transition-transform opacity-90">📅</span>
+                    <h2 class="font-bold text-[13px] sm:text-[14px] text-slate-800 dark:text-slate-200 tracking-wide whitespace-nowrap overflow-hidden text-ellipsis w-full">Aylık Takvim</h2>
                 </button>
-                <button onclick="showSection('izin-hesap')" class="w-full py-5 px-3 glass-card rounded-[24px] hover:border-purple-400 active:scale-[0.98] transition-all text-center flex flex-col items-center justify-center group">
-                    <span class="text-[34px] mb-2.5 drop-shadow-sm group-hover:scale-110 transition-transform">✈️</span>
-                    <h2 class="font-extrabold text-[13.5px] text-slate-800 dark:text-slate-100 tracking-tight">İzin Planlayıcı</h2>
+                <button onclick="showSection('izin-hesap')" class="w-full py-6 px-3 glass-card rounded-[24px] active:scale-[0.98] transition-all text-center flex flex-col items-center justify-center group">
+                    <span class="text-[36px] mb-3 group-hover:scale-110 transition-transform opacity-90">✈️</span>
+                    <h2 class="font-bold text-[13px] sm:text-[14px] text-slate-800 dark:text-slate-200 tracking-wide whitespace-nowrap overflow-hidden text-ellipsis w-full">İzin Planlayıcı</h2>
                 </button>
-                <button onclick="showSection('mesai-hesap')" class="w-full py-5 px-3 glass-card rounded-[24px] hover:border-emerald-400 active:scale-[0.98] transition-all text-center flex flex-col items-center justify-center group">
-                    <span class="text-[34px] mb-2.5 drop-shadow-sm group-hover:scale-110 transition-transform">💰</span>
-                    <h2 class="font-extrabold text-[13.5px] text-slate-800 dark:text-slate-100 tracking-tight">Kazanç & Mesai</h2>
+                <button onclick="showSection('mesai-hesap')" class="w-full py-6 px-3 glass-card rounded-[24px] active:scale-[0.98] transition-all text-center flex flex-col items-center justify-center group">
+                    <span class="text-[36px] mb-3 group-hover:scale-110 transition-transform opacity-90">💰</span>
+                    <h2 class="font-bold text-[13px] sm:text-[14px] text-slate-800 dark:text-slate-200 tracking-wide whitespace-nowrap overflow-hidden text-ellipsis w-full">Kazanç & Mesai</h2>
                 </button>
-                <button onclick="generateYearlyReport()" class="w-full py-5 px-3 glass-card rounded-[24px] hover:border-orange-400 active:scale-[0.98] transition-all text-center flex flex-col items-center justify-center relative overflow-hidden group">
-                    <div class="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-rose-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <span class="text-[34px] mb-2.5 drop-shadow-sm group-hover:scale-110 transition-transform">📊</span>
-                    <h2 class="font-extrabold text-[13.5px] text-slate-800 dark:text-slate-100 tracking-tight">Yıllık Rapor</h2>
+                <button onclick="generateYearlyReport()" class="w-full py-6 px-3 glass-card rounded-[24px] active:scale-[0.98] transition-all text-center flex flex-col items-center justify-center group">
+                    <span class="text-[36px] mb-3 group-hover:scale-110 transition-transform opacity-90">📊</span>
+                    <h2 class="font-bold text-[13px] sm:text-[14px] text-slate-800 dark:text-slate-200 tracking-wide whitespace-nowrap overflow-hidden text-ellipsis w-full">Yıllık Rapor</h2>
                 </button>
             </div>
         </div>
-
-        <!-- GERİ BUTONLARI İÇİN STANDART NATIVE GÖRÜNÜM (Çizgisiz, sade ok) -->
         
         <!-- AYARLAR BÖLÜMÜ -->
         <div id="section-ayarlar" class="app-section space-y-4">
-            <button onclick="showSection('menu')" class="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-extrabold text-sm py-2 px-1 hover:opacity-80 transition-opacity active:scale-95 mb-2 outline-none">
+            <button onclick="showSection('menu')" class="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-extrabold text-sm py-2 hover:opacity-80 transition-opacity active:scale-95 mb-2 outline-none">
                 <span class="text-xl leading-none font-bold mt-[-2px]">‹</span> Ana Menü
             </button>
             
-            <div class="glass-card p-5 sm:p-7 rounded-[28px] space-y-5">
-                <div>
-                    <h2 class="text-[22px] font-black text-slate-800 dark:text-slate-100 flex items-center gap-2 mb-1 tracking-tight">⚙️ Sistem Ayarları</h2>
-                    <p class="text-[12px] text-slate-500 dark:text-slate-400 font-semibold">Çalışma döngünüzü özelleştirin.</p>
+            <div class="glass-card p-6 sm:p-8 rounded-[28px] space-y-5">
+                <div class="mb-6">
+                    <h2 class="text-[22px] font-black text-slate-800 dark:text-slate-100 flex items-center gap-2 tracking-tight">⚙️ Ayarlar</h2>
                 </div>
                 
-                <div class="w-full mt-5">
-                    <label class="block text-[11.5px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2.5 ml-1">Çalışma Döngüsü</label>
+                <div class="w-full">
+                    <label class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2.5 ml-1">Çalışma Döngüsü</label>
                     <div class="relative">
-                        <select id="ayarlar-dongu" class="w-full px-4 py-4 bg-slate-50/80 dark:bg-slate-900/60 rounded-[18px] border border-slate-200 dark:border-slate-700/80 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm font-bold text-slate-700 dark:text-slate-200 shadow-inner appearance-none cursor-pointer">
+                        <select id="ayarlar-dongu" class="modern-input appearance-none cursor-pointer">
                             <option value="default">Klasik (2 Gündüz, 2 Gece, 2 İzin)</option>
                             <option value="4g2i">4 Gündüz, 2 İzin</option>
                             <option value="sabit_g">Sabit Gündüz (Pazar İzin)</option>
@@ -192,214 +209,205 @@
                 </div>
 
                 <div class="w-full">
-                    <label class="block text-[11.5px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2.5 ml-1">Referans Başlangıç Tarihi</label>
-                    <input type="date" id="ayarlar-tarih" class="w-full px-4 py-4 bg-slate-50/80 dark:bg-slate-900/60 rounded-[18px] border border-slate-200 dark:border-slate-700/80 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm font-bold text-slate-700 dark:text-slate-200 shadow-inner block">
-                    <p class="text-[10.5px] text-slate-500 dark:text-slate-400 mt-2.5 font-medium ml-1 leading-relaxed">* Döngünün ilk iş gününe denk gelen geçmiş bir tarih seçin.</p>
+                    <label class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2.5 ml-1">Referans Başlangıç</label>
+                    <input type="date" id="ayarlar-tarih" class="modern-input">
+                    <p class="text-[10px] text-slate-500 dark:text-slate-500 mt-2.5 font-medium ml-1">* Döngünün ilk iş gününe denk gelen geçmiş bir tarih seçin.</p>
                 </div>
                 
-                <button onclick="ayarlariKaydet()" class="w-full py-4.5 mt-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 active:scale-[0.98] text-white rounded-[18px] font-black text-[15px] transition-all shadow-md tracking-wide">
-                    Ayarları Kaydet
+                <button onclick="ayarlariKaydet()" class="w-full py-4 mt-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 active:scale-[0.98] text-white rounded-[16px] font-black text-[15px] transition-all shadow-md tracking-wide">
+                    Kaydet
                 </button>
             </div>
         </div>
 
         <!-- YILLIK RAPOR BÖLÜMÜ -->
         <div id="section-yillik-rapor" class="app-section space-y-4">
-            <button onclick="showSection('menu')" class="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-extrabold text-sm py-2 px-1 hover:opacity-80 transition-opacity active:scale-95 mb-2 outline-none">
+            <button onclick="showSection('menu')" class="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-extrabold text-sm py-2 hover:opacity-80 transition-opacity active:scale-95 mb-2 outline-none">
                 <span class="text-xl leading-none font-bold mt-[-2px]">‹</span> Ana Menü
             </button>
             
             <div class="glass-card p-6 sm:p-8 rounded-[28px] space-y-5">
                 <div class="text-center mb-8">
-                    <span class="text-[54px] block mb-3 drop-shadow-md">📊</span>
-                    <h2 class="text-[26px] font-black text-slate-800 dark:text-slate-100 tracking-tight">2026 Yıllık Analiz</h2>
+                    <div class="inline-block p-4 rounded-[20px] bg-slate-100 dark:bg-slate-800/50 mb-4">
+                        <span class="text-[40px] block drop-shadow-sm leading-none">📊</span>
+                    </div>
+                    <h2 class="text-[24px] font-black text-slate-800 dark:text-slate-100 tracking-tight">2026 Yıllık Analiz</h2>
                     <p class="text-[13px] text-slate-500 dark:text-slate-400 font-semibold mt-1">Tüm yılın çalışma döngüsü</p>
                 </div>
                 
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-emerald-50/80 dark:bg-emerald-900/20 p-5 rounded-[20px] border border-emerald-200/60 dark:border-emerald-800/50 text-center shadow-sm">
-                        <span class="block text-[10.5px] font-extrabold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-1.5">Toplam Gündüz</span>
+                    <div class="bg-emerald-50/50 dark:bg-[#061813]/60 p-5 rounded-[22px] border border-emerald-200/40 dark:border-emerald-800/30 text-center">
+                        <span class="block text-[9.5px] sm:text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-1.5 whitespace-nowrap overflow-hidden">Toplam Gündüz</span>
                         <span id="yil-gunduz" class="text-4xl font-black text-emerald-700 dark:text-emerald-300">0</span>
                     </div>
-                    <div class="bg-indigo-50/80 dark:bg-indigo-900/20 p-5 rounded-[20px] border border-indigo-200/60 dark:border-indigo-800/50 text-center shadow-sm">
-                        <span class="block text-[10.5px] font-extrabold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-1.5">Toplam Gece</span>
+                    <div class="bg-indigo-50/50 dark:bg-[#0a1122]/60 p-5 rounded-[22px] border border-indigo-200/40 dark:border-indigo-800/30 text-center">
+                        <span class="block text-[9.5px] sm:text-[10px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-1.5 whitespace-nowrap overflow-hidden">Toplam Gece</span>
                         <span id="yil-gece" class="text-4xl font-black text-indigo-700 dark:text-indigo-300">0</span>
                     </div>
                 </div>
                 
-                <div class="bg-slate-50/80 dark:bg-slate-800/40 p-5 rounded-[20px] border border-slate-200/60 dark:border-slate-700/50 text-center shadow-sm mt-2">
-                    <span class="block text-[10.5px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">Toplam İzin</span>
+                <div class="bg-slate-50/50 dark:bg-slate-800/30 p-5 rounded-[22px] border border-slate-200/40 dark:border-slate-700/30 text-center mt-2">
+                    <span class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5 whitespace-nowrap">Toplam İzin</span>
                     <span id="yil-izin" class="text-4xl font-black text-slate-700 dark:text-slate-200">0</span>
                 </div>
             </div>
         </div>
 
-
         <!-- TAKVİM: AY LİSTESİ -->
         <div id="section-takvim-aylar" class="app-section space-y-4">
-            <button onclick="showSection('menu')" class="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-extrabold text-sm py-2 px-1 hover:opacity-80 transition-opacity active:scale-95 mb-2 outline-none">
+            <button onclick="showSection('menu')" class="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-extrabold text-sm py-2 hover:opacity-80 transition-opacity active:scale-95 mb-2 outline-none">
                 <span class="text-xl leading-none font-bold mt-[-2px]">‹</span> Ana Menü
             </button>
-            <!-- Aylar ekranı tam dolduracak şekilde ayarlandı -->
-            <div id="month-list" class="grid grid-cols-3 gap-3.5"></div>
+            <div id="month-list" class="grid grid-cols-3 gap-3"></div>
         </div>
 
-        <!-- TAKVİM: DETAY (YAZI TAŞMAYAN, EKRANI DOLDURAN TASARIM) -->
+        <!-- TAKVİM: DETAY -->
         <div id="section-takvim-detay" class="app-section space-y-4">
-            <div class="flex items-center justify-between mb-3 px-1">
-                <button onclick="showSection('takvim-aylar')" class="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-extrabold text-sm py-2 hover:opacity-80 transition-opacity active:scale-95 outline-none">
+            <div class="flex items-center justify-between mb-4 px-1">
+                <button onclick="showSection('takvim-aylar')" class="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-extrabold text-sm py-2 hover:opacity-80 active:scale-95 outline-none">
                     <span class="text-xl leading-none font-bold mt-[-2px]">‹</span> Aylar
                 </button>
-                <h2 id="month-name" class="text-[20px] font-black text-slate-800 dark:text-slate-100 tracking-tight"></h2>
+                <h2 id="month-name" class="text-[18px] sm:text-[20px] font-black text-slate-800 dark:text-slate-100 tracking-tight"></h2>
                 <div class="flex items-center gap-2">
-                    <button onclick="copyToClipboard()" id="copy-btn" class="w-9 h-9 rounded-[10px] bg-slate-200/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 flex items-center justify-center hover:scale-105 active:scale-95 transition-all text-[15px]" title="Kopyala">
-                        📋
-                    </button>
-                    <button onclick="exportIcs()" class="w-9 h-9 rounded-[10px] bg-slate-200/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 flex items-center justify-center hover:scale-105 active:scale-95 transition-all text-[15px]" title="Takvime Aktar">
-                        📤
-                    </button>
+                    <button onclick="copyToClipboard()" id="copy-btn" class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:scale-105 active:scale-95 transition-all text-[15px]">📋</button>
+                    <button onclick="exportIcs()" class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:scale-105 active:scale-95 transition-all text-[15px]">📤</button>
                 </div>
             </div>
             
-            <!-- İstatistik Kartları -->
             <div class="grid grid-cols-3 gap-2.5">
-                <div class="glass-card py-3 rounded-[18px] text-center shadow-sm">
-                    <span class="block text-[9.5px] font-extrabold text-emerald-600 dark:text-emerald-400 uppercase tracking-[0.15em] mb-1">Gündüz</span>
-                    <span id="stat-gunduz" class="text-xl font-black text-emerald-700 dark:text-emerald-300">0</span>
+                <div class="glass-card py-3.5 rounded-[20px] text-center shadow-sm">
+                    <span class="block text-[9px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-1 whitespace-nowrap">Gündüz</span>
+                    <span id="stat-gunduz" class="text-[22px] leading-none font-black text-emerald-700 dark:text-emerald-300">0</span>
                 </div>
-                <div class="glass-card py-3 rounded-[18px] text-center shadow-sm">
-                    <span class="block text-[9.5px] font-extrabold text-indigo-600 dark:text-indigo-400 uppercase tracking-[0.15em] mb-1">Gece</span>
-                    <span id="stat-gece" class="text-xl font-black text-indigo-700 dark:text-indigo-300">0</span>
+                <div class="glass-card py-3.5 rounded-[20px] text-center shadow-sm">
+                    <span class="block text-[9px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-1 whitespace-nowrap">Gece</span>
+                    <span id="stat-gece" class="text-[22px] leading-none font-black text-indigo-700 dark:text-indigo-300">0</span>
                 </div>
-                <div class="glass-card py-3 rounded-[18px] text-center shadow-sm">
-                    <span class="block text-[9.5px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-[0.15em] mb-1">İzin</span>
-                    <span id="stat-izin" class="text-xl font-black text-slate-600 dark:text-slate-300">0</span>
+                <div class="glass-card py-3.5 rounded-[20px] text-center shadow-sm">
+                    <span class="block text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1 whitespace-nowrap">İzin</span>
+                    <span id="stat-izin" class="text-[22px] leading-none font-black text-slate-600 dark:text-slate-300">0</span>
                 </div>
             </div>
 
-            <!-- Takvim Izgarası (Ekrana tam yayılan, taşmayan, kısaltmasız tasarım) -->
-            <div class="glass-card p-2 sm:p-4 rounded-[28px] shadow-sm relative">
-                <div class="text-[10px] text-slate-500 dark:text-slate-400 font-extrabold text-center w-full mb-4 mt-1 uppercase tracking-widest flex items-center justify-center gap-1.5">
-                    <span>💡 Günlere dokunarak not ekleyebilirsiniz</span>
+            <div class="glass-card p-3 sm:p-5 rounded-[28px] shadow-sm relative">
+                <div class="text-[10px] text-slate-400 font-bold text-center w-full mb-4 mt-1 uppercase tracking-widest">
+                    💡 Günlere dokunarak not ekleyebilirsiniz
                 </div>
-                <!-- gap-1 ile kutular arası mesafe kısaltıldı, kutu genişliği maksimize edildi -->
-                <div id="calendar-grid" class="grid grid-cols-7 gap-1 sm:gap-1.5 text-center w-full"></div>
+                <div id="calendar-grid" class="grid grid-cols-7 gap-1.5 sm:gap-2 text-center w-full"></div>
             </div>
 
-            <!-- Özel Günler Kutusu -->
-            <div id="holiday-box" class="hidden bg-gradient-to-br from-rose-50/90 to-orange-50/90 dark:from-rose-950/40 dark:to-orange-950/40 p-6 rounded-[24px] shadow-sm space-y-4 border border-rose-200/50 dark:border-rose-800/30">
-                <h3 class="text-[12px] font-black text-rose-600 dark:text-rose-400 uppercase tracking-[0.15em] flex items-center gap-2">
-                    <span class="text-lg">🎉</span> Özel Günler
+            <div id="holiday-box" class="hidden bg-rose-50/80 dark:bg-rose-950/20 p-5 rounded-[24px] border border-rose-200/50 dark:border-rose-900/30">
+                <h3 class="text-[11px] font-black text-rose-600 dark:text-rose-400 uppercase tracking-widest flex items-center gap-2 mb-3">
+                    <span class="text-base">🎉</span> Özel Günler
                 </h3>
-                <ul id="holiday-list" class="space-y-2.5 text-[13px] font-bold text-rose-800 dark:text-rose-300 leading-relaxed"></ul>
+                <ul id="holiday-list" class="space-y-2 text-[12.5px] font-bold text-rose-800 dark:text-rose-300/80"></ul>
             </div>
         </div>
 
         <!-- İZİN HESAPLAYICI -->
         <div id="section-izin-hesap" class="app-section space-y-4">
-            <button onclick="showSection('menu')" class="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-extrabold text-sm py-2 px-1 hover:opacity-80 transition-opacity active:scale-95 mb-2 outline-none">
+            <button onclick="showSection('menu')" class="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-extrabold text-sm py-2 hover:opacity-80 active:scale-95 mb-2 outline-none">
                 <span class="text-xl leading-none font-bold mt-[-2px]">‹</span> Ana Menü
             </button>
             
-            <div class="glass-card p-5 sm:p-7 rounded-[28px] space-y-6">
+            <div class="glass-card p-6 sm:p-8 rounded-[28px] space-y-6">
                 
-                <div class="bg-slate-50/80 dark:bg-slate-800/40 p-5 rounded-[20px] border border-slate-200/60 dark:border-slate-700/50">
-                    <label class="block text-[11.5px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2.5 ml-1 flex items-center gap-1.5">🗂️ Toplam Yıllık İzin Hakkın <span class="text-[9.5px] lowercase opacity-70 font-semibold">(Opsiyonel)</span></label>
-                    <input type="number" id="izin-toplam-hak" placeholder="Örn: 14" class="w-full px-4 py-4 bg-white/80 dark:bg-slate-900/80 rounded-[16px] border border-slate-200/80 dark:border-slate-700/80 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-purple-500 outline-none transition-all text-sm font-bold text-slate-700 dark:text-slate-200 shadow-sm block">
+                <div>
+                    <label class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2.5 ml-1">🗂️ Toplam Yıllık İzin Hakkın <span class="text-[8.5px] opacity-70 font-semibold">(Opsiyonel)</span></label>
+                    <input type="number" id="izin-toplam-hak" placeholder="Örn: 14" class="modern-input">
                 </div>
 
-                <div class="w-full">
-                    <label class="block text-[11.5px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2.5 ml-1">İzin Başlangıç Tarihi</label>
-                    <input type="date" id="start-date" class="w-full px-4 py-4 bg-slate-50/80 dark:bg-slate-900/60 rounded-[18px] border border-slate-200 dark:border-slate-700/80 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-purple-500 outline-none transition-all text-sm font-bold text-slate-700 dark:text-slate-200 shadow-inner block">
+                <div>
+                    <label class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2.5 ml-1">İzin Başlangıç Tarihi</label>
+                    <input type="date" id="start-date" class="modern-input">
                 </div>
                 
-                <div class="w-full">
-                    <label class="block text-[11.5px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2.5 ml-1">Kullanılacak İzin (Gün)</label>
-                    <input type="number" id="izin-gun" placeholder="Örn: 7" class="w-full px-4 py-4 bg-slate-50/80 dark:bg-slate-900/60 rounded-[18px] border border-slate-200 dark:border-slate-700/80 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-purple-500 outline-none transition-all text-sm font-bold text-slate-700 dark:text-slate-200 shadow-inner block">
+                <div>
+                    <label class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2.5 ml-1">Kullanılacak İzin (Gün)</label>
+                    <input type="number" id="izin-gun" placeholder="Örn: 10" class="modern-input">
                 </div>
                 
-                <button onclick="hesaplaIzin()" class="w-full py-4.5 mt-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 active:scale-[0.98] text-white rounded-[18px] font-black text-[15px] transition-all shadow-md shadow-purple-500/20 tracking-wide">
-                    Hesapla ve Bakiyeyi Gör
+                <button onclick="hesaplaIzin()" class="w-full py-4.5 mt-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 active:scale-[0.98] text-white rounded-[16px] font-black text-[15px] transition-all shadow-md shadow-purple-500/20 tracking-wide">
+                    Hesapla
                 </button>
                 
-                <div id="izin-sonuc" class="p-6 bg-purple-50 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 rounded-[20px] hidden text-center border border-purple-200 dark:border-purple-800/50 shadow-sm transition-all mt-5"></div>
+                <div id="izin-sonuc" class="p-6 bg-purple-50 dark:bg-[#130f24]/80 text-purple-800 dark:text-purple-300 rounded-[20px] hidden text-center border border-purple-200 dark:border-purple-800/40 mt-5 transition-all w-full overflow-hidden"></div>
             </div>
         </div>
 
         <!-- MESAİ VE KAZANÇ HESAPLAYICI -->
         <div id="section-mesai-hesap" class="app-section space-y-4">
-            <button onclick="showSection('menu')" class="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-extrabold text-sm py-2 px-1 hover:opacity-80 transition-opacity active:scale-95 mb-2 outline-none">
+            <button onclick="showSection('menu')" class="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-extrabold text-sm py-2 hover:opacity-80 active:scale-95 mb-2 outline-none">
                 <span class="text-xl leading-none font-bold mt-[-2px]">‹</span> Ana Menü
             </button>
             
-            <div class="glass-card p-5 sm:p-7 rounded-[28px] space-y-6">
+            <div class="glass-card p-6 sm:p-8 rounded-[28px] space-y-5">
                 
-                <div class="w-full">
-                    <label class="block text-[11.5px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2.5 ml-1">Maaş / Asgari Ücret (TL) <span class="text-[9.5px] lowercase opacity-70 font-semibold">(Opsiyonel)</span></label>
-                    <input type="number" id="mesai-maas" placeholder="Örn: 17002" class="w-full px-4 py-4 bg-slate-50/80 dark:bg-slate-900/60 rounded-[18px] border border-slate-200 dark:border-slate-700/80 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none transition-all text-sm font-bold text-slate-700 dark:text-slate-200 shadow-inner block">
+                <div>
+                    <label class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2.5 ml-1">Maaş / Asgari Ücret (TL) <span class="text-[8px] opacity-70">(Opsiyonel)</span></label>
+                    <input type="number" id="mesai-maas" placeholder="Örn: 17002" class="modern-input">
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="w-full">
-                        <label class="block text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2.5 ml-1">Mesai Saati</label>
-                        <input type="number" id="mesai-saat" placeholder="Örn: 12.5" step="0.5" class="w-full px-4 py-4 bg-slate-50/80 dark:bg-slate-900/60 rounded-[18px] border border-slate-200 dark:border-slate-700/80 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none transition-all text-sm font-bold text-slate-700 dark:text-slate-200 shadow-inner block">
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2.5 ml-1">Mesai Saati</label>
+                        <input type="number" id="mesai-saat" placeholder="Örn: 12.5" step="0.5" class="modern-input">
                     </div>
-                    
-                    <div class="w-full">
-                        <label class="block text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2.5 ml-1">Saatlik Ücret</label>
-                        <input type="number" id="mesai-ucret" placeholder="Örn: 150" class="w-full px-4 py-4 bg-slate-50/80 dark:bg-slate-900/60 rounded-[18px] border border-slate-200 dark:border-slate-700/80 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none transition-all text-sm font-bold text-slate-700 dark:text-slate-200 shadow-inner block">
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2.5 ml-1">Saatlik Ücret</label>
+                        <input type="number" id="mesai-ucret" placeholder="Örn: 150" class="modern-input">
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-slate-200/60 dark:border-slate-700/60 pt-6 mt-3">
-                    <div class="bg-slate-50/80 dark:bg-slate-800/40 p-4 rounded-[20px] border border-slate-200/60 dark:border-slate-700/50">
-                        <label class="block text-[10.5px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2.5 ml-1 flex items-center gap-1.5">🚗 Yol Desteği <span class="text-[9.5px] lowercase opacity-70 font-semibold">(Ops.)</span></label>
-                        <div class="grid grid-cols-2 gap-2.5">
-                            <input type="number" id="mesai-yol-ucret" placeholder="₺/Gün" class="w-full px-3 py-3.5 bg-white/80 dark:bg-slate-900/80 rounded-[14px] border border-slate-200/80 dark:border-slate-700/80 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none transition-all text-xs font-bold text-slate-700 dark:text-slate-200 shadow-sm block">
-                            <input type="number" id="mesai-yol-gun" placeholder="Adet" class="w-full px-3 py-3.5 bg-white/80 dark:bg-slate-900/80 rounded-[14px] border border-slate-200/80 dark:border-slate-700/80 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none transition-all text-xs font-bold text-slate-700 dark:text-slate-200 shadow-sm block">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+                    <div class="p-4 rounded-[20px] bg-slate-50/50 dark:bg-slate-800/30 border border-slate-200/50 dark:border-slate-700/30">
+                        <label class="block text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2.5 ml-1">🚗 Yol Desteği (Ops.)</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="number" id="mesai-yol-ucret" placeholder="₺/Gün" class="modern-input !p-2.5 !text-xs">
+                            <input type="number" id="mesai-yol-gun" placeholder="Adet" class="modern-input !p-2.5 !text-xs">
                         </div>
                     </div>
                     
-                    <div class="bg-slate-50/80 dark:bg-slate-800/40 p-4 rounded-[20px] border border-slate-200/60 dark:border-slate-700/50">
-                        <label class="block text-[10.5px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2.5 ml-1 flex items-center gap-1.5">🍔 Yemek Desteği <span class="text-[9.5px] lowercase opacity-70 font-semibold">(Ops.)</span></label>
-                        <div class="grid grid-cols-2 gap-2.5">
-                            <input type="number" id="mesai-yemek-ucret" placeholder="₺/Gün" class="w-full px-3 py-3.5 bg-white/80 dark:bg-slate-900/80 rounded-[14px] border border-slate-200/80 dark:border-slate-700/80 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none transition-all text-xs font-bold text-slate-700 dark:text-slate-200 shadow-sm block">
-                            <input type="number" id="mesai-yemek-gun" placeholder="Adet" class="w-full px-3 py-3.5 bg-white/80 dark:bg-slate-900/80 rounded-[14px] border border-slate-200/80 dark:border-slate-700/80 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none transition-all text-xs font-bold text-slate-700 dark:text-slate-200 shadow-sm block">
+                    <div class="p-4 rounded-[20px] bg-slate-50/50 dark:bg-slate-800/30 border border-slate-200/50 dark:border-slate-700/30">
+                        <label class="block text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2.5 ml-1">🍔 Yemek Desteği (Ops.)</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="number" id="mesai-yemek-ucret" placeholder="₺/Gün" class="modern-input !p-2.5 !text-xs">
+                            <input type="number" id="mesai-yemek-gun" placeholder="Adet" class="modern-input !p-2.5 !text-xs">
                         </div>
                     </div>
                 </div>
                 
-                <div class="border-t border-slate-200/60 dark:border-slate-700/60 pt-6 mt-3">
-                    <label class="block text-[11.5px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3 ml-1">Mesai Çarpanı</label>
-                    <div class="grid grid-cols-4 gap-2.5">
-                        <button onclick="setMultiplier(1.5)" id="btn-mult-1.5" class="mult-btn py-4 bg-emerald-600 text-white rounded-[16px] text-sm font-black shadow-md transition-all">1.5x</button>
-                        <button onclick="setMultiplier(2.0)" id="btn-mult-2.0" class="mult-btn py-4 bg-slate-100/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 rounded-[16px] text-sm font-extrabold border border-slate-200 dark:border-slate-700 transition-all">2.0x</button>
-                        <button onclick="setMultiplier(1.0)" id="btn-mult-1.0" class="mult-btn py-4 bg-slate-100/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 rounded-[16px] text-sm font-extrabold border border-slate-200 dark:border-slate-700 transition-all">1.0x</button>
-                        <input type="number" id="mesai-carpan" oninput="customMultiplierInput()" step="0.1" class="w-full text-center px-1 py-4 bg-slate-50/80 dark:bg-slate-900/60 rounded-[16px] border border-slate-200 dark:border-slate-700 text-sm font-extrabold outline-none focus:bg-white dark:focus:bg-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500 text-slate-700 dark:text-slate-200 block" placeholder="Özel">
+                <div class="pt-4 border-t border-slate-200/50 dark:border-slate-700/30">
+                    <label class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3 ml-1">Mesai Çarpanı</label>
+                    <div class="grid grid-cols-4 gap-2">
+                        <button onclick="setMultiplier(1.5)" id="btn-mult-1.5" class="mult-btn py-3.5 bg-emerald-600 text-white rounded-[14px] text-[13px] font-black shadow-md transition-all">1.5x</button>
+                        <button onclick="setMultiplier(2.0)" id="btn-mult-2.0" class="mult-btn py-3.5 bg-slate-100/80 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 rounded-[14px] text-[13px] font-extrabold border border-slate-200/60 dark:border-slate-700/50 transition-all">2.0x</button>
+                        <button onclick="setMultiplier(1.0)" id="btn-mult-1.0" class="mult-btn py-3.5 bg-slate-100/80 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 rounded-[14px] text-[13px] font-extrabold border border-slate-200/60 dark:border-slate-700/50 transition-all">1.0x</button>
+                        <input type="number" id="mesai-carpan" oninput="customMultiplierInput()" step="0.1" class="modern-input !p-1 !text-center !rounded-[14px]" placeholder="Özel">
                     </div>
                 </div>
                 
-                <button onclick="hesaplaMesai()" class="w-full py-4.5 mt-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:opacity-90 active:scale-[0.98] text-white rounded-[18px] font-black text-[15px] transition-transform shadow-md shadow-emerald-500/20 tracking-wide">
+                <button onclick="hesaplaMesai()" class="w-full py-4.5 mt-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:opacity-90 active:scale-[0.98] text-white rounded-[16px] font-black text-[15px] transition-transform shadow-md tracking-wide">
                     Hesapla
                 </button>
                 
-                <div id="mesai-sonuc" class="p-6 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 rounded-[20px] hidden text-center border border-emerald-200 dark:border-emerald-800/60 shadow-sm mt-5 transition-all"></div>
+                <div id="mesai-sonuc" class="p-6 bg-emerald-50 dark:bg-[#061813]/80 text-emerald-800 dark:text-emerald-300 rounded-[20px] hidden text-center border border-emerald-200 dark:border-emerald-800/40 mt-5 transition-all"></div>
             </div>
         </div>
     </div>
 
-    <!-- AJANDA (NOT) MODALI -->
+    <!-- AJANDA MODALI -->
     <div id="note-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
-        <div class="bg-white/95 dark:bg-slate-900/95 p-6 sm:p-7 rounded-[32px] shadow-2xl border border-slate-200 dark:border-slate-800 w-full max-w-sm modal-content relative backdrop-blur-xl">
-            <button onclick="closeNoteModal()" class="absolute top-5 right-5 w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 font-black hover:bg-rose-100 hover:text-rose-600 transition-colors text-lg">✕</button>
-            <h3 class="text-[20px] font-black text-slate-800 dark:text-slate-100 mb-1 flex items-center gap-2.5 tracking-tight"><span class="text-[26px]">📝</span> Günlük Ajanda</h3>
-            <p id="note-modal-date" class="text-[11px] font-extrabold text-blue-600 dark:text-blue-400 mb-5 uppercase tracking-widest"></p>
+        <div class="bg-white dark:bg-[#0a1122] p-7 rounded-[32px] shadow-2xl border border-slate-200 dark:border-slate-700/50 w-full max-w-sm modal-content relative">
+            <button onclick="closeNoteModal()" class="absolute top-5 right-5 w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800/80 text-slate-500 font-black hover:bg-rose-100 hover:text-rose-600 transition-colors text-lg">✕</button>
+            <h3 class="text-[20px] font-black text-slate-800 dark:text-slate-100 mb-1 flex items-center gap-2.5 tracking-tight"><span class="text-[24px]">📝</span> Günlük Ajanda</h3>
+            <p id="note-modal-date" class="text-[10px] font-black text-blue-600 dark:text-blue-400 mb-6 uppercase tracking-widest"></p>
             
-            <textarea id="note-input" rows="4" placeholder="Fazla mesai, toplantı, vb. notlar..." class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-950 rounded-[20px] border border-slate-200 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all text-[15px] font-semibold text-slate-700 dark:text-slate-200 resize-none mb-5 shadow-inner"></textarea>
+            <textarea id="note-input" rows="4" placeholder="Mesai, toplantı, vb. notlar..." class="modern-input !rounded-[20px] resize-none mb-6"></textarea>
             
             <div class="flex gap-3">
-                <button onclick="saveNote()" class="flex-1 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-[16px] font-black text-[15px] transition-colors shadow-md shadow-blue-500/20 tracking-wide">Kaydet</button>
-                <button onclick="deleteNote()" class="py-4 px-6 bg-rose-50 dark:bg-rose-900/20 hover:bg-rose-100 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900/50 rounded-[16px] font-extrabold text-[15px] transition-colors tracking-wide">Sil</button>
+                <button onclick="saveNote()" class="flex-1 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-[16px] font-black text-[15px] transition-colors shadow-md tracking-wide">Kaydet</button>
+                <button onclick="deleteNote()" class="py-4 px-6 bg-rose-50 dark:bg-rose-900/20 hover:bg-rose-100 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800/50 rounded-[16px] font-extrabold text-[15px] transition-colors tracking-wide">Sil</button>
             </div>
         </div>
     </div>
@@ -467,20 +475,29 @@
                 
                 if(shift === 'Gündüz') {
                     hoursDiv.innerText = "08:00 - 20:00"; hoursDiv.classList.remove('hidden');
-                    advisorText.innerText = "🛌 Gece dinlenmesi: 23:00 - 06:30 önerilir."; advisorDiv.classList.remove('hidden');
+                    advisorText.innerText = "Gece dinlenmesi: 23:00 - 06:30 önerilir."; advisorDiv.classList.remove('hidden');
                 } else if(shift === 'Gece') {
                     hoursDiv.innerText = "20:00 - 08:00"; hoursDiv.classList.remove('hidden');
-                    advisorText.innerText = "🛌 Gündüz uykusu: 08:30 - 16:30 arası önerilir."; advisorDiv.classList.remove('hidden');
+                    advisorText.innerText = "Gündüz uykusu: 08:30 - 16:30 arası önerilir."; advisorDiv.classList.remove('hidden');
                 } else {
                     hoursDiv.classList.add('hidden');
-                    advisorText.innerText = "🎉 Bugün kendinize zaman ayırın, iyice dinlenin!"; advisorDiv.classList.remove('hidden');
+                    advisorText.innerText = "Bugün kendinize zaman ayırın, iyice dinlenin!"; advisorDiv.classList.remove('hidden');
                 }
 
                 document.getElementById('future-radar').classList.remove('hidden');
                 document.getElementById('tomorrow-shift-text').innerText = `🔜 Yarın: ${getShift(new Date(2026, m, d + 1))}`;
 
-                let daysToLeave = 0; let checkDate = new Date(2026, m, d);
-                for(let i=1; i<=7; i++) { checkDate.setDate(checkDate.getDate() + 1); if(getShift(checkDate) === 'İzin') { daysToLeave = i; break; } }
+                // HATA DÜZELTMESİ: İzin Günü Kalan Süre Hesaplama Mantığı Güçlendirildi
+                let daysToLeave = 0; 
+                let checkDate = new Date(y, m, d);
+                // 30 günlük maksimum tarama ile her döngü tipinde doğru sonucu bulur
+                for(let i = 1; i <= 30; i++) { 
+                    checkDate.setDate(checkDate.getDate() + 1); 
+                    if(getShift(checkDate) === 'İzin') { 
+                        daysToLeave = i; 
+                        break; 
+                    } 
+                }
                 const leaveText = document.getElementById('next-leave-text');
                 if (shift === 'İzin') leaveText.innerText = "🏖️ Zaten İzindesin";
                 else if (daysToLeave === 1) leaveText.innerText = "🏖️ İzin: Yarın!";
@@ -504,7 +521,7 @@
             const aylar = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
             aylar.forEach((m, i) => {
                 const btn = document.createElement('button');
-                btn.className = "py-4.5 px-2 glass-card rounded-[20px] shadow-sm text-[15px] font-extrabold text-slate-800 dark:text-slate-100 border border-slate-200/60 dark:border-slate-700/40 hover:border-blue-400 active:scale-95 transition-all w-full flex items-center justify-center tracking-wide";
+                btn.className = "py-5 px-2 glass-card rounded-[22px] shadow-sm text-[14px] font-bold text-slate-800 dark:text-slate-100 hover:border-blue-400 active:scale-95 transition-all w-full flex items-center justify-center tracking-wide";
                 btn.innerText = m;
                 btn.onclick = () => showCalendar(i, m);
                 container.appendChild(btn);
@@ -538,10 +555,9 @@
             localStorage.setItem('v_shift_setting', shiftSetting);
             localStorage.setItem('v_shift_ref', shiftRefDate);
             initTodayWidget(); 
-            alert("Ayarlar başarıyla kaydedildi."); showSection('menu');
+            showSection('menu');
         }
 
-        // TAŞMAYAN, KISALTMASIZ, EKRANI DOLDURAN TAKVİM TASARIMI
         function showCalendar(mIndex, mName) {
             activeMonthIndex = mIndex;
             activeMonthName = mName;
@@ -554,15 +570,14 @@
             
             let cGunduz = 0, cGece = 0, cIzin = 0;
             
-            // Kısaltmasız, temiz günler
             grid.innerHTML = `
-                <div class="text-[10px] sm:text-[11px] font-extrabold text-slate-400 dark:text-slate-500 mb-2.5">Pzt</div>
-                <div class="text-[10px] sm:text-[11px] font-extrabold text-slate-400 dark:text-slate-500 mb-2.5">Sal</div>
-                <div class="text-[10px] sm:text-[11px] font-extrabold text-slate-400 dark:text-slate-500 mb-2.5">Çar</div>
-                <div class="text-[10px] sm:text-[11px] font-extrabold text-slate-400 dark:text-slate-500 mb-2.5">Per</div>
-                <div class="text-[10px] sm:text-[11px] font-extrabold text-slate-400 dark:text-slate-500 mb-2.5">Cum</div>
-                <div class="text-[10px] sm:text-[11px] font-extrabold text-slate-400 dark:text-slate-500 mb-2.5">Cmt</div>
-                <div class="text-[10px] sm:text-[11px] font-extrabold text-slate-400 dark:text-slate-500 mb-2.5">Paz</div>
+                <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Pzt</div>
+                <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Sal</div>
+                <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Çar</div>
+                <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Per</div>
+                <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Cum</div>
+                <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Cmt</div>
+                <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Paz</div>
             `;
             
             const daysInMonth = new Date(2026, mIndex + 1, 0).getDate();
@@ -583,11 +598,10 @@
 
                 const div = document.createElement('div');
                 
-                // Mükemmel oran ve taşmayan yapı (aspect-square yerine sabit min-height kullanımı)
-                let baseClass = "relative flex flex-col items-center justify-center rounded-[12px] sm:rounded-[14px] border border-slate-200/50 dark:border-white/5 w-full h-[62px] min-[380px]:h-[68px] sm:h-[76px] overflow-hidden cursor-pointer hover:scale-[1.04] active:scale-95 transition-transform shadow-sm ";
-                let shiftClass = shift === 'Gündüz' ? 'bg-emerald-50/90 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400' : 
-                                 shift === 'Gece' ? 'bg-indigo-50/90 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400' : 
-                                 'bg-white dark:bg-slate-800/60 text-slate-500 dark:text-slate-400';
+                let baseClass = "relative flex flex-col items-center justify-center rounded-[14px] border border-slate-200/50 dark:border-white/5 w-full h-[64px] min-[380px]:h-[70px] sm:h-[78px] overflow-hidden cursor-pointer hover:scale-[1.04] active:scale-95 transition-transform shadow-sm ";
+                let shiftClass = shift === 'Gündüz' ? 'bg-emerald-50/90 dark:bg-[#061813]/80 text-emerald-700 dark:text-emerald-400' : 
+                                 shift === 'Gece' ? 'bg-indigo-50/90 dark:bg-[#0a1122]/80 text-indigo-700 dark:text-indigo-400' : 
+                                 'bg-white dark:bg-slate-800/40 text-slate-500 dark:text-slate-400';
 
                 let holidayIndicator = holidayName ? `<span class="absolute top-1 right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-rose-500 rounded-full shadow-[0_0_4px_rgba(244,63,94,0.6)]"></span>` : "";
                 let noteIndicator = hasNote ? `<span class="absolute top-1 left-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full shadow-[0_0_4px_rgba(59,130,246,0.6)]"></span>` : "";
@@ -598,11 +612,10 @@
                 div.className = baseClass + shiftClass;
                 div.onclick = () => openNoteModal(d, mIndex, mName);
                 
-                // CRITICAL FIX: whitespace-nowrap ve uyumlu text boyutu ile KESİNLİKLE TAŞMA OLMAZ.
                 div.innerHTML = `
                     ${holidayIndicator}${noteIndicator}
-                    <span class="text-[14px] sm:text-[16px] font-black leading-none mb-1">${d}</span>
-                    <span class="text-[8.5px] min-[370px]:text-[9.5px] sm:text-[11px] font-extrabold w-full text-center leading-none uppercase tracking-tighter whitespace-nowrap px-0.5">${shift}</span>
+                    <span class="text-[15px] sm:text-[17px] font-black leading-none mb-1">${d}</span>
+                    <span class="text-[8.5px] min-[370px]:text-[9px] sm:text-[11px] font-bold w-full text-center leading-none uppercase tracking-tighter whitespace-nowrap px-0.5">${shift}</span>
                 `;
                 grid.appendChild(div);
             }
@@ -616,8 +629,8 @@
                 holidayList.innerHTML = "";
                 monthlyHolidays.forEach(h => {
                     const li = document.createElement('li');
-                    li.className = "flex items-start gap-2 text-[13px] sm:text-sm";
-                    li.innerHTML = `<span class="text-rose-500 mt-0.5 font-black">•</span> <span><strong class="font-extrabold">${h.day} ${mName}:</strong> ${h.name}</span>`;
+                    li.className = "flex items-start gap-2 text-[13px]";
+                    li.innerHTML = `<span class="text-rose-500 mt-0.5 font-black">•</span> <span><strong class="font-black">${h.day} ${mName}:</strong> ${h.name}</span>`;
                     holidayList.appendChild(li);
                 });
             } else holidayBox.classList.add('hidden');
@@ -706,9 +719,10 @@
             const toplamHak = parseInt(document.getElementById('izin-toplam-hak').value) || 0;
             if(toplamHak > 0) localStorage.setItem('v_izin_hakkim', document.getElementById('izin-toplam-hak').value);
             const sonucKutu = document.getElementById('izin-sonuc');
+            
             if(!startStr || isNaN(gun) || gun < 1) {
-                sonucKutu.classList.remove('hidden'); sonucKutu.innerHTML = `<span class="text-rose-600 font-bold">Lütfen tarih/gün girin.</span>`;
-                sonucKutu.className = "p-5 bg-rose-50 dark:bg-rose-900/20 rounded-[20px] text-center border border-rose-200 mt-5"; return;
+                sonucKutu.classList.remove('hidden'); sonucKutu.innerHTML = `<span class="text-rose-500 font-bold">Lütfen tarih/gün girin.</span>`;
+                sonucKutu.className = "p-5 bg-rose-50 dark:bg-rose-950/40 rounded-[20px] text-center border border-rose-200 mt-5 w-full"; return;
             }
             const start = new Date(startStr); start.setDate(start.getDate() + gun + 2);
             
@@ -716,19 +730,30 @@
             if (toplamHak > 0) {
                 let kalanHak = Math.max(0, toplamHak - gun); let yuzde = Math.max(0, (kalanHak / toplamHak) * 100);
                 let barColor = yuzde > 50 ? 'bg-emerald-500' : (yuzde > 20 ? 'bg-orange-400' : 'bg-rose-500');
-                bakiyeHTML = `<div class="mt-5 pt-4 border-t border-purple-200/50 dark:border-purple-800/50"><div class="flex justify-between text-[11px] font-bold text-purple-700/80 dark:text-purple-300/80 mb-2"><span>Kalan İzin Bakiyen</span><span>${kalanHak} / ${toplamHak} Gün</span></div><div class="w-full bg-purple-100 dark:bg-slate-800 rounded-full h-2.5 overflow-hidden"><div class="${barColor} h-2.5 rounded-full progress-bar-fill" style="width: 0%"></div></div></div>`;
+                bakiyeHTML = `<div class="mt-5 pt-5 border-t border-purple-200/50 dark:border-purple-800/30 w-full"><div class="flex justify-between text-[11px] font-black text-purple-700/80 dark:text-purple-400 mb-2.5"><span>KALAN İZİN BAKİYEN</span><span>${kalanHak} / ${toplamHak} GÜN</span></div><div class="w-full bg-purple-100 dark:bg-slate-800/80 rounded-full h-2.5 overflow-hidden"><div class="${barColor} h-2.5 rounded-full progress-bar-fill" style="width: 0%"></div></div></div>`;
                 setTimeout(() => { document.querySelectorAll('.progress-bar-fill').forEach(b => b.style.width = `${yuzde}%`); }, 100);
             }
+            
             sonucKutu.classList.remove('hidden');
-            sonucKutu.className = "p-6 bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/40 dark:to-indigo-900/40 text-purple-900 dark:text-purple-100 rounded-[20px] text-left border border-purple-200 dark:border-purple-700/50 shadow-sm mt-5";
-            sonucKutu.innerHTML = `<div class="text-center"><div class="text-[11px] font-extrabold uppercase tracking-[0.15em] text-purple-500 mb-2">İşe Başlama Tarihi</div><div class="text-[22px] font-black tracking-tight truncate">${start.toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div></div>${bakiyeHTML}`;
+            sonucKutu.className = "p-6 sm:p-7 bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-[#15112e]/90 dark:to-[#111633]/90 text-purple-900 dark:text-purple-100 rounded-[24px] text-center border border-purple-200/80 dark:border-purple-700/40 shadow-sm mt-5 w-full flex flex-col items-center";
+            
+            // HATA DÜZELTMESİ: İşe başlama tarihi tamamen okunabilir ve tek satır yapıldı.
+            const dateStr = start.toLocaleDateString('tr-TR', { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' });
+            
+            sonucKutu.innerHTML = `
+                <div class="w-full flex flex-col items-center">
+                    <div class="text-[10px] font-black uppercase tracking-[0.2em] text-purple-500/90 dark:text-purple-400/90 mb-2">İşe Başlama Tarihi</div>
+                    <div class="text-[16px] min-[380px]:text-[17px] sm:text-[19px] font-black tracking-tight whitespace-nowrap text-center w-full">${dateStr}</div>
+                </div>
+                ${bakiyeHTML}
+            `;
         }
 
         function setMultiplier(val) { selectedMultiplier = val; document.getElementById('mesai-carpan').value = val; updateMultButtons(); }
         function customMultiplierInput() { const val = parseFloat(document.getElementById('mesai-carpan').value); if(!isNaN(val)) { selectedMultiplier = val; updateMultButtons(true); } }
         function updateMultButtons(isC = false) {
-            document.querySelectorAll('.mult-btn').forEach(btn => btn.className = "mult-btn py-4 bg-slate-50/80 dark:bg-slate-900/60 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700/80 rounded-[16px] text-sm font-extrabold transition-all");
-            if (!isC) { const aBtn = document.getElementById(`btn-mult-${selectedMultiplier.toFixed(1)}`); if (aBtn) aBtn.className = "mult-btn py-4 bg-emerald-600 text-white rounded-[16px] text-sm font-black shadow-md transition-all"; }
+            document.querySelectorAll('.mult-btn').forEach(btn => btn.className = "mult-btn py-3.5 bg-slate-50/80 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50 rounded-[14px] text-[13px] font-bold transition-all");
+            if (!isC) { const aBtn = document.getElementById(`btn-mult-${selectedMultiplier.toFixed(1)}`); if (aBtn) aBtn.className = "mult-btn py-3.5 bg-emerald-600 text-white rounded-[14px] text-[13px] font-black shadow-md transition-all"; }
         }
 
         function hesaplaMesai() {
@@ -741,15 +766,15 @@
             const sonucKutu = document.getElementById('mesai-sonuc');
 
             if(saat === 0 && ucret === 0 && maas === 0 && yolUcret*yolGun === 0 && yemekUcret*yemekGun === 0) {
-                sonucKutu.classList.remove('hidden'); sonucKutu.innerHTML = `<span class="text-rose-600 font-bold">Lütfen hesaplanacak bir değer girin.</span>`;
-                sonucKutu.className = "p-5 bg-rose-50 dark:bg-rose-900/20 rounded-[20px] border border-rose-200 mt-5 text-center"; return;
+                sonucKutu.classList.remove('hidden'); sonucKutu.innerHTML = `<span class="text-rose-500 font-bold">Lütfen hesaplanacak bir değer girin.</span>`;
+                sonucKutu.className = "p-5 bg-rose-50 dark:bg-rose-950/40 rounded-[20px] border border-rose-200/50 mt-5 text-center"; return;
             }
             const mesaiKazanci = saat * ucret * selectedMultiplier, genelToplam = maas + mesaiKazanci + (yolUcret*yolGun) + (yemekUcret*yemekGun);
             let ekstralar = []; if (maas > 0) ekstralar.push(`${maas}₺ Maaş`); if (yolUcret*yolGun > 0) ekstralar.push(`${yolUcret}₺×${yolGun} Yol`); if (yemekUcret*yemekGun > 0) ekstralar.push(`${yemekUcret}₺×${yemekGun} Yemek`);
             
             sonucKutu.classList.remove('hidden');
-            sonucKutu.className = "p-6 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/40 dark:to-teal-900/40 text-emerald-900 dark:text-emerald-100 rounded-[20px] text-center border border-emerald-200 dark:border-emerald-700/50 shadow-sm mt-5";
-            sonucKutu.innerHTML = `<div class="text-[11px] font-extrabold uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-2">Toplam Hakediş Tutarı</div><div class="text-[32px] font-black mb-2 tracking-tight">${genelToplam.toLocaleString('tr-TR', { minimumFractionDigits: 2 })} ₺</div><div class="text-[11px] text-emerald-700/90 dark:text-emerald-300/90 font-bold mt-2 pt-2 border-t border-emerald-200/50 inline-block leading-relaxed">[( ${saat}s × ${ucret}₺ × ${selectedMultiplier} ) ${ekstralar.length > 0 ? `<br>+ ${ekstralar.join(' & ')}` : ''}]</div>`;
+            sonucKutu.className = "p-6 sm:p-7 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-[#061813]/90 dark:to-[#091a1a]/90 text-emerald-900 dark:text-emerald-100 rounded-[24px] text-center border border-emerald-200/80 dark:border-emerald-800/40 shadow-sm mt-5";
+            sonucKutu.innerHTML = `<div class="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400/90 mb-2">Toplam Hakediş Tutarı</div><div class="text-[32px] font-black mb-2 tracking-tight">${genelToplam.toLocaleString('tr-TR', { minimumFractionDigits: 2 })} ₺</div><div class="text-[10px] sm:text-[11px] text-emerald-700/80 dark:text-emerald-300/60 font-bold mt-3 pt-3 border-t border-emerald-200/50 dark:border-emerald-800/40 inline-block leading-relaxed">[( ${saat}s × ${ucret}₺ × ${selectedMultiplier} ) ${ekstralar.length > 0 ? `<br>+ ${ekstralar.join(' & ')}` : ''}]</div>`;
         }
     </script>
 </body>
