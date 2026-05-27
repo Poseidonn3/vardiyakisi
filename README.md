@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="tr" class="scroll-smooth">
 <head>
@@ -35,6 +34,20 @@
     <style>
         * { border: none !important; outline: none !important; text-decoration: none !important; }
 
+        /* YATAY KAYMAYI ENGELLEME VE SCROLLBAR GİZLEME KURALI */
+        html, body {
+            max-width: 100vw;
+            overflow-x: hidden; /* Yatay kaymayı kesinlikle engeller */
+            overflow-y: auto;   /* Dikey kaydırmaya izin verir */
+            -ms-overflow-style: none;  /* IE ve Edge için scrollbar gizler */
+            scrollbar-width: none;  /* Firefox için scrollbar gizler */
+        }
+        
+        /* Chrome, Safari ve Opera için scrollbar gizler */
+        ::-webkit-scrollbar { 
+            display: none; 
+        }
+
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
             -webkit-tap-highlight-color: transparent; 
@@ -57,7 +70,6 @@
             -webkit-appearance: none; width: 100%; box-sizing: border-box; background: transparent;
         }
         .dark input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.8; }
-        ::-webkit-scrollbar { display: none; }
         
         /* Premium Kart Yapısı */
         .glass-card {
@@ -97,7 +109,7 @@
         @keyframes progress-stripes { from { background-position: 1rem 0; } to { background-position: 0 0; } }
     </style>
 </head>
-<body class="bg-slate-100 dark:bg-darkbg text-slate-800 dark:text-slate-100 min-h-[100dvh] flex flex-col transition-colors duration-300">
+<body class="bg-slate-100 dark:bg-darkbg text-slate-800 dark:text-slate-100 min-h-[100dvh] flex flex-col transition-colors duration-300 w-full overflow-x-hidden">
 
     <div class="max-w-[500px] mx-auto w-full flex-1 flex flex-col px-5 pt-8 pb-10">
         
@@ -112,10 +124,10 @@
                 </div>
             </div>
             <div class="flex gap-3 shrink-0">
-                <button onclick="showSection('ayarlar')" class="w-12 h-12 rounded-[18px] bg-white dark:bg-darkcard shadow-sm hover:scale-105 active:scale-95 transition-all flex items-center justify-center">
+                <button onclick="showSection('ayarlar')" class="w-12 h-12 rounded-[18px] bg-white dark:bg-darkcard shadow-sm hover:scale-105 active:scale-95 transition-all flex items-center justify-center shrink-0">
                     <span class="text-xl">⚙️</span>
                 </button>
-                <button onclick="toggleTheme()" class="w-12 h-12 rounded-[18px] bg-white dark:bg-darkcard shadow-sm hover:scale-105 active:scale-95 transition-all flex items-center justify-center">
+                <button onclick="toggleTheme()" class="w-12 h-12 rounded-[18px] bg-white dark:bg-darkcard shadow-sm hover:scale-105 active:scale-95 transition-all flex items-center justify-center shrink-0">
                     <span id="theme-icon" class="text-xl">🌙</span>
                 </button>
             </div>
@@ -155,7 +167,7 @@
                     </div>
                 </div>
 
-                <!-- Canlı Mesai İlerlemesi (YENİ ÖZELLİK) -->
+                <!-- Canlı Mesai İlerlemesi -->
                 <div id="shift-progress-container" class="hidden w-full bg-slate-50 dark:bg-darkinput rounded-[20px] p-4">
                     <div class="flex justify-between items-end mb-2 w-full">
                         <span class="text-[11px] font-black text-slate-500 uppercase tracking-widest truncate">Mesai İlerlemesi</span>
@@ -167,7 +179,7 @@
                     <p id="shift-progress-desc" class="text-[10px] font-bold text-slate-400 mt-2 text-center truncate">İyi çalışmalar!</p>
                 </div>
 
-                <button onclick="openNoteModalForToday()" class="w-full bg-slate-800 dark:bg-blue-600 hover:opacity-90 active:scale-[0.98] py-4 rounded-[20px] flex items-center justify-center gap-3 transition-all shadow-lg">
+                <button onclick="openNoteModalForToday()" class="w-full bg-slate-800 dark:bg-blue-600 hover:opacity-90 active:scale-[0.98] py-4 rounded-[20px] flex items-center justify-center gap-3 transition-all shadow-lg shrink-0">
                     <span class="text-xl">📝</span>
                     <span class="text-sm sm:text-base font-black text-white truncate">Bugüne Hızlı Not Ekle</span>
                 </button>
@@ -226,7 +238,7 @@
                     <input type="number" id="ayarlar-maas-gunu" placeholder="Örn: 15" min="1" max="31" class="w-full text-sm sm:text-base font-bold text-slate-800 dark:text-white truncate">
                 </div>
                 
-                <button onclick="ayarlariKaydet()" class="w-full py-4 mt-4 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white rounded-[20px] font-black text-sm sm:text-base transition-all shadow-lg shadow-blue-500/30 truncate">
+                <button onclick="ayarlariKaydet()" class="w-full py-4 mt-4 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white rounded-[20px] font-black text-sm sm:text-base transition-all shadow-lg shadow-blue-500/30 truncate shrink-0">
                     Ayarları Kaydet ve Uygula
                 </button>
             </div>
@@ -331,7 +343,7 @@
                     <input type="number" id="izin-gun" placeholder="Örn: 10" class="w-full text-sm sm:text-base font-bold text-slate-800 dark:text-white truncate">
                 </div>
                 
-                <button onclick="hesaplaIzin()" class="w-full py-4 mt-2 bg-purple-600 active:bg-purple-700 text-white rounded-[20px] font-black text-sm sm:text-base transition-colors shadow-md shadow-purple-500/20 truncate">
+                <button onclick="hesaplaIzin()" class="w-full py-4 mt-2 bg-purple-600 active:bg-purple-700 text-white rounded-[20px] font-black text-sm sm:text-base transition-colors shadow-md shadow-purple-500/20 truncate shrink-0">
                     Tarihi Hesapla
                 </button>
                 
@@ -384,14 +396,14 @@
                 <div class="w-full">
                     <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 ml-1 truncate">Çarpan Belirle</label>
                     <div class="grid grid-cols-4 gap-2 w-full">
-                        <button onclick="setMultiplier(1.5)" id="btn-mult-1.5" class="mult-btn py-3 bg-emerald-500 text-white rounded-[16px] text-xs font-black shadow-sm w-full truncate">1.5x</button>
-                        <button onclick="setMultiplier(2.0)" id="btn-mult-2.0" class="mult-btn py-3 bg-slate-100 dark:bg-darkinput text-slate-600 dark:text-slate-300 rounded-[16px] text-xs font-bold w-full truncate">2.0x</button>
-                        <button onclick="setMultiplier(1.0)" id="btn-mult-1.0" class="mult-btn py-3 bg-slate-100 dark:bg-darkinput text-slate-600 dark:text-slate-300 rounded-[16px] text-xs font-bold w-full truncate">1.0x</button>
+                        <button onclick="setMultiplier(1.5)" id="btn-mult-1.5" class="mult-btn py-3 bg-emerald-500 text-white rounded-[16px] text-xs font-black shadow-sm w-full truncate shrink-0">1.5x</button>
+                        <button onclick="setMultiplier(2.0)" id="btn-mult-2.0" class="mult-btn py-3 bg-slate-100 dark:bg-darkinput text-slate-600 dark:text-slate-300 rounded-[16px] text-xs font-bold w-full truncate shrink-0">2.0x</button>
+                        <button onclick="setMultiplier(1.0)" id="btn-mult-1.0" class="mult-btn py-3 bg-slate-100 dark:bg-darkinput text-slate-600 dark:text-slate-300 rounded-[16px] text-xs font-bold w-full truncate shrink-0">1.0x</button>
                         <input type="number" id="mesai-carpan" oninput="customMultiplierInput()" step="0.1" class="bg-slate-100 dark:bg-darkinput font-bold text-slate-800 dark:text-white text-xs rounded-[16px] text-center w-full" placeholder="Özel">
                     </div>
                 </div>
                 
-                <button onclick="hesaplaMesai()" class="w-full py-4 mt-2 bg-slate-800 dark:bg-emerald-600 active:scale-[0.98] text-white rounded-[20px] font-black text-sm sm:text-base transition-transform shadow-md truncate">
+                <button onclick="hesaplaMesai()" class="w-full py-4 mt-2 bg-slate-800 dark:bg-emerald-600 active:scale-[0.98] text-white rounded-[20px] font-black text-sm sm:text-base transition-transform shadow-md truncate shrink-0">
                     Toplamı Hesapla
                 </button>
                 
@@ -402,19 +414,19 @@
 
     <!-- AJANDA MODALI -->
     <div id="note-modal" class="fixed inset-0 z-50 flex items-center justify-center p-5 modal-overlay hidden">
-        <div class="bg-white dark:bg-darkcard p-6 sm:p-8 rounded-[32px] shadow-2xl w-full max-w-sm flex flex-col">
-            <div class="flex justify-between items-center mb-6 w-full gap-2">
+        <div class="bg-white dark:bg-darkcard p-6 sm:p-8 rounded-[32px] shadow-2xl w-full max-w-sm flex flex-col max-h-[90vh]">
+            <div class="flex justify-between items-center mb-6 w-full gap-2 shrink-0">
                 <h3 class="text-lg font-black text-slate-800 dark:text-white flex items-center gap-2 w-full truncate"><span class="text-2xl">📝</span> Ajanda</h3>
                 <button onclick="closeNoteModal()" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-darkinput text-slate-500 font-black flex items-center justify-center flex-shrink-0">✕</button>
             </div>
             
-            <p id="note-modal-date" class="text-xs font-black text-blue-500 mb-4 uppercase tracking-widest w-full truncate"></p>
+            <p id="note-modal-date" class="text-xs font-black text-blue-500 mb-4 uppercase tracking-widest w-full truncate shrink-0"></p>
             
-            <div class="input-box !p-0 mb-6 w-full">
-                <textarea id="note-input" rows="4" placeholder="Buraya not alın..." class="w-full bg-transparent p-4 text-sm font-bold text-slate-800 dark:text-white outline-none resize-none rounded-[20px]"></textarea>
+            <div class="input-box !p-0 mb-6 w-full flex-1">
+                <textarea id="note-input" rows="4" placeholder="Buraya not alın..." class="w-full h-full bg-transparent p-4 text-sm font-bold text-slate-800 dark:text-white outline-none resize-none rounded-[20px]"></textarea>
             </div>
             
-            <div class="flex gap-3 w-full">
+            <div class="flex gap-3 w-full shrink-0">
                 <button onclick="saveNote()" class="flex-1 py-4 bg-blue-600 text-white rounded-[16px] font-black text-sm active:scale-95 transition-transform truncate">Notu Kaydet</button>
                 <button onclick="deleteNote()" class="py-4 px-6 bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 rounded-[16px] font-black text-sm active:scale-95 transition-transform truncate">Sil</button>
             </div>
@@ -476,12 +488,12 @@
             startLiveClock();
         }
 
-        // HATA DÜZELTİLDİ: Sadece Gün Bazlı Kesin Matematik (Saat Farklılıklarını Yoksayar)
+        // Kusursuz Vardiya Hesaplama Motoru
         function getShift(targetDate) {
             const refParts = shiftRefDate.split('-');
             if(refParts.length !== 3) return "Hata";
             
-            // Saatleri tamamen sıfırlayarak sadece gün farkı buluyoruz (UTC mantığıyla timezone hatalarını ezer)
+            // Saatleri tamamen sıfırlayarak sadece gün farkı buluyoruz
             const r = Date.UTC(parseInt(refParts[0]), parseInt(refParts[1]) - 1, parseInt(refParts[2]));
             const t = Date.UTC(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
             
@@ -495,11 +507,10 @@
 
             const len = cycle.length;
             let idx = diffDays % len;
-            if (idx < 0) idx = len + idx; // Geçmiş tarihler için negatif indeksi düzelt
+            if (idx < 0) idx = len + idx; 
             return cycle[idx];
         }
 
-        // YENİ: Kaydet Butonu Fonksiyonu
         function ayarlariKaydet() {
             const yeniDongu = document.getElementById('ayarlar-dongu').value;
             const yeniTarih = document.getElementById('ayarlar-tarih').value;
@@ -515,7 +526,6 @@
             localStorage.setItem('v_shift_ref', shiftRefDate);
             localStorage.setItem('v_payday', paydaySetting);
             
-            // Tüm inputları da toplu kaydet
             localStorage.setItem('v_maas', document.getElementById('mesai-maas').value);
             localStorage.setItem('v_ucret', document.getElementById('mesai-ucret').value);
             localStorage.setItem('v_saat', document.getElementById('mesai-saat').value);
@@ -525,17 +535,15 @@
             localStorage.setItem('v_yemek_gun', document.getElementById('mesai-yemek-gun').value);
             localStorage.setItem('v_izin_hakkim', document.getElementById('izin-toplam-hak').value);
 
-            // Sistemi Yenile
             initDashboard();
             if (document.getElementById('section-takvim-detay').classList.contains('active')) {
                 showCalendar(activeMonthIndex, activeMonthName);
             }
             
-            // Menüye Dön
             showSection('menu');
         }
 
-        // CANLI DASHBOARD ve Yeni Özellikler
+        // CANLI DASHBOARD
         function initDashboard() {
             const y = CURRENT_YEAR;
             const m = CURRENT_DATE.getMonth();
@@ -545,7 +553,7 @@
             document.getElementById('dash-today').innerText = shiftT;
             document.getElementById('dash-tomorrow').innerText = getShift(new Date(y, m, d + 1));
 
-            // Sıradaki İzin Hesabı
+            // Sıradaki İzin
             let daysToLeave = 0; 
             let checkDate = new Date(y, m, d);
             for(let i = 1; i <= 30; i++) { 
@@ -575,7 +583,6 @@
             updateShiftProgress(shiftT);
         }
 
-        // YENİ: Canlı Saat
         function startLiveClock() {
             setInterval(() => {
                 const now = new Date();
@@ -584,7 +591,6 @@
             }, 1000);
         }
 
-        // YENİ: Mesai İlerleme Çubuğu (Gündüz 08-20, Gece 20-08 varsayımı)
         function updateShiftProgress(shiftToday) {
             const container = document.getElementById('shift-progress-container');
             const bar = document.getElementById('shift-progress-bar');
@@ -606,7 +612,6 @@
                 let percent = 0;
 
                 if (shiftToday === 'Gündüz') {
-                    // 08:00 (480) - 20:00 (1200)
                     if (currentMins >= 480 && currentMins <= 1200) {
                         percent = ((currentMins - 480) / 720) * 100;
                         desc.innerText = "Mesaiye devam, kolay gelsin!";
@@ -614,12 +619,11 @@
                     } else if (currentMins > 1200) { percent = 100; desc.innerText = "Mesai bitti, dinlenme vakti."; bar.className = "bg-slate-400 h-3 rounded-full transition-all"; }
                     else { percent = 0; desc.innerText = "Mesai henüz başlamadı."; bar.className = "bg-slate-300 h-3 rounded-full transition-all"; }
                 } else {
-                    // Gece 20:00 (1200) - 08:00 (480 ertesi gün)
-                    if (currentMins >= 1200) { // Akşam 20:00 ile 23:59 arası (0 - 4 saat geçmiş)
+                    if (currentMins >= 1200) { 
                         percent = ((currentMins - 1200) / 720) * 100;
                         desc.innerText = "Gece mesaisi devam ediyor.";
                         bar.className = "bg-indigo-500 h-3 rounded-full progress-bar-striped transition-all duration-1000";
-                    } else if (currentMins <= 480) { // Gece yarısından sabah 08:00'e kadar (4 - 12 saat geçmiş)
+                    } else if (currentMins <= 480) { 
                         percent = (((currentMins + 1440) - 1200) / 720) * 100;
                         desc.innerText = "Gece bitiyor, az kaldı!";
                         bar.className = "bg-indigo-500 h-3 rounded-full progress-bar-striped transition-all duration-1000";
@@ -632,10 +636,10 @@
             };
 
             calcProgress();
-            setInterval(calcProgress, 60000); // Her dakika güncelle
+            setInterval(calcProgress, 60000); 
         }
 
-        // Navigasyon ve Ekranlar
+        // Navigasyon
         function showSection(id) {
             document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active'));
             document.getElementById('section-' + id).classList.add('active');
