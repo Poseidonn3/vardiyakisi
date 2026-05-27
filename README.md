@@ -89,7 +89,7 @@
 <body class="bg-slate-50 dark:bg-darkbg text-slate-800 dark:text-slate-100 min-h-screen pb-12 transition-colors duration-500 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50/80 via-slate-50 to-slate-100 dark:from-slate-900 dark:via-darkbg dark:to-darkbg">
 
     <!-- GENİŞLETİLMİŞ KONTEYNER: Ekranı Daha İyi Doldurur -->
-    <div class="max-w-[500px] mx-auto w-full px-4 sm:px-4 pt-4 sm:pt-8">
+    <div class="max-w-[500px] mx-auto w-full px-4 sm:px-6 pt-8 sm:pt-8">
         
         <!-- ÜST BAŞLIK VE TEMA/AYARLAR -->
         <header class="mb-6 flex items-center justify-between">
@@ -597,7 +597,7 @@
                 div.innerHTML = `
                     ${holidayIndicator}${noteIndicator}
                     <span class="text-[13px] sm:text-[15px] font-bold leading-none mb-1">${d}</span>
-                    <span class="text-[8px] min-[375px]:text-[9px] min-[400px]:text-[10px] font-extrabold w-full text-center leading-none uppercase tracking-tighter truncate px-0.5">${shift}</span>
+                    <<span class="text-[9px] font-extrabold w-full text-center leading-tight uppercase whitespace-nowrap overflow-hidden text-ellipsis">
                 `;
                 grid.appendChild(div);
             }
