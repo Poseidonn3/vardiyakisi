@@ -539,59 +539,61 @@
 
         // TAŞMAYAN, ESTETİK TAKVİM TASARIMI
         function showCalendar(mIndex, mName) {
-            activeMonthIndex = mIndex;
-            activeMonthName = mName;
-            showSection('takvim-detay');
-            document.getElementById('month-name').innerText = mName + " 2026";
-            
-            const grid = document.getElementById('calendar-grid');
-            const holidayBox = document.getElementById('holiday-box');
-            const holidayList = document.getElementById('holiday-list');
-            
-            let cGunduz = 0, cGece = 0, cIzin = 0;
-            
-            grid.innerHTML = `
-                <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Pt</div>
-                <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Sa</div>
-                <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Ça</div>
-                <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Pe</div>
-                <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Cu</div>
-                <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Ct</div>
-                <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Pa</div>
-            `;
-            
-            const daysInMonth = new Date(2026, mIndex + 1, 0).getDate();
-            const firstDayIndex = (new Date(2026, mIndex, 1).getDay() + 6) % 7; 
-            
-            for(let i = 0; i < firstDayIndex; i++) grid.appendChild(document.createElement('div'));
-            let monthlyHolidays = [];
+    activeMonthIndex = mIndex;
+    activeMonthName = mName;
+    showSection('takvim-detay');
+    document.getElementById('month-name').innerText = mName + " 2026";
 
-            for(let d = 1; d <= daysInMonth; d++) {
-                const shift = getShift(new Date(2026, mIndex, d));
-                if (shift === 'Gündüz') cGunduz++; else if (shift === 'Gece') cGece++; else cIzin++;
+    const grid = document.getElementById('calendar-grid');
+    const holidayBox = document.getElementById('holiday-box');
+    const holidayList = document.getElementById('holiday-list');
 
-                const holidayName = TR_HOLIDAYS_2026[`${mIndex}-${d}`];
-                if (holidayName) monthlyHolidays.push({ day: d, name: holidayName });
+    grid.innerHTML = `
+        <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Pt</div>
+        <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Sa</div>
+        <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Ça</div>
+        <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Pe</div>
+        <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Cu</div>
+        <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Ct</div>
+        <div class="text-[10px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 mb-2">Pa</div>
+    `;
 
-                const dateKey = `2026-${mIndex+1}-${d}`;
-                const hasNote = appNotes[dateKey] ? true : false;
+    const daysInMonth = new Date(2026, mIndex + 1, 0).getDate();
+    const firstDayIndex = (new Date(2026, mIndex, 1).getDay() + 6) % 7;
 
-                const div = document.createElement('div');
-                // Optimizasyon: aspect-square veya sabit height. 
-                // Taşmayı önleyen en kritik kısım text-truncate ve doğru padding/height.
-                let baseClass = "relative flex flex-col items-center justify-center rounded-[12px] sm:rounded-xl border border-slate-200/50 dark:border-white/5 w-full h-[60px] min-[375px]:h-[66px] sm:h-[72px] overflow-hidden cursor-pointer hover:scale-[1.03] active:scale-95 transition-transform shadow-sm ";
-                let shiftClass = shift === 'Gündüz' ? 'bg-emerald-50/80 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400' : 
-                                 shift === 'Gece' ? 'bg-indigo-50/80 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400' : 
-                                 'bg-white dark:bg-slate-800/60 text-slate-500 dark:text-slate-400';
+    // Grid'e önceki ay boş kutular ekleme.
+    for (let i = 0; i < firstDayIndex; i++) { grid.appendChild(document.createElement('div')); }
 
-                let holidayIndicator = holidayName ? `<span class="absolute top-1 right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-rose-500 rounded-full shadow-[0_0_4px_rgba(244,63,94,0.6)]"></span>` : "";
-                let noteIndicator = hasNote ? `<span class="absolute top-1 left-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full shadow-[0_0_4px_rgba(59,130,246,0.6)]"></span>` : "";
+    for (let d = 1; d <= daysInMonth; d++) {
+        const div = document.createElement('div');
+        const shift = getShift(new Date(2026, mIndex, d));
+        const shiftClass = shift === 'Gündüz'
+            ? 'bg-emerald-50/80 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400'
+            : shift === 'Gece'
+            ? 'bg-indigo-50/80 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400'
+            : 'bg-white dark:bg-slate-800/60 text-slate-500 dark:text-slate-400';
 
-                if(holidayName) baseClass += " !border-rose-300 dark:!border-rose-500/50 ";
-                if(hasNote) baseClass += " !border-blue-300 dark:!border-blue-500/50 ";
+        let nameClass = `
+            relative overflow-hidden px-1 flex flex-col items-center justify-center w-full h-[60px] sm:h-[80px] rounded-xl
+            border border-slate-200/50 dark:border-white/5 hover:scale-[1.03] hover:shadow-lg transition-transform
+        `;
 
-                div.className = baseClass + shiftClass;
-                div.onclick = () => openNoteModal(d, mIndex, mName);
+        div.className = nameClass + shiftClass;
+        div.onclick = () => openNoteModal(d, mIndex, mName);
+
+        // Alt tarafa üçlü durum görünümü yerleştirme.
+        div.innerHTML = `
+            <span class="text-[13px] sm:text-[15px] font-bold leading-none mb-1 text-center">${d}</span>
+            <span class="text-[9px] min-[375px]:text-[10px] font-extrabold uppercase tracking-tighter truncate">${shift}</span>
+            <div class="mt-2 flex justify-around items-center text-[10px] sm:text-[11px] font-bold">
+                <span class="px-2 py-1 rounded-lg bg-emerald-400/30 text-emerald-600 dark:text-emerald-300">G<br>☀️</span>
+                <span class="px-2 py-1 rounded-lg bg-indigo-400/30 text-indigo-600 dark:text-indigo-300">N<br>🌙</span>
+                <span class="px-2 py-1 rounded-lg bg-slate-400/30 text-slate-600 dark:text-slate-300">İ<br>🏖️</span>
+            </div>
+        `;
+        grid.appendChild(div);
+    }
+}
                 
                 // Truncate ile GÜNDÜZ yazısının asla taşmamasını garanti ediyoruz.
                 div.innerHTML = `
