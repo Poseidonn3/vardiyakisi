@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="tr" class="scroll-smooth">
 <head>
@@ -754,6 +754,3 @@
     </script>
 </body>
 </html>
-
-
-```
