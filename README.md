@@ -89,7 +89,7 @@
 <body class="bg-slate-50 dark:bg-darkbg text-slate-800 dark:text-slate-100 min-h-screen pb-12 transition-colors duration-500 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50/80 via-slate-50 to-slate-100 dark:from-slate-900 dark:via-darkbg dark:to-darkbg">
 
     <!-- GENİŞLETİLMİŞ KONTEYNER: Ekranı Daha İyi Doldurur -->
-    <div class="max-w-[430px] mx-auto w-full px-4 sm:pt-8">
+    <div class="max-w-[400px] mx-auto w-full px-4 sm:px-6 pt-6 sm:pt-8">
         
         <!-- ÜST BAŞLIK VE TEMA/AYARLAR -->
         <header class="mb-6 flex items-center justify-between">
@@ -746,90 +746,6 @@
             sonucKutu.className = "p-6 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/40 dark:to-teal-900/40 text-emerald-900 dark:text-emerald-100 rounded-2xl text-center border border-emerald-200 dark:border-emerald-700/50 shadow-sm mt-4";
             sonucKutu.innerHTML = `<div class="text-[11px] font-extrabold uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-2">Toplam Hakediş Tutarı</div><div class="text-4xl font-black mb-2">${genelToplam.toLocaleString('tr-TR', { minimumFractionDigits: 2 })} ₺</div><div class="text-[11px] text-emerald-700/90 dark:text-emerald-300/90 font-bold mt-2 pt-2 border-t border-emerald-200/50 inline-block">[( ${saat}s × ${ucret}₺ × ${selectedMultiplier} ) ${ekstralar.length > 0 ? `<br>+ ${ekstralar.join(' & ')}` : ''}]</div>`;
         }
-        /* iPhone safe area düzeltmesi */
-body
-}
-    padding-top: max(20px, env(safe-area-inset-top));
-    padding-left: max(12px, env(safe-area-inset-left));
-    padding-right: max(12px, env(safe-area-inset-right));
-    padding-bottom: max(20px, env(safe-area-inset-bottom));
-
-    overflow-x:hidden;
-}
-
-/* Ana konteyner */
-.max-w-\[500px\]{
-    width:100%;
-    max-width:430px !important;
-    margin:auto;
-}
-
-/* Başlık taşmasını engelle */
-header
-{
-    margin-top:10px;
-    min-height:70px;
-    align-items:center;
-}
-
-header h1{
-    font-size:2rem !important;
-    line-height:1.1;
-    word-break:keep-all;
-}
-
-/* Menü kutuları */
-.grid-cols-2 button{
-    min-height:170px;
-}
-
-.grid-cols-2 button h2{
-    font-size:18px !important;
-    line-height:1.2;
-}
-
-/* Takvim kutuları */
-#calendar-grid{
-    gap:6px !important;
-}
-
-#calendar-grid div{
-    min-width:0;
-}
-
-/* Gün yazıları */
-#calendar-grid span:last-child{
-    white-space:nowrap !important;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    font-size:9px !important;
-    letter-spacing:-0.5px;
-}
-
-/* Kart yükseklikleri */
-.glass-card{
-    min-height:auto;
-}
-
-/* Blur desteklenmiyorsa */
-@supports not ((backdrop-filter:blur(20px))){
-    .glass-card{
-        background:#1e293b !important;
-    }
-}
-
-/* iOS font render */
-    body{
-    -webkit-font-smoothing:antialiased;
-    text-rendering:optimizeLegibility;
-}
-
-/* zoom bozulmasını engelle */
-    input,
-    select,
-    textarea{
-    font-size:16px !important;
-}
     </script>
 </body>
 </html>
