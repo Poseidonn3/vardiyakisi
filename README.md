@@ -597,7 +597,7 @@
                 div.innerHTML = `
                     ${holidayIndicator}${noteIndicator}
                     <span class="text-[15px] sm:text-[15px] font-bold leading-none mb-1">${d}</span>
-                    <span class="text-[15px] min-[375px]:text-[12px] min-[400px]:text-[12px] font-extrabold w-full text-center leading-none uppercase tracking-tighter truncate px-1">${shift}</span>
+                    <span class="text-[20px] min-[375px]:text-[12px] min-[400px]:text-[12px] font-extrabold w-full text-center leading-none uppercase tracking-tighter truncate px-5">${shift}</span>
                 `;
                 grid.appendChild(div);
             }
