@@ -89,7 +89,7 @@
 <body class="bg-slate-50 dark:bg-darkbg text-slate-800 dark:text-slate-100 min-h-screen pb-12 transition-colors duration-500 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50/80 via-slate-50 to-slate-100 dark:from-slate-900 dark:via-darkbg dark:to-darkbg">
 
     <!-- GENİŞLETİLMİŞ KONTEYNER: Ekranı Daha İyi Doldurur -->
-    <div class="max-w-[500px] mx-auto w-full px-4 sm:px-6 pt-8 sm:pt-8">
+    <div class="max-w-[500px] mx-auto w-full px-4 sm:px-6 pt-6 sm:pt-8">
         
         <!-- ÜST BAŞLIK VE TEMA/AYARLAR -->
         <header class="mb-6 flex items-center justify-between">
@@ -111,7 +111,7 @@
         <div id="section-menu" class="app-section active space-y-5">
             
             <!-- Bugünün Özeti Akıllı Kartı -->
-            <div class="p-5 sm:p-6 rounded-[36px] shadow-lg shadow-blue-500/20 dark:shadow-none bg-gradient-to-br from-blue-600 to-indigo-600 text-white relative overflow-hidden">
+            <div class="p-5 sm:p-6 rounded-[28px] shadow-lg shadow-blue-500/20 dark:shadow-none bg-gradient-to-br from-blue-600 to-indigo-600 text-white relative overflow-hidden">
                 <div class="absolute -right-4 -top-4 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
                 <div class="absolute -left-4 -bottom-4 w-24 h-24 bg-black/10 rounded-full blur-xl"></div>
                 <div class="relative z-10">
@@ -597,7 +597,7 @@
                 div.innerHTML = `
                     ${holidayIndicator}${noteIndicator}
                     <span class="text-[13px] sm:text-[15px] font-bold leading-none mb-1">${d}</span>
-                    <span class="text-[9px] font-extrabold w-full text-center leading-tight uppercase whitespace-nowrap overflow-hidden text-ellipsis">
+                    <span class="text-[10px] min-[375px]:text-[9px] min-[400px]:text-[10px] font-extrabold w-full text-center leading-none uppercase tracking-tighter truncate px-0.5">${shift}</span>
                 `;
                 grid.appendChild(div);
             }
@@ -749,4 +749,3 @@
     </script>
 </body>
 </html>
-
