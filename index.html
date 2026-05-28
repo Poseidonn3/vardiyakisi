@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
-    <title>Vardiya Yönetim Merkezi</title>
+    <title>Vardiya Yönetim Merkezi 2026</title>
     
     <!-- PWA & Mobil Uyumluluk -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -118,7 +118,7 @@
                 <div class="flex-1 overflow-hidden pr-3">
                     <h1 class="text-2xl sm:text-3xl font-black tracking-tight text-blue-600 dark:text-blue-400 truncate">Vardiya Akışı</h1>
                     <div class="flex items-center gap-2 mt-1">
-                        <p class="text-[11px] sm:text-xs font-black text-slate-400 uppercase tracking-widest truncate">Premium Asistan</p>
+                        <p class="text-[11px] sm:text-xs font-black text-slate-400 uppercase tracking-widest truncate">2026 Premium Asistan</p>
                         <span class="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-600"></span>
                         <p id="live-clock" class="text-[11px] sm:text-xs font-black text-emerald-500 uppercase tracking-widest truncate">00:00</p>
                     </div>
@@ -209,18 +209,20 @@
                     <span class="text-2xl leading-none -ml-1">‹</span>
                 </button>
                 <h2 class="text-lg sm:text-xl font-black text-slate-800 dark:text-white flex-1 text-center truncate px-2">Ayarlar</h2>
-                <div class="w-11 h-11"></div> <!-- Ortalama için boş kutu -->
+                <div class="w-11 h-11"></div> 
             </header>
             
             <div class="glass-card p-6 sm:p-8 flex flex-col gap-5 w-full">
                 <div class="input-box w-full">
                     <label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-2 truncate">Çalışma Döngüsü</label>
-                    <select id="ayarlar-dongu" class="w-full text-sm sm:text-base font-bold text-slate-800 dark:text-white cursor-pointer truncate pr-4">
-                        <option value="default">2 Gündüz, 2 Gece, 2 İzin</option>
-                        <option value="4g2i">4 Gündüz, 2 İzin</option>
-                        <option value="sabit_g">Sabit Gündüz (Pazar İzin)</option>
-                        <option value="sabit_ge">Sabit Gece (Pazar İzin)</option>
-                    </select>
+                    <div class="flex items-center w-full">
+                        <select id="ayarlar-dongu" class="w-full text-sm sm:text-base font-bold text-slate-800 dark:text-white cursor-pointer truncate pr-4">
+                            <option value="default">2 Gündüz, 2 Gece, 2 İzin</option>
+                            <option value="4g2i">4 Gündüz, 2 İzin</option>
+                            <option value="sabit_g">Sabit Gündüz (Pazar İzin)</option>
+                            <option value="sabit_ge">Sabit Gece (Pazar İzin)</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="input-box w-full relative">
@@ -323,6 +325,7 @@
                 <div id="calendar-grid" class="grid grid-cols-7 gap-1 sm:gap-1.5 text-center w-full"></div>
             </div>
 
+            <!-- 2026 ÖZEL GÜNLER BÖLÜMÜ -->
             <div id="holiday-box" class="hidden input-box !bg-rose-50 dark:!bg-rose-900/20 w-full mt-4">
                 <h3 class="text-xs font-black text-rose-500 uppercase tracking-widest mb-2 truncate">🎉 Özel Günler</h3>
                 <ul id="holiday-list" class="space-y-2 text-xs font-bold text-rose-700 dark:text-rose-300 w-full"></ul>
@@ -453,23 +456,38 @@
     </div>
 
     <script>
-        // Ulusal Sabit Tatiller
-        const NATIONAL_HOLIDAYS = {
-            "1-1": "Yılbaşı", "4-23": "23 Nisan", "5-1": "1 Mayıs", 
-            "5-19": "19 Mayıs", "7-15": "15 Temmuz", "8-30": "30 Ağustos Zafer B.", "10-29": "29 Ekim Cumhuriyet B."
+        // --- YENİLİK: 2026 TÜRKİYE RESMİ TATİLLERİ ---
+        const HOLIDAYS_2026 = {
+            "1-1": "Yılbaşı",
+            "3-20": "Ramazan Bayramı Arifesi",
+            "3-21": "Ramazan Bayramı 1. Gün",
+            "3-22": "Ramazan Bayramı 2. Gün",
+            "3-23": "Ramazan Bayramı 3. Gün",
+            "4-23": "23 Nisan Ulusal Egemenlik ve Çocuk B.",
+            "5-1": "1 Mayıs İşçi Bayramı",
+            "5-19": "19 Mayıs Gençlik ve Spor B.",
+            "5-26": "Kurban Bayramı Arifesi",
+            "5-27": "Kurban Bayramı 1. Gün",
+            "5-28": "Kurban Bayramı 2. Gün",
+            "5-29": "Kurban Bayramı 3. Gün",
+            "5-30": "Kurban Bayramı 4. Gün",
+            "7-15": "15 Temmuz Demokrasi Günü",
+            "8-30": "30 Ağustos Zafer Bayramı",
+            "10-29": "29 Ekim Cumhuriyet Bayramı",
+            "11-10": "10 Kasım Atatürk'ü Anma"
         };
 
         const CURRENT_DATE = new Date();
-        const CURRENT_YEAR = CURRENT_DATE.getFullYear();
+        const CURRENT_YEAR = 2026; // Veritabanı ile mükemmel eşleşmesi için 2026 yılına sabitlendi
 
         let selectedMultiplier = parseFloat(localStorage.getItem('v_multiplier')) || 1.5;
         let activeMonthIndex = 0;
         let activeMonthName = "";
         
-        // Veritabanı
+        // Veritabanı (YENİLİK: Varsayılan başlangıç tarihi 24 Mayıs 2026 yapıldı)
         let appNotes = JSON.parse(localStorage.getItem('v_notes')) || {};
         let shiftSetting = localStorage.getItem('v_shift_setting') || 'default';
-        let shiftRefDate = localStorage.getItem('v_shift_ref') || `${CURRENT_YEAR}-01-01`;
+        let shiftRefDate = localStorage.getItem('v_shift_ref') || `2026-05-24`; 
         let paydaySetting = parseInt(localStorage.getItem('v_payday')) || 15;
         let activeNoteDateKey = "";
 
@@ -658,15 +676,11 @@
             setInterval(calcProgress, 60000); 
         }
 
-        // MÜKEMMEL SAYFA GEÇİŞ MOTORU (Aşağıda açılmayı %100 bitirir)
+        // MÜKEMMEL SAYFA GEÇİŞ MOTORU
         function showSection(id) {
             document.querySelectorAll('.app-page').forEach(s => s.classList.remove('active'));
             document.getElementById('section-' + id).classList.add('active');
-            
-            // Yumuşak kaydırmayı iptal edip, sayfanın anında en tepesinde başlamasını sağlar.
-            // Bu sayede "aşağıdan açılma" veya "zıplama" hissi tamamen yok olur!
             window.scrollTo(0, 0); 
-            
             if(id === 'takvim-aylar') renderMonths();
         }
 
@@ -713,10 +727,12 @@
 
             for(let d = 1; d <= daysInMonth; d++) {
                 const shift = getShift(new Date(CURRENT_YEAR, mIndex, d));
-                if (shift === 'Gündüz') cGunduz++; else if (shift === 'Gece') cGece++; else cIzin++;
-
-                const holidayName = NATIONAL_HOLIDAYS[`${mIndex+1}-${d}`];
+                
+                // YENİLİK: Özel Gün Kontrolü (2026 Tatillerine Göre)
+                const holidayName = HOLIDAYS_2026[`${mIndex+1}-${d}`];
                 if (holidayName) monthlyHolidays.push({ day: d, name: holidayName });
+
+                if (shift === 'Gündüz') cGunduz++; else if (shift === 'Gece') cGece++; else cIzin++;
 
                 const dateKey = `${CURRENT_YEAR}-${mIndex+1}-${d}`;
                 const hasNote = appNotes[dateKey] ? true : false;
@@ -734,7 +750,6 @@
                 div.className = baseClass + shiftClass;
                 div.onclick = () => openNoteModal(d, mIndex, mName);
                 
-                // GÜNDÜZ/GECE Kısaltma Kaldırıldı. Kutu içine net sığması için font uyarlandı.
                 div.innerHTML = `
                     ${holidayIndicator}${noteIndicator}
                     <span class="text-[16px] sm:text-[18px] font-black leading-none mb-0.5">${d}</span>
@@ -747,6 +762,7 @@
             document.getElementById('stat-gece').innerText = cGece;
             document.getElementById('stat-izin').innerText = cIzin;
 
+            // YENİLİK: Ayın İçindeki Özel Günlerin Gösterilmesi
             if (monthlyHolidays.length > 0) {
                 holidayBox.classList.remove('hidden');
                 holidayList.innerHTML = "";
