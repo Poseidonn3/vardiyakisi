@@ -71,7 +71,6 @@
             -webkit-appearance: none; width: 100%; box-sizing: border-box; background: transparent; outline: none;
         }
         
-        /* Tarih seçici ikonunu mobil için tıkalanabilir ve belirgin yapıyoruz */
         input[type="date"]::-webkit-calendar-picker-indicator { 
             filter: invert(1); opacity: 0.7; cursor: pointer; width: 100%; height: 100%; position: absolute; left: 0; top: 0; background-position: right; background-size: 20px; 
         }
@@ -136,9 +135,10 @@
                 <div class="flex-1 overflow-hidden pr-3">
                     <h1 class="text-2xl sm:text-3xl font-black tracking-tight text-blue-600 dark:text-blue-400 truncate">Vardiya Akışı</h1>
                     <div class="flex items-center gap-2 mt-1">
-                        <p class="text-[11px] sm:text-xs font-black text-slate-400 uppercase tracking-widest truncate">2026 Premium Asistan</p>
-                        <span class="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-600"></span>
-                        <p id="live-clock" class="text-[11px] sm:text-xs font-black text-emerald-500 uppercase tracking-widest truncate">00:00</p>
+                        <!-- YAZI KISALTILDI, SHRINK-0 EKLENDİ SAAT ARTIK HEP GÖRÜNÜR -->
+                        <p class="text-[11px] sm:text-xs font-black text-slate-400 uppercase tracking-widest truncate">Vardiya Asistanım</p>
+                        <span class="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-600 shrink-0"></span>
+                        <p id="live-clock" class="text-[11px] sm:text-xs font-black text-emerald-500 uppercase tracking-widest shrink-0">00:00</p>
                     </div>
                 </div>
                 <div class="flex gap-2 sm:gap-3 shrink-0">
@@ -177,8 +177,9 @@
                         <span class="text-[10px] font-black text-indigo-500 uppercase tracking-widest w-full text-center truncate">Yarın</span>
                         <span id="dash-tomorrow" class="text-base sm:text-lg font-black text-indigo-700 dark:text-indigo-300 mt-1 w-full text-center truncate">-</span>
                     </div>
+                    <!-- HAVA DURUMU HAPI -->
                     <div class="flex-1 bg-emerald-50 dark:bg-emerald-900/40 rounded-[20px] py-4 px-2 flex flex-col items-center justify-center overflow-hidden">
-                        <span class="text-[10px] font-black text-emerald-500 uppercase tracking-widest w-full text-center truncate">Hava Durumu</span>
+                        <span class="text-[10px] font-black text-emerald-500 uppercase tracking-widest w-full text-center truncate" id="dash-weather-city">Hava Durumu</span>
                         <span id="dash-weather" class="text-sm sm:text-base font-black text-emerald-700 dark:text-emerald-300 mt-1.5 w-full text-center truncate">Bekleniyor ⛅</span>
                     </div>
                 </div>
@@ -231,7 +232,9 @@
                 </h3>
                 <button onclick="closeNotificationModal()" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-darkinput text-slate-500 font-black flex items-center justify-center flex-shrink-0">✕</button>
             </div>
+            
             <div class="flex-1 overflow-y-auto pr-1 space-y-3" id="notification-list"></div>
+            
             <button onclick="clearAllNotifications()" class="w-full py-4 mt-5 bg-slate-800 dark:bg-slate-700 hover:bg-slate-700 text-white rounded-[16px] font-black text-sm active:scale-95 transition-transform truncate shrink-0">
                 Tümünü Temizle (Okundu)
             </button>
@@ -395,7 +398,7 @@
                     <input type="number" id="mesai-maas" placeholder="Örn: 17002" class="w-full text-sm sm:text-base font-bold text-slate-800 dark:text-white truncate">
                 </div>
 
-                <!-- 1. MESAİ HESABI (NORMAL) -->
+                <!-- 1. MESAİ HESABI -->
                 <div class="bg-slate-50 dark:bg-darkinput rounded-2xl p-4 flex flex-col gap-3 border border-slate-200 dark:border-slate-700">
                     <span class="text-[10px] font-black text-blue-500 uppercase tracking-widest">1. Mesai (Örn: Haftalık)</span>
                     <div class="flex gap-2 w-full">
@@ -406,12 +409,11 @@
                         <button onclick="setMult(1, 1.5)" id="btn-m1-1.5" class="mult-btn-1 py-2 bg-blue-500 text-white rounded-[12px] text-xs font-black shadow-sm w-full truncate">1.5x</button>
                         <button onclick="setMult(1, 2.0)" id="btn-m1-2.0" class="mult-btn-1 py-2 bg-white dark:bg-[#1e293b] text-slate-600 dark:text-slate-300 rounded-[12px] text-xs font-bold border border-slate-200 dark:border-slate-600 w-full truncate">2.0x</button>
                         <button onclick="setMult(1, 1.0)" id="btn-m1-1.0" class="mult-btn-1 py-2 bg-white dark:bg-[#1e293b] text-slate-600 dark:text-slate-300 rounded-[12px] text-xs font-bold border border-slate-200 dark:border-slate-600 w-full truncate">1.0x</button>
-                        <!-- YENİLİK: Boş gelen Değer Kutusu -->
                         <input type="number" id="mesai-carpan-1" oninput="customMult(1)" step="0.1" placeholder="Değer Gir" class="bg-white dark:bg-[#1e293b] text-slate-800 dark:text-white border border-slate-200 dark:border-slate-600 text-xs font-bold rounded-[12px] text-center w-full placeholder:text-[9px]">
                     </div>
                 </div>
 
-                <!-- 2. MESAİ HESABI (ÖZEL GÜN) -->
+                <!-- 2. MESAİ HESABI -->
                 <div class="bg-slate-50 dark:bg-darkinput rounded-2xl p-4 flex flex-col gap-3 border border-slate-200 dark:border-slate-700">
                     <span class="text-[10px] font-black text-indigo-500 uppercase tracking-widest">2. Mesai (Örn: Özel Gün)</span>
                     <div class="flex gap-2 w-full">
@@ -422,7 +424,6 @@
                         <button onclick="setMult(2, 1.5)" id="btn-m2-1.5" class="mult-btn-2 py-2 bg-white dark:bg-[#1e293b] text-slate-600 dark:text-slate-300 rounded-[12px] text-xs font-bold border border-slate-200 dark:border-slate-600 w-full truncate">1.5x</button>
                         <button onclick="setMult(2, 2.0)" id="btn-m2-2.0" class="mult-btn-2 py-2 bg-indigo-500 text-white rounded-[12px] text-xs font-black shadow-sm w-full truncate">2.0x</button>
                         <button onclick="setMult(2, 1.0)" id="btn-m2-1.0" class="mult-btn-2 py-2 bg-white dark:bg-[#1e293b] text-slate-600 dark:text-slate-300 rounded-[12px] text-xs font-bold border border-slate-200 dark:border-slate-600 w-full truncate">1.0x</button>
-                        <!-- YENİLİK: Boş gelen Değer Kutusu -->
                         <input type="number" id="mesai-carpan-2" oninput="customMult(2)" step="0.1" placeholder="Değer Gir" class="bg-white dark:bg-[#1e293b] text-slate-800 dark:text-white border border-slate-200 dark:border-slate-600 text-xs font-bold rounded-[12px] text-center w-full placeholder:text-[9px]">
                     </div>
                 </div>
@@ -448,7 +449,6 @@
                 <button onclick="hesaplaMesai()" class="w-full py-4 mt-1 bg-slate-800 dark:bg-emerald-600 active:scale-[0.98] text-white rounded-[20px] font-black text-sm sm:text-base transition-transform shadow-md truncate shrink-0">Tümünü Hesapla</button>
                 <div id="mesai-sonuc" class="hidden mt-1 w-full"></div>
                 
-                <!-- BÜTÇE GEÇİŞ BUTONU -->
                 <button onclick="showSection('butce')" class="w-full py-4 mt-1 bg-indigo-600 active:scale-[0.98] text-white rounded-[20px] font-black text-sm sm:text-base transition-transform shadow-md shadow-indigo-500/30 truncate shrink-0 flex items-center justify-center gap-2">
                     <span class="text-xl">💼</span> Akıllı Bütçe Planlayıcı
                 </button>
@@ -467,7 +467,6 @@
                 <div class="w-11 h-11"></div>
             </header>
             
-            <!-- DAİRESEL ŞABLON (DONUT CHART) -->
             <div class="glass-card p-6 w-full flex flex-col items-center">
                 <div class="relative w-40 h-40 flex items-center justify-center mb-4 drop-shadow-xl">
                     <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
@@ -492,10 +491,9 @@
                 </div>
             </div>
 
-            <!-- FATURA/GİDER EKLEME FORMU -->
             <div class="glass-card p-5 w-full flex flex-col gap-3">
                 <h3 class="text-[11px] font-black text-slate-800 dark:text-white uppercase tracking-widest flex items-center gap-2 mb-1 truncate">
-                    <span class="text-lg">🧾</span> Yeni Fatura / Gider Ekle
+                    <span class="text-lg">🧾</span> Düzenli Gider Ekle
                 </h3>
                 
                 <div class="input-box w-full relative">
@@ -522,7 +520,6 @@
                         <input type="number" id="budget-amount" placeholder="0.00" class="text-sm font-bold text-slate-800 dark:text-white w-full">
                     </div>
                     
-                    <!-- YENİLİK: TAKVİMLİ VE YÖNLENDİRMELİ FATURA GÜNÜ SEÇİCİ -->
                     <div class="w-1/2 flex flex-col gap-1">
                         <div class="input-box w-full h-full relative !py-2 !px-3 overflow-hidden">
                             <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1 truncate">🗓️ Fatura Günü</label>
@@ -533,10 +530,9 @@
                         </div>
                     </div>
                 </div>
-                <button onclick="addBudgetExpense()" class="w-full py-4 bg-indigo-500 active:scale-95 text-white rounded-[16px] font-black text-sm transition-transform shadow-md truncate mt-1">Düzenli Fatura Olarak Ekle</button>
+                <button onclick="addBudgetExpense()" class="w-full py-4 bg-indigo-500 active:scale-95 text-white rounded-[16px] font-black text-sm transition-transform shadow-md truncate mt-1">Sisteme Kaydet & Takvime İşle</button>
             </div>
 
-            <!-- GİDER LİSTESİ -->
             <div class="glass-card p-5 w-full flex-1">
                 <h3 class="text-[11px] font-black text-slate-800 dark:text-white uppercase tracking-widest mb-3 truncate flex items-center gap-2">
                     <span class="text-lg">📋</span> Düzenli Fatura Listesi
@@ -577,7 +573,6 @@
         const CURRENT_DATE = new Date();
         const CURRENT_YEAR = 2026; 
 
-        // ÇİFT MESAİ ÇARPANLARI
         let mult1 = parseFloat(localStorage.getItem('v_mult1')) || 1.5;
         let mult2 = parseFloat(localStorage.getItem('v_mult2')) || 2.0;
 
@@ -590,7 +585,6 @@
         let paydaySetting = parseInt(localStorage.getItem('v_payday')) || 15;
         let activeNoteDateKey = "";
 
-        // GİDERLER: Artık full date yerine sadece `day` tutacağız (Tüm aylarda tekrarlanması için)
         let budgetExpenses = JSON.parse(localStorage.getItem('v_budget')) || [];
         let activeNotifications = []; 
 
@@ -627,19 +621,52 @@
             document.getElementById('mesai-yemek-gun').value = localStorage.getItem('v_yemek_gun') || '';
             document.getElementById('izin-toplam-hak').value = localStorage.getItem('v_izin_hakkim') || '';
             
-            updateMultBtns();
+            updateMultBtns(1, false);
+            updateMultBtns(2, false);
 
             initDashboard();
             startLiveClock();
+            fetchWeather(); // YENİLİK: Hava Durumu (Direkt Mersin)
             checkNotifications();
             renderBudget();
         }
 
-        // YENİLİK: BOŞ KALAN DEĞER GİRİŞİ SİSTEMİ
+        // --- HAVA DURUMU (API) SİSTEMİ - MERSİN'E KİLİTLİ ---
+        async function fetchWeather() {
+            const weatherEl = document.getElementById('dash-weather');
+            const cityEl = document.getElementById('dash-weather-city');
+            const apiKey = '127997d73d31a727c2395dbed41ac8cc';
+            
+            try {
+                // Sadece Mersin iline istek atar
+                const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=Mersin,TR&appid=${apiKey}&units=metric&lang=tr`);
+                if(!res.ok) throw new Error("City not found");
+                const data = await res.json();
+                
+                if(data && data.main) {
+                    const temp = Math.round(data.main.temp);
+                    const id = data.weather[0].id;
+                    let emoji = '⛅';
+                    if(id >= 200 && id < 300) emoji = '⛈️';
+                    else if(id >= 300 && id < 600) emoji = '🌧️';
+                    else if(id >= 600 && id < 700) emoji = '❄️';
+                    else if(id >= 700 && id < 800) emoji = '🌫️';
+                    else if(id === 800) emoji = '☀️';
+                    else if(id > 800) emoji = '☁️';
+                    
+                    weatherEl.innerText = `${temp}°C ${emoji}`;
+                    cityEl.innerText = "MERSİN"; 
+                }
+            } catch (e) {
+                weatherEl.innerText = 'Hata ⚠️';
+            }
+        }
+
+        // ÇARPAN BUTONLARI VE BOŞ GİRİŞ SİSTEMİ
         function setMult(type, val) {
             if(type === 1) { mult1 = val; localStorage.setItem('v_mult1', val); }
             else { mult2 = val; localStorage.setItem('v_mult2', val); }
-            updateMultBtns();
+            updateMultBtns(type, false);
         }
         function customMult(type) {
             const val = parseFloat(document.getElementById(`mesai-carpan-${type}`).value);
@@ -652,20 +679,19 @@
         function updateMultBtns(forceCustomType = 0, isTyping = false) {
             document.querySelectorAll('.mult-btn-1').forEach(b => b.className = "mult-btn-1 py-2 bg-white dark:bg-[#1e293b] text-slate-600 dark:text-slate-300 rounded-[12px] text-xs font-bold w-full truncate border border-slate-200 dark:border-slate-700");
             let btn1 = document.getElementById(`btn-m1-${mult1.toFixed(1)}`);
-            if (btn1 && forceCustomType !== 1) { 
+            if (btn1 && !isTyping) { 
                 btn1.className = "mult-btn-1 py-2 bg-blue-500 text-white rounded-[12px] text-xs font-black shadow-sm w-full truncate"; 
-                document.getElementById('mesai-carpan-1').value = ""; // Buton aktifse input boş kalır
-            } else if(!isTyping) { document.getElementById('mesai-carpan-1').value = mult1; }
+                document.getElementById('mesai-carpan-1').value = ""; 
+            } else if(isTyping && forceCustomType === 1) { document.getElementById('mesai-carpan-1').value = mult1; }
             
             document.querySelectorAll('.mult-btn-2').forEach(b => b.className = "mult-btn-2 py-2 bg-white dark:bg-[#1e293b] text-slate-600 dark:text-slate-300 rounded-[12px] text-xs font-bold w-full truncate border border-slate-200 dark:border-slate-700");
             let btn2 = document.getElementById(`btn-m2-${mult2.toFixed(1)}`);
-            if (btn2 && forceCustomType !== 2) { 
+            if (btn2 && !isTyping) { 
                 btn2.className = "mult-btn-2 py-2 bg-indigo-500 text-white rounded-[12px] text-xs font-black shadow-sm w-full truncate"; 
-                document.getElementById('mesai-carpan-2').value = ""; // Buton aktifse input boş kalır
-            } else if(!isTyping) { document.getElementById('mesai-carpan-2').value = mult2; }
+                document.getElementById('mesai-carpan-2').value = ""; 
+            } else if(isTyping && forceCustomType === 2) { document.getElementById('mesai-carpan-2').value = mult2; }
         }
 
-        // BİLDİRİM SİSTEMİ MOTORU (Evrensel Ay Günlerine Göre)
         function checkNotifications() {
             let notifs = [];
             let clearedNotifs = JSON.parse(localStorage.getItem('v_cleared_notifs')) || [];
@@ -679,7 +705,6 @@
                 let id = 'exp_' + exp.id;
                 if(clearedNotifs.includes(id)) return; 
 
-                // Ay sonu kontrolü (Örn: Fatura 31'inde ama Şubat ayındayız)
                 let daysInTodayMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
                 let actualTargetDayToday = exp.day > daysInTodayMonth ? daysInTodayMonth : exp.day;
 
@@ -727,7 +752,6 @@
             checkNotifications(); closeNotificationModal();
         }
 
-        // AKILLI BÜTÇE MOTORU (YENİLİK: Evrensel Ay Günü Mantığı)
         function renderBudget() {
             let lastCalcSalary = parseFloat(localStorage.getItem('v_last_salary')) || parseFloat(document.getElementById('mesai-maas').value) || 0;
             document.querySelectorAll('#budget-maas-txt').forEach(el => { el.innerText = lastCalcSalary.toLocaleString('tr-TR') + ' ₺'; });
@@ -788,7 +812,6 @@
 
             if(isNaN(amount) || amount <= 0 || !dateVal) { alert("Lütfen takvimden geçerli bir tarih ve tutar girin."); return; }
 
-            // Sadece 'GÜN' bilgisini alıyoruz, böylece her ay otomatik işler
             const dayOfMonth = parseInt(dateVal.split('-')[2]);
 
             const newExp = { id: Date.now().toString(), name: name, amount: amount, day: dayOfMonth };
@@ -897,7 +920,6 @@
             });
         }
 
-        // YENİLİK: TAKVİM FATURA ENTEGRASYONU
         function showCalendar(mIndex, mName) {
             activeMonthIndex = mIndex; activeMonthName = mName;
             showSection('takvim-detay'); document.getElementById('month-name').innerText = mName + " " + CURRENT_YEAR;
@@ -921,11 +943,9 @@
                 const holidayName = HOLIDAYS_2026[`${mIndex+1}-${d}`];
                 if (holidayName) { monthlyEvents.push({ type: 'holiday', day: d, name: holidayName }); }
 
-                // FATURA ENTEGRASYONU
                 let dayBills = budgetExpenses.filter(e => {
                     if(!e.day) return false;
-                    let targetDay = e.day;
-                    if(targetDay > daysInMonth) targetDay = daysInMonth; // Ay 30 çekiyorsa 31'ine eklenen faturayı 30'da göster
+                    let targetDay = e.day > daysInMonth ? daysInMonth : e.day;
                     return targetDay === d;
                 });
                 
@@ -980,24 +1000,32 @@
             } else holidayBox.classList.add('hidden');
         }
 
+        // WHATSAPP PAYLAŞIM VE GİZLİ COPY-PASTE HATA DÜZELTMELERİ
         function shareWhatsApp() {
             let textData = `📅 *${activeMonthName} ${CURRENT_YEAR} Vardiya Planı:*\n\n`;
             for (let d = 1; d <= new Date(CURRENT_YEAR, activeMonthIndex + 1, 0).getDate(); d++) {
                 const shift = getShift(new Date(CURRENT_YEAR, activeMonthIndex, d)); let icon = shift === 'Gündüz' ? '☀️' : (shift === 'Gece' ? '🌙' : '🏖️'); textData += `${d} ${activeMonthName}: ${icon} ${shift}\n`;
             }
             textData += `\n📊 *Özet:* ${document.getElementById('stat-gunduz').innerText} Gündüz, ${document.getElementById('stat-gece').innerText} Gece, ${document.getElementById('stat-izin').innerText} İzin`;
-            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(textData)}`, '_blank');
+            
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(textData)}`;
+            window.open(whatsappUrl, '_blank');
         }
 
         function copyToClipboard() {
             let textData = `📅 ${activeMonthName} ${CURRENT_YEAR} Vardiya:\n`;
             for (let d = 1; d <= new Date(CURRENT_YEAR, activeMonthIndex + 1, 0).getDate(); d++) { textData += `${d}: ${getShift(new Date(CURRENT_YEAR, activeMonthIndex, d))}\n`; }
+            
+            const copySuccess = () => { const btn = document.getElementById('copy-btn'); const old = btn.innerHTML; btn.innerHTML = '✅'; setTimeout(() => { btn.innerHTML = old; }, 2000); };
+            
             if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(textData).then(() => { const btn = document.getElementById('copy-btn'); const old = btn.innerHTML; btn.innerHTML = '✅'; setTimeout(() => { btn.innerHTML = old; }, 2000); });
-            } else {
-                const el = document.createElement('textarea'); el.value = textData; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
-                const btn = document.getElementById('copy-btn'); const old = btn.innerHTML; btn.innerHTML = '✅'; setTimeout(() => { btn.innerHTML = old; }, 2000);
-            }
+                navigator.clipboard.writeText(textData).then(copySuccess).catch(() => fallbackCopy(textData, copySuccess));
+            } else { fallbackCopy(textData, copySuccess); }
+        }
+
+        function fallbackCopy(text, successCb) {
+            const el = document.createElement('textarea'); el.value = text; el.setAttribute('readonly', ''); el.style.position = 'absolute'; el.style.left = '-9999px';
+            document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); successCb();
         }
 
         function openNoteModalForToday() { openNoteModal(CURRENT_DATE.getDate(), CURRENT_DATE.getMonth(), ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"][CURRENT_DATE.getMonth()]); }
@@ -1036,14 +1064,14 @@
             sonucKutu.innerHTML = `<div class="input-box !bg-purple-50 dark:!bg-purple-900/30 text-center w-full flex flex-col items-center p-4"><div class="text-[10px] font-black uppercase tracking-widest text-purple-500 mb-1 w-full text-center truncate">İşe Dönüş Tarihi</div><div class="text-base sm:text-lg font-black text-purple-700 dark:text-purple-300 w-full block text-center truncate">${start.toLocaleDateString('tr-TR', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}</div></div>${bakiyeHTML}`;
         }
 
-        // YENİLİK: BOŞ BIRAKILAN MESAİLER SIFIR SAYILIR HATA VERMEZ
+        // MESAİ SIFIR KABUL ETME SİSTEMİ EKLENDİ
         function hesaplaMesai() {
             const maas = parseFloat(document.getElementById('mesai-maas').value) || 0;
             
             const saat1 = parseFloat(document.getElementById('mesai-saat-1').value) || 0;
             const ucret1 = parseFloat(document.getElementById('mesai-ucret-1').value) || 0;
             const carpan1Value = parseFloat(document.getElementById('mesai-carpan-1').value);
-            const m1Final = isNaN(carpan1Value) ? mult1 : carpan1Value; // Kutuda değer varsa onu al, yoksa butondakini al
+            const m1Final = isNaN(carpan1Value) ? mult1 : carpan1Value; 
             
             const saat2 = parseFloat(document.getElementById('mesai-saat-2').value) || 0;
             const ucret2 = parseFloat(document.getElementById('mesai-ucret-2').value) || 0;
