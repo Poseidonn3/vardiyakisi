@@ -15,7 +15,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
     
+    <!-- Karanlık Tema Ön Yükleyici -->
     <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+        
         tailwind.config = {
             darkMode: 'class',
             theme: { 
@@ -34,7 +39,6 @@
     <style>
         * { border: none !important; outline: none !important; text-decoration: none !important; }
 
-        /* YATAY KAYMAYI ENGELLEME VE SCROLLBAR GİZLEME KURALI */
         html, body {
             max-width: 100vw;
             overflow-x: hidden; 
@@ -43,9 +47,7 @@
             scrollbar-width: none;  
         }
         
-        ::-webkit-scrollbar { 
-            display: none; 
-        }
+        ::-webkit-scrollbar { display: none; }
 
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
@@ -54,7 +56,6 @@
             overscroll-behavior-y: none; 
         }
         
-        /* GERÇEK SAYFA GEÇİŞİ ANİMASYONU (Bağımsız Sayfa Hissi) */
         .app-page { display: none; width: 100%; min-height: 100dvh; }
         .app-page.active { display: block; animation: slideInPage 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         
@@ -66,12 +67,15 @@
         ::placeholder { color: #94a3b8; opacity: 1; }
         .dark ::placeholder { color: #64748b; }
         
-        input[type="date"], input[type="number"], select { 
-            -webkit-appearance: none; width: 100%; box-sizing: border-box; background: transparent;
+        input[type="date"], input[type="number"], input[type="text"], select { 
+            -webkit-appearance: none; width: 100%; box-sizing: border-box; background: transparent; outline: none;
         }
-        .dark input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.8; }
         
-        /* Premium Kart Yapısı */
+        /* Tarih seçici ikonunu mobil için tıkalanabilir ve belirgin yapıyoruz */
+        input[type="date"]::-webkit-calendar-picker-indicator { 
+            filter: invert(1); opacity: 0.7; cursor: pointer; width: 100%; height: 100%; position: absolute; left: 0; top: 0; background-position: right; background-size: 20px; 
+        }
+        
         .glass-card {
             background: #ffffff;
             border-radius: 28px;
@@ -106,14 +110,28 @@
             animation: progress-stripes 1s linear infinite;
         }
         @keyframes progress-stripes { from { background-position: 1rem 0; } to { background-position: 0 0; } }
+
+        /* SPLASH EKRANI ANİMASYONLARI */
+        .splash-logo { animation: splashPop 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .splash-text { opacity: 0; animation: splashTextFade 0.8s ease-out 0.3s forwards; }
+        @keyframes splashPop { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes splashTextFade { 0% { transform: translateY(15px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+
+        .calendar-icons-wrapper { bottom: 3px; position: absolute; display: flex; width: 100%; justify-content: center; gap: 2px; }
     </style>
 </head>
 <body class="bg-slate-100 dark:bg-darkbg text-slate-800 dark:text-slate-100 w-full overflow-x-hidden">
 
+    <!-- SPLASH (AÇILIŞ) EKRANI -->
+    <div id="splash-screen" class="fixed inset-0 z-[100] bg-slate-100 dark:bg-darkbg flex flex-col items-center justify-center transition-opacity duration-500">
+        <img src="image.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3652/3652191.png'" alt="Özel Güvenlik" class="w-40 h-40 sm:w-48 sm:h-48 object-contain splash-logo drop-shadow-2xl">
+        <h1 class="mt-6 text-xl sm:text-2xl font-black text-slate-800 dark:text-white tracking-widest uppercase splash-text text-center px-4">Özel Güvenlik</h1>
+        <p class="mt-2 text-[10px] sm:text-xs font-bold text-slate-500 dark:text-slate-400 splash-text tracking-widest uppercase">Vardiya Sistemi Yükleniyor...</p>
+    </div>
+
     <!-- SAYFA 1: ANA MENÜ & CANLI DASHBOARD -->
     <div id="section-menu" class="app-page active">
         <div class="max-w-[500px] mx-auto w-full min-h-[100dvh] flex flex-col px-5 pt-8 pb-10 gap-5">
-            <!-- Ana Menü Üst Başlık -->
             <header class="mb-3 flex items-center justify-between w-full shrink-0">
                 <div class="flex-1 overflow-hidden pr-3">
                     <h1 class="text-2xl sm:text-3xl font-black tracking-tight text-blue-600 dark:text-blue-400 truncate">Vardiya Akışı</h1>
@@ -123,11 +141,15 @@
                         <p id="live-clock" class="text-[11px] sm:text-xs font-black text-emerald-500 uppercase tracking-widest truncate">00:00</p>
                     </div>
                 </div>
-                <div class="flex gap-3 shrink-0">
-                    <button onclick="showSection('ayarlar')" class="w-12 h-12 rounded-[18px] bg-white dark:bg-darkcard shadow-sm hover:scale-105 active:scale-95 transition-all flex items-center justify-center shrink-0">
+                <div class="flex gap-2 sm:gap-3 shrink-0">
+                    <button onclick="openNotificationModal()" class="relative w-11 h-11 sm:w-12 sm:h-12 rounded-[18px] bg-white dark:bg-darkcard shadow-sm hover:scale-105 active:scale-95 transition-all flex items-center justify-center shrink-0">
+                        <span class="text-xl">🔔</span>
+                        <span id="notif-badge" class="hidden absolute top-2 right-2.5 w-3 h-3 bg-rose-500 rounded-full border-2 border-white dark:border-darkcard"></span>
+                    </button>
+                    <button onclick="showSection('ayarlar')" class="w-11 h-11 sm:w-12 sm:h-12 rounded-[18px] bg-white dark:bg-darkcard shadow-sm hover:scale-105 active:scale-95 transition-all flex items-center justify-center shrink-0">
                         <span class="text-xl">⚙️</span>
                     </button>
-                    <button onclick="toggleTheme()" class="w-12 h-12 rounded-[18px] bg-white dark:bg-darkcard shadow-sm hover:scale-105 active:scale-95 transition-all flex items-center justify-center shrink-0">
+                    <button onclick="toggleTheme()" class="w-11 h-11 sm:w-12 sm:h-12 rounded-[18px] bg-white dark:bg-darkcard shadow-sm hover:scale-105 active:scale-95 transition-all flex items-center justify-center shrink-0">
                         <span id="theme-icon" class="text-xl">🌙</span>
                     </button>
                 </div>
@@ -156,12 +178,11 @@
                         <span id="dash-tomorrow" class="text-base sm:text-lg font-black text-indigo-700 dark:text-indigo-300 mt-1 w-full text-center truncate">-</span>
                     </div>
                     <div class="flex-1 bg-emerald-50 dark:bg-emerald-900/40 rounded-[20px] py-4 px-2 flex flex-col items-center justify-center overflow-hidden">
-                        <span class="text-[10px] font-black text-emerald-500 uppercase tracking-widest w-full text-center truncate">Sıradaki İzin</span>
-                        <span id="dash-leave" class="text-sm sm:text-base font-black text-emerald-700 dark:text-emerald-300 mt-1.5 w-full text-center truncate">-</span>
+                        <span class="text-[10px] font-black text-emerald-500 uppercase tracking-widest w-full text-center truncate">Hava Durumu</span>
+                        <span id="dash-weather" class="text-sm sm:text-base font-black text-emerald-700 dark:text-emerald-300 mt-1.5 w-full text-center truncate">Bekleniyor ⛅</span>
                     </div>
                 </div>
 
-                <!-- Canlı Mesai İlerlemesi -->
                 <div id="shift-progress-container" class="hidden w-full bg-slate-50 dark:bg-darkinput rounded-[20px] p-4">
                     <div class="flex justify-between items-end mb-2 w-full">
                         <span class="text-[11px] font-black text-slate-500 uppercase tracking-widest truncate">Mesai İlerlemesi</span>
@@ -201,44 +222,51 @@
         </div>
     </div>
 
+    <!-- BİLDİRİM MODALI -->
+    <div id="notification-modal" class="fixed inset-0 z-[60] flex items-center justify-center p-5 modal-overlay hidden">
+        <div class="bg-white dark:bg-darkcard p-6 sm:p-8 rounded-[32px] shadow-2xl w-full max-w-sm flex flex-col max-h-[85vh]">
+            <div class="flex justify-between items-center mb-4 w-full gap-2 shrink-0">
+                <h3 class="text-lg font-black text-slate-800 dark:text-white flex items-center gap-2 w-full truncate">
+                    <span class="text-2xl">🔔</span> Sistem Uyarıları
+                </h3>
+                <button onclick="closeNotificationModal()" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-darkinput text-slate-500 font-black flex items-center justify-center flex-shrink-0">✕</button>
+            </div>
+            <div class="flex-1 overflow-y-auto pr-1 space-y-3" id="notification-list"></div>
+            <button onclick="clearAllNotifications()" class="w-full py-4 mt-5 bg-slate-800 dark:bg-slate-700 hover:bg-slate-700 text-white rounded-[16px] font-black text-sm active:scale-95 transition-transform truncate shrink-0">
+                Tümünü Temizle (Okundu)
+            </button>
+        </div>
+    </div>
+
     <!-- SAYFA 2: AYARLAR -->
     <div id="section-ayarlar" class="app-page">
         <div class="max-w-[500px] mx-auto w-full min-h-[100dvh] flex flex-col px-5 pt-8 pb-10 gap-4">
             <header class="mb-4 flex items-center justify-between w-full shrink-0">
-                <button onclick="showSection('menu')" class="flex items-center justify-center w-11 h-11 rounded-[16px] bg-white dark:bg-darkcard shadow-sm hover:scale-105 active:scale-95 transition-all text-slate-600 dark:text-slate-300">
-                    <span class="text-2xl leading-none -ml-1">‹</span>
-                </button>
+                <button onclick="showSection('menu')" class="flex items-center justify-center w-11 h-11 rounded-[16px] bg-white dark:bg-darkcard shadow-sm hover:scale-105 active:scale-95 transition-all text-slate-600 dark:text-slate-300"><span class="text-2xl leading-none -ml-1">‹</span></button>
                 <h2 class="text-lg sm:text-xl font-black text-slate-800 dark:text-white flex-1 text-center truncate px-2">Ayarlar</h2>
                 <div class="w-11 h-11"></div> 
             </header>
-            
             <div class="glass-card p-6 sm:p-8 flex flex-col gap-5 w-full">
-                <div class="input-box w-full">
+                <div class="input-box w-full relative">
                     <label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-2 truncate">Çalışma Döngüsü</label>
-                    <div class="flex items-center w-full">
-                        <select id="ayarlar-dongu" class="w-full text-sm sm:text-base font-bold text-slate-800 dark:text-white cursor-pointer truncate pr-4">
-                            <option value="default">2 Gündüz, 2 Gece, 2 İzin</option>
-                            <option value="4g2i">4 Gündüz, 2 İzin</option>
-                            <option value="sabit_g">Sabit Gündüz (Pazar İzin)</option>
-                            <option value="sabit_ge">Sabit Gece (Pazar İzin)</option>
-                        </select>
-                    </div>
+                    <select id="ayarlar-dongu" class="w-full text-sm sm:text-base font-bold text-slate-800 dark:text-white appearance-none cursor-pointer truncate pr-4">
+                        <option value="default">2 Gündüz, 2 Gece, 2 İzin</option>
+                        <option value="4g2i">4 Gündüz, 2 İzin</option>
+                        <option value="sabit_g">Sabit Gündüz (Pazar İzin)</option>
+                        <option value="sabit_ge">Sabit Gece (Pazar İzin)</option>
+                    </select>
+                    <span class="absolute right-4 top-1/2 mt-1 text-xs text-slate-400 pointer-events-none">▼</span>
                 </div>
-
                 <div class="input-box w-full relative">
                     <label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-2 truncate">Döngü Başlangıç Tarihi</label>
-                    <input type="date" id="ayarlar-tarih" class="w-full text-sm sm:text-base font-bold text-slate-800 dark:text-white truncate">
+                    <input type="date" id="ayarlar-tarih" class="w-full text-sm sm:text-base font-bold text-slate-800 dark:text-white truncate relative z-10">
                     <p class="text-[10px] font-bold text-blue-500 mt-2 truncate w-full">* Seçtiğiniz gün ilk "Gündüz" kabul edilir.</p>
                 </div>
-
                 <div class="input-box w-full">
                     <label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-2 truncate">Maaş Günü (Ayın Kaçı?)</label>
                     <input type="number" id="ayarlar-maas-gunu" placeholder="Örn: 15" min="1" max="31" class="w-full text-sm sm:text-base font-bold text-slate-800 dark:text-white truncate">
                 </div>
-                
-                <button onclick="ayarlariKaydet()" class="w-full py-4 mt-4 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white rounded-[20px] font-black text-sm sm:text-base transition-all shadow-lg shadow-blue-500/30 truncate shrink-0">
-                    Ayarları Kaydet ve Uygula
-                </button>
+                <button onclick="ayarlariKaydet()" class="w-full py-4 mt-4 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white rounded-[20px] font-black text-sm sm:text-base transition-all shadow-lg shadow-blue-500/30 truncate shrink-0">Ayarları Kaydet ve Uygula</button>
             </div>
         </div>
     </div>
@@ -247,18 +275,12 @@
     <div id="section-yillik-rapor" class="app-page">
         <div class="max-w-[500px] mx-auto w-full min-h-[100dvh] flex flex-col px-5 pt-8 pb-10 gap-4">
             <header class="mb-4 flex items-center justify-between w-full shrink-0">
-                <button onclick="showSection('menu')" class="flex items-center justify-center w-11 h-11 rounded-[16px] bg-white dark:bg-darkcard shadow-sm hover:scale-105 active:scale-95 transition-all text-slate-600 dark:text-slate-300">
-                    <span class="text-2xl leading-none -ml-1">‹</span>
-                </button>
+                <button onclick="showSection('menu')" class="flex items-center justify-center w-11 h-11 rounded-[16px] bg-white dark:bg-darkcard shadow-sm hover:scale-105 active:scale-95 transition-all text-slate-600 dark:text-slate-300"><span class="text-2xl leading-none -ml-1">‹</span></button>
                 <h2 id="report-title" class="text-lg sm:text-xl font-black text-slate-800 dark:text-white flex-1 text-center truncate px-2">Yıllık Analiz</h2>
                 <div class="w-11 h-11"></div>
             </header>
-            
             <div class="glass-card p-6 sm:p-8 flex flex-col gap-4 w-full">
-                <div class="text-center mb-2 w-full">
-                    <span class="text-[50px] block mb-2">📊</span>
-                </div>
-                
+                <div class="text-center mb-2 w-full"><span class="text-[50px] block mb-2">📊</span></div>
                 <div class="grid grid-cols-2 gap-4 w-full">
                     <div class="input-box !bg-emerald-50 dark:!bg-emerald-900/20 text-center w-full">
                         <span class="block text-[11px] font-black text-emerald-500 uppercase tracking-widest mb-1 truncate">Gündüz</span>
@@ -269,7 +291,6 @@
                         <span id="yil-gece" class="text-3xl font-black text-indigo-600 dark:text-indigo-400 truncate">0</span>
                     </div>
                 </div>
-                
                 <div class="input-box text-center w-full mt-2">
                     <span class="block text-[11px] font-black text-slate-500 uppercase tracking-widest mb-1 truncate">Toplam İzin</span>
                     <span id="yil-izin" class="text-3xl font-black text-slate-700 dark:text-slate-300 truncate">0</span>
@@ -278,13 +299,11 @@
         </div>
     </div>
 
-    <!-- SAYFA 4: TAKVİM AYLAR SEÇİMİ -->
+    <!-- TAKVİM AYLAR -->
     <div id="section-takvim-aylar" class="app-page">
         <div class="max-w-[500px] mx-auto w-full min-h-[100dvh] flex flex-col px-5 pt-8 pb-10 gap-4">
             <header class="mb-4 flex items-center justify-between w-full shrink-0">
-                <button onclick="showSection('menu')" class="flex items-center justify-center w-11 h-11 rounded-[16px] bg-white dark:bg-darkcard shadow-sm hover:scale-105 active:scale-95 transition-all text-slate-600 dark:text-slate-300">
-                    <span class="text-2xl leading-none -ml-1">‹</span>
-                </button>
+                <button onclick="showSection('menu')" class="flex items-center justify-center w-11 h-11 rounded-[16px] bg-white dark:bg-darkcard shadow-sm hover:scale-105 active:scale-95 transition-all text-slate-600 dark:text-slate-300"><span class="text-2xl leading-none -ml-1">‹</span></button>
                 <h2 class="text-lg sm:text-xl font-black text-slate-800 dark:text-white flex-1 text-center truncate px-2">Aylık Takvim</h2>
                 <div class="w-11 h-11"></div>
             </header>
@@ -292,13 +311,11 @@
         </div>
     </div>
 
-    <!-- SAYFA 5: TAKVİM DETAY -->
+    <!-- TAKVİM DETAY -->
     <div id="section-takvim-detay" class="app-page">
         <div class="max-w-[500px] mx-auto w-full min-h-[100dvh] flex flex-col px-5 pt-8 pb-10 gap-4">
             <header class="mb-4 flex items-center justify-between w-full shrink-0 gap-2">
-                <button onclick="showSection('takvim-aylar')" class="flex items-center justify-center w-11 h-11 rounded-[16px] bg-white dark:bg-darkcard shadow-sm hover:scale-105 active:scale-95 transition-all text-slate-600 dark:text-slate-300 flex-shrink-0">
-                    <span class="text-2xl leading-none -ml-1">‹</span>
-                </button>
+                <button onclick="showSection('takvim-aylar')" class="flex items-center justify-center w-11 h-11 rounded-[16px] bg-white dark:bg-darkcard shadow-sm hover:scale-105 active:scale-95 transition-all text-slate-600 dark:text-slate-300 flex-shrink-0"><span class="text-2xl leading-none -ml-1">‹</span></button>
                 <h2 id="month-name" class="text-lg sm:text-xl font-black text-slate-800 dark:text-white flex-1 text-center truncate"></h2>
                 <div class="flex gap-2 flex-shrink-0">
                     <button onclick="shareWhatsApp()" class="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 hover:scale-105 active:scale-95 transition-all flex items-center justify-center shadow-sm text-lg" title="WhatsApp Gönder">💬</button>
@@ -325,54 +342,45 @@
                 <div id="calendar-grid" class="grid grid-cols-7 gap-1 sm:gap-1.5 text-center w-full"></div>
             </div>
 
-            <!-- 2026 ÖZEL GÜNLER BÖLÜMÜ -->
-            <div id="holiday-box" class="hidden input-box !bg-rose-50 dark:!bg-rose-900/20 w-full mt-4">
-                <h3 class="text-xs font-black text-rose-500 uppercase tracking-widest mb-2 truncate">🎉 Özel Günler</h3>
-                <ul id="holiday-list" class="space-y-2 text-xs font-bold text-rose-700 dark:text-rose-300 w-full"></ul>
+            <!-- FATURALAR VE ÖZEL GÜNLER PANOSU -->
+            <div id="holiday-box" class="hidden input-box !bg-slate-50 dark:!bg-darkinput w-full mt-4 border border-slate-200 dark:border-slate-700">
+                <h3 class="text-[11px] font-black text-slate-800 dark:text-white uppercase tracking-widest mb-3 truncate flex items-center gap-2"><span class="text-lg">📌</span> Özel Günler & Ödemeler</h3>
+                <ul id="holiday-list" class="space-y-2 text-xs font-bold text-slate-600 dark:text-slate-300 w-full"></ul>
             </div>
         </div>
     </div>
 
-    <!-- SAYFA 6: İZİN HESAPLAYICI -->
+    <!-- İZİN HESAPLAYICI -->
     <div id="section-izin-hesap" class="app-page">
         <div class="max-w-[500px] mx-auto w-full min-h-[100dvh] flex flex-col px-5 pt-8 pb-10 gap-4">
             <header class="mb-4 flex items-center justify-between w-full shrink-0">
-                <button onclick="showSection('menu')" class="flex items-center justify-center w-11 h-11 rounded-[16px] bg-white dark:bg-darkcard shadow-sm hover:scale-105 active:scale-95 transition-all text-slate-600 dark:text-slate-300">
-                    <span class="text-2xl leading-none -ml-1">‹</span>
-                </button>
+                <button onclick="showSection('menu')" class="flex items-center justify-center w-11 h-11 rounded-[16px] bg-white dark:bg-darkcard shadow-sm hover:scale-105 active:scale-95 transition-all text-slate-600 dark:text-slate-300"><span class="text-2xl leading-none -ml-1">‹</span></button>
                 <h2 class="text-lg sm:text-xl font-black text-slate-800 dark:text-white flex-1 text-center truncate px-2">İzin Planlayıcı</h2>
                 <div class="w-11 h-11"></div>
             </header>
-            
             <div class="glass-card p-6 sm:p-8 flex flex-col gap-4 w-full">
                 <div class="input-box w-full">
                     <label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 truncate">Yıllık İzin Hakkı (Ops.)</label>
                     <input type="number" id="izin-toplam-hak" placeholder="Örn: 14" class="w-full text-sm sm:text-base font-bold text-slate-800 dark:text-white truncate">
                 </div>
-
-                <div class="input-box w-full">
+                <div class="input-box w-full relative">
                     <label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 truncate">Başlangıç Tarihi</label>
-                    <input type="date" id="start-date" class="w-full text-sm sm:text-base font-bold text-slate-800 dark:text-white truncate">
+                    <input type="date" id="start-date" class="w-full text-sm sm:text-base font-bold text-slate-800 dark:text-white truncate pr-2 relative z-10">
                 </div>
-                
                 <div class="input-box w-full">
                     <label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 truncate">Kullanılacak Gün</label>
                     <input type="number" id="izin-gun" placeholder="Örn: 10" class="w-full text-sm sm:text-base font-bold text-slate-800 dark:text-white truncate">
                 </div>
-                
-                <button onclick="hesaplaIzin()" class="w-full py-4 mt-2 bg-purple-600 active:bg-purple-700 text-white rounded-[20px] font-black text-sm sm:text-base transition-colors shadow-md shadow-purple-500/20 truncate shrink-0">
-                    Tarihi Hesapla
-                </button>
-                
+                <button onclick="hesaplaIzin()" class="w-full py-4 mt-2 bg-purple-600 active:bg-purple-700 text-white rounded-[20px] font-black text-sm sm:text-base transition-colors shadow-md shadow-purple-500/20 truncate shrink-0">Tarihi Hesapla</button>
                 <div id="izin-sonuc" class="hidden mt-2 w-full"></div>
             </div>
         </div>
     </div>
 
-    <!-- SAYFA 7: MESAİ VE KAZANÇ -->
+    <!-- MESAİ VE KAZANÇ -->
     <div id="section-mesai-hesap" class="app-page">
         <div class="max-w-[500px] mx-auto w-full min-h-[100dvh] flex flex-col px-5 pt-8 pb-10 gap-4">
-            <header class="mb-4 flex items-center justify-between w-full shrink-0">
+            <header class="mb-2 flex items-center justify-between w-full shrink-0">
                 <button onclick="showSection('menu')" class="flex items-center justify-center w-11 h-11 rounded-[16px] bg-white dark:bg-darkcard shadow-sm hover:scale-105 active:scale-95 transition-all text-slate-600 dark:text-slate-300">
                     <span class="text-2xl leading-none -ml-1">‹</span>
                 </button>
@@ -380,34 +388,56 @@
                 <div class="w-11 h-11"></div>
             </header>
             
-            <div class="glass-card p-6 sm:p-8 flex flex-col gap-4 w-full">
-                <div class="input-box w-full">
-                    <label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 truncate">Aylık Maaş (Ops.)</label>
+            <div class="glass-card p-5 sm:p-6 flex flex-col gap-4 w-full">
+                <!-- Temel Maaş -->
+                <div class="input-box w-full !py-3">
+                    <label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 truncate">Aylık Net Maaş (Ops.)</label>
                     <input type="number" id="mesai-maas" placeholder="Örn: 17002" class="w-full text-sm sm:text-base font-bold text-slate-800 dark:text-white truncate">
                 </div>
 
-                <div class="grid grid-cols-2 gap-3 w-full">
-                    <div class="input-box w-full">
-                        <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 truncate w-full">Mesai Saati</label>
-                        <input type="number" id="mesai-saat" placeholder="12.5" step="0.5" class="w-full text-sm font-bold text-slate-800 dark:text-white truncate">
+                <!-- 1. MESAİ HESABI (NORMAL) -->
+                <div class="bg-slate-50 dark:bg-darkinput rounded-2xl p-4 flex flex-col gap-3 border border-slate-200 dark:border-slate-700">
+                    <span class="text-[10px] font-black text-blue-500 uppercase tracking-widest">1. Mesai (Örn: Haftalık)</span>
+                    <div class="flex gap-2 w-full">
+                        <input type="number" id="mesai-saat-1" placeholder="Saat" class="w-1/2 text-xs sm:text-sm font-bold text-slate-800 dark:text-white bg-white dark:bg-[#1e293b] p-3 rounded-xl border border-slate-200 dark:border-slate-600">
+                        <input type="number" id="mesai-ucret-1" placeholder="Saat Ücreti" class="w-1/2 text-xs sm:text-sm font-bold text-slate-800 dark:text-white bg-white dark:bg-[#1e293b] p-3 rounded-xl border border-slate-200 dark:border-slate-600">
                     </div>
-                    <div class="input-box w-full">
-                        <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 truncate w-full">Saatlik Ücret</label>
-                        <input type="number" id="mesai-ucret" placeholder="150" class="w-full text-sm font-bold text-slate-800 dark:text-white truncate">
+                    <div class="grid grid-cols-4 gap-2 w-full">
+                        <button onclick="setMult(1, 1.5)" id="btn-m1-1.5" class="mult-btn-1 py-2 bg-blue-500 text-white rounded-[12px] text-xs font-black shadow-sm w-full truncate">1.5x</button>
+                        <button onclick="setMult(1, 2.0)" id="btn-m1-2.0" class="mult-btn-1 py-2 bg-white dark:bg-[#1e293b] text-slate-600 dark:text-slate-300 rounded-[12px] text-xs font-bold border border-slate-200 dark:border-slate-600 w-full truncate">2.0x</button>
+                        <button onclick="setMult(1, 1.0)" id="btn-m1-1.0" class="mult-btn-1 py-2 bg-white dark:bg-[#1e293b] text-slate-600 dark:text-slate-300 rounded-[12px] text-xs font-bold border border-slate-200 dark:border-slate-600 w-full truncate">1.0x</button>
+                        <!-- YENİLİK: Boş gelen Değer Kutusu -->
+                        <input type="number" id="mesai-carpan-1" oninput="customMult(1)" step="0.1" placeholder="Değer Gir" class="bg-white dark:bg-[#1e293b] text-slate-800 dark:text-white border border-slate-200 dark:border-slate-600 text-xs font-bold rounded-[12px] text-center w-full placeholder:text-[9px]">
                     </div>
                 </div>
 
+                <!-- 2. MESAİ HESABI (ÖZEL GÜN) -->
+                <div class="bg-slate-50 dark:bg-darkinput rounded-2xl p-4 flex flex-col gap-3 border border-slate-200 dark:border-slate-700">
+                    <span class="text-[10px] font-black text-indigo-500 uppercase tracking-widest">2. Mesai (Örn: Özel Gün)</span>
+                    <div class="flex gap-2 w-full">
+                        <input type="number" id="mesai-saat-2" placeholder="Saat" class="w-1/2 text-xs sm:text-sm font-bold text-slate-800 dark:text-white bg-white dark:bg-[#1e293b] p-3 rounded-xl border border-slate-200 dark:border-slate-600">
+                        <input type="number" id="mesai-ucret-2" placeholder="Saat Ücreti" class="w-1/2 text-xs sm:text-sm font-bold text-slate-800 dark:text-white bg-white dark:bg-[#1e293b] p-3 rounded-xl border border-slate-200 dark:border-slate-600">
+                    </div>
+                    <div class="grid grid-cols-4 gap-2 w-full">
+                        <button onclick="setMult(2, 1.5)" id="btn-m2-1.5" class="mult-btn-2 py-2 bg-white dark:bg-[#1e293b] text-slate-600 dark:text-slate-300 rounded-[12px] text-xs font-bold border border-slate-200 dark:border-slate-600 w-full truncate">1.5x</button>
+                        <button onclick="setMult(2, 2.0)" id="btn-m2-2.0" class="mult-btn-2 py-2 bg-indigo-500 text-white rounded-[12px] text-xs font-black shadow-sm w-full truncate">2.0x</button>
+                        <button onclick="setMult(2, 1.0)" id="btn-m2-1.0" class="mult-btn-2 py-2 bg-white dark:bg-[#1e293b] text-slate-600 dark:text-slate-300 rounded-[12px] text-xs font-bold border border-slate-200 dark:border-slate-600 w-full truncate">1.0x</button>
+                        <!-- YENİLİK: Boş gelen Değer Kutusu -->
+                        <input type="number" id="mesai-carpan-2" oninput="customMult(2)" step="0.1" placeholder="Değer Gir" class="bg-white dark:bg-[#1e293b] text-slate-800 dark:text-white border border-slate-200 dark:border-slate-600 text-xs font-bold rounded-[12px] text-center w-full placeholder:text-[9px]">
+                    </div>
+                </div>
+
+                <!-- Yol & Yemek -->
                 <div class="grid grid-cols-2 gap-3 w-full">
-                    <div class="input-box w-full">
-                        <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 truncate w-full">Yol (₺ / Gün)</label>
+                    <div class="input-box w-full !py-3">
+                        <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 truncate w-full">Yol (₺/Gün)</label>
                         <div class="flex gap-2 w-full">
                             <input type="number" id="mesai-yol-ucret" placeholder="Ücret" class="w-1/2 text-xs sm:text-sm font-bold text-slate-800 dark:text-white truncate">
                             <input type="number" id="mesai-yol-gun" placeholder="Gün" class="w-1/2 text-xs sm:text-sm font-bold text-slate-800 dark:text-white truncate">
                         </div>
                     </div>
-                    
-                    <div class="input-box w-full">
-                        <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 truncate w-full">Yemek (₺ / Gün)</label>
+                    <div class="input-box w-full !py-3">
+                        <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 truncate w-full">Yemek (₺/Gün)</label>
                         <div class="flex gap-2 w-full">
                             <input type="number" id="mesai-yemek-ucret" placeholder="Ücret" class="w-1/2 text-xs sm:text-sm font-bold text-slate-800 dark:text-white truncate">
                             <input type="number" id="mesai-yemek-gun" placeholder="Gün" class="w-1/2 text-xs sm:text-sm font-bold text-slate-800 dark:text-white truncate">
@@ -415,39 +445,120 @@
                     </div>
                 </div>
                 
-                <div class="w-full">
-                    <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 ml-1 truncate">Çarpan Belirle</label>
-                    <div class="grid grid-cols-4 gap-2 w-full">
-                        <button onclick="setMultiplier(1.5)" id="btn-mult-1.5" class="mult-btn py-3 bg-emerald-500 text-white rounded-[16px] text-xs font-black shadow-sm w-full truncate shrink-0">1.5x</button>
-                        <button onclick="setMultiplier(2.0)" id="btn-mult-2.0" class="mult-btn py-3 bg-slate-100 dark:bg-darkinput text-slate-600 dark:text-slate-300 rounded-[16px] text-xs font-bold w-full truncate shrink-0">2.0x</button>
-                        <button onclick="setMultiplier(1.0)" id="btn-mult-1.0" class="mult-btn py-3 bg-slate-100 dark:bg-darkinput text-slate-600 dark:text-slate-300 rounded-[16px] text-xs font-bold w-full truncate shrink-0">1.0x</button>
-                        <input type="number" id="mesai-carpan" oninput="customMultiplierInput()" step="0.1" class="bg-slate-100 dark:bg-darkinput font-bold text-slate-800 dark:text-white text-xs rounded-[16px] text-center w-full" placeholder="Özel">
-                    </div>
-                </div>
+                <button onclick="hesaplaMesai()" class="w-full py-4 mt-1 bg-slate-800 dark:bg-emerald-600 active:scale-[0.98] text-white rounded-[20px] font-black text-sm sm:text-base transition-transform shadow-md truncate shrink-0">Tümünü Hesapla</button>
+                <div id="mesai-sonuc" class="hidden mt-1 w-full"></div>
                 
-                <button onclick="hesaplaMesai()" class="w-full py-4 mt-2 bg-slate-800 dark:bg-emerald-600 active:scale-[0.98] text-white rounded-[20px] font-black text-sm sm:text-base transition-transform shadow-md truncate shrink-0">
-                    Toplamı Hesapla
+                <!-- BÜTÇE GEÇİŞ BUTONU -->
+                <button onclick="showSection('butce')" class="w-full py-4 mt-1 bg-indigo-600 active:scale-[0.98] text-white rounded-[20px] font-black text-sm sm:text-base transition-transform shadow-md shadow-indigo-500/30 truncate shrink-0 flex items-center justify-center gap-2">
+                    <span class="text-xl">💼</span> Akıllı Bütçe Planlayıcı
                 </button>
-                
-                <div id="mesai-sonuc" class="hidden mt-2 w-full"></div>
             </div>
         </div>
     </div>
 
-    <!-- AJANDA MODALI (SABİT) -->
+    <!-- SAYFA 8: AKILLI BÜTÇE PLANLAYICI -->
+    <div id="section-butce" class="app-page">
+        <div class="max-w-[500px] mx-auto w-full min-h-[100dvh] flex flex-col px-5 pt-8 pb-10 gap-4">
+            <header class="mb-4 flex items-center justify-between w-full shrink-0">
+                <button onclick="showSection('mesai-hesap')" class="flex items-center justify-center w-11 h-11 rounded-[16px] bg-white dark:bg-darkcard shadow-sm hover:scale-105 active:scale-95 transition-all text-slate-600 dark:text-slate-300">
+                    <span class="text-2xl leading-none -ml-1">‹</span>
+                </button>
+                <h2 class="text-lg sm:text-xl font-black text-slate-800 dark:text-white flex-1 text-center truncate px-2">Bütçe Planlayıcı</h2>
+                <div class="w-11 h-11"></div>
+            </header>
+            
+            <!-- DAİRESEL ŞABLON (DONUT CHART) -->
+            <div class="glass-card p-6 w-full flex flex-col items-center">
+                <div class="relative w-40 h-40 flex items-center justify-center mb-4 drop-shadow-xl">
+                    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="40" fill="transparent" stroke="#f1f5f9" stroke-width="9" class="dark:stroke-slate-700"></circle>
+                        <circle id="donut-expense" cx="50" cy="50" r="40" fill="transparent" stroke="#10b981" stroke-width="9" stroke-dasharray="251.2" stroke-dashoffset="251.2" stroke-linecap="round" class="transition-all duration-1000"></circle>
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Kalan Net</span>
+                        <span id="budget-kalan" class="text-xl font-black text-emerald-500 truncate max-w-[120px] text-center mt-0.5">0 ₺</span>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3 w-full">
+                    <div class="bg-slate-50 dark:bg-darkinput p-3 rounded-[16px] text-center flex flex-col justify-center border border-slate-100 dark:border-slate-700">
+                        <span class="block text-[9px] font-black text-slate-400 uppercase tracking-widest truncate">Aylık Gelir</span>
+                        <span id="budget-maas-txt" class="text-sm font-black text-slate-800 dark:text-white mt-1">0 ₺</span>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-darkinput p-3 rounded-[16px] text-center flex flex-col justify-center border border-slate-100 dark:border-slate-700">
+                        <span class="block text-[9px] font-black text-slate-400 uppercase tracking-widest truncate">Toplam Gider</span>
+                        <span id="budget-total-expense" class="text-sm font-black text-rose-500 mt-1">0 ₺</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FATURA/GİDER EKLEME FORMU -->
+            <div class="glass-card p-5 w-full flex flex-col gap-3">
+                <h3 class="text-[11px] font-black text-slate-800 dark:text-white uppercase tracking-widest flex items-center gap-2 mb-1 truncate">
+                    <span class="text-lg">🧾</span> Yeni Fatura / Gider Ekle
+                </h3>
+                
+                <div class="input-box w-full relative">
+                    <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 truncate">Fatura Tipi / Kategori</label>
+                    <select id="budget-category" class="w-full text-sm font-bold text-slate-800 dark:text-white outline-none bg-transparent appearance-none cursor-pointer">
+                        <option value="Elektrik ⚡">⚡ Elektrik Faturası</option>
+                        <option value="Su 💧">💧 Su Faturası</option>
+                        <option value="Doğalgaz 🔥">🔥 Doğalgaz Faturası</option>
+                        <option value="İnternet 🌐">🌐 İnternet & İletişim</option>
+                        <option value="Kira 🏠">🏠 Ev Kirası</option>
+                        <option value="Aidat 🏢">🏢 Bina Aidatı</option>
+                        <option value="Kredi 💳">💳 Kredi / Kart Ödemesi</option>
+                        <option value="Yakıt ⛽">⛽ Araç Yakıtı</option>
+                        <option value="Market 🛒">🛒 Market Harcaması</option>
+                        <option value="Eğitim 📚">📚 Eğitim & Okul</option>
+                        <option value="Diğer 📦">📦 Diğer Gider</option>
+                    </select>
+                    <span class="absolute right-4 top-1/2 mt-1 pointer-events-none text-xs text-slate-400">▼</span>
+                </div>
+
+                <div class="flex gap-2 w-full">
+                    <div class="input-box w-1/2">
+                        <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 truncate">Tutar (₺)</label>
+                        <input type="number" id="budget-amount" placeholder="0.00" class="text-sm font-bold text-slate-800 dark:text-white w-full">
+                    </div>
+                    
+                    <!-- YENİLİK: TAKVİMLİ VE YÖNLENDİRMELİ FATURA GÜNÜ SEÇİCİ -->
+                    <div class="w-1/2 flex flex-col gap-1">
+                        <div class="input-box w-full h-full relative !py-2 !px-3 overflow-hidden">
+                            <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1 truncate">🗓️ Fatura Günü</label>
+                            <input type="date" id="budget-date" class="text-sm font-bold text-slate-800 dark:text-white w-full h-full relative z-10 bg-transparent">
+                        </div>
+                        <div class="bg-indigo-100 dark:bg-indigo-900/40 rounded-lg p-1.5 text-center border border-indigo-200 dark:border-indigo-800/50 shadow-sm">
+                            <span class="text-[8px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest block leading-tight">Takvimden Seçiniz</span>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="addBudgetExpense()" class="w-full py-4 bg-indigo-500 active:scale-95 text-white rounded-[16px] font-black text-sm transition-transform shadow-md truncate mt-1">Düzenli Fatura Olarak Ekle</button>
+            </div>
+
+            <!-- GİDER LİSTESİ -->
+            <div class="glass-card p-5 w-full flex-1">
+                <h3 class="text-[11px] font-black text-slate-800 dark:text-white uppercase tracking-widest mb-3 truncate flex items-center gap-2">
+                    <span class="text-lg">📋</span> Düzenli Fatura Listesi
+                </h3>
+                <ul id="budget-list" class="space-y-2 w-full overflow-y-auto max-h-[300px] pr-1">
+                    <!-- Dinamik Giderler -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- AJANDA MODALI -->
     <div id="note-modal" class="fixed inset-0 z-50 flex items-center justify-center p-5 modal-overlay hidden">
         <div class="bg-white dark:bg-darkcard p-6 sm:p-8 rounded-[32px] shadow-2xl w-full max-w-sm flex flex-col max-h-[90vh]">
             <div class="flex justify-between items-center mb-6 w-full gap-2 shrink-0">
                 <h3 class="text-lg font-black text-slate-800 dark:text-white flex items-center gap-2 w-full truncate"><span class="text-2xl">📝</span> Ajanda</h3>
                 <button onclick="closeNoteModal()" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-darkinput text-slate-500 font-black flex items-center justify-center flex-shrink-0">✕</button>
             </div>
-            
             <p id="note-modal-date" class="text-xs font-black text-blue-500 mb-4 uppercase tracking-widest w-full truncate shrink-0"></p>
-            
             <div class="input-box !p-0 mb-6 w-full flex-1">
                 <textarea id="note-input" rows="4" placeholder="Buraya not alın..." class="w-full h-full bg-transparent p-4 text-sm font-bold text-slate-800 dark:text-white outline-none resize-none rounded-[20px]"></textarea>
             </div>
-            
             <div class="flex gap-3 w-full shrink-0">
                 <button onclick="saveNote()" class="flex-1 py-4 bg-blue-600 text-white rounded-[16px] font-black text-sm active:scale-95 transition-transform truncate">Notu Kaydet</button>
                 <button onclick="deleteNote()" class="py-4 px-6 bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 rounded-[16px] font-black text-sm active:scale-95 transition-transform truncate">Sil</button>
@@ -456,42 +567,33 @@
     </div>
 
     <script>
-        // --- YENİLİK: 2026 TÜRKİYE RESMİ TATİLLERİ ---
         const HOLIDAYS_2026 = {
-            "1-1": "Yılbaşı",
-            "3-20": "Ramazan Bayramı Arifesi",
-            "3-21": "Ramazan Bayramı 1. Gün",
-            "3-22": "Ramazan Bayramı 2. Gün",
-            "3-23": "Ramazan Bayramı 3. Gün",
-            "4-23": "23 Nisan Ulusal Egemenlik ve Çocuk B.",
-            "5-1": "1 Mayıs İşçi Bayramı",
-            "5-19": "19 Mayıs Gençlik ve Spor B.",
-            "5-26": "Kurban Bayramı Arifesi",
-            "5-27": "Kurban Bayramı 1. Gün",
-            "5-28": "Kurban Bayramı 2. Gün",
-            "5-29": "Kurban Bayramı 3. Gün",
-            "5-30": "Kurban Bayramı 4. Gün",
-            "7-15": "15 Temmuz Demokrasi Günü",
-            "8-30": "30 Ağustos Zafer Bayramı",
-            "10-29": "29 Ekim Cumhuriyet Bayramı",
-            "11-10": "10 Kasım Atatürk'ü Anma"
+            "1-1": "Yılbaşı", "3-20": "Ramazan Bayramı Arifesi", "3-21": "Ramazan B. 1. Gün", "3-22": "Ramazan B. 2. Gün", "3-23": "Ramazan B. 3. Gün",
+            "4-23": "23 Nisan Çocuk B.", "5-1": "1 Mayıs İşçi B.", "5-19": "19 Mayıs Gençlik B.", "5-26": "Kurban Bayramı Arifesi",
+            "5-27": "Kurban B. 1. Gün", "5-28": "Kurban B. 2. Gün", "5-29": "Kurban B. 3. Gün", "5-30": "Kurban B. 4. Gün",
+            "7-15": "15 Temmuz", "8-30": "30 Ağustos Zafer B.", "10-29": "29 Ekim Cumhuriyet B.", "11-10": "10 Kasım"
         };
 
         const CURRENT_DATE = new Date();
-        const CURRENT_YEAR = 2026; // Veritabanı ile mükemmel eşleşmesi için 2026 yılına sabitlendi
+        const CURRENT_YEAR = 2026; 
 
-        let selectedMultiplier = parseFloat(localStorage.getItem('v_multiplier')) || 1.5;
+        // ÇİFT MESAİ ÇARPANLARI
+        let mult1 = parseFloat(localStorage.getItem('v_mult1')) || 1.5;
+        let mult2 = parseFloat(localStorage.getItem('v_mult2')) || 2.0;
+
         let activeMonthIndex = 0;
         let activeMonthName = "";
         
-        // Veritabanı (YENİLİK: Varsayılan başlangıç tarihi 24 Mayıs 2026 yapıldı)
         let appNotes = JSON.parse(localStorage.getItem('v_notes')) || {};
         let shiftSetting = localStorage.getItem('v_shift_setting') || 'default';
         let shiftRefDate = localStorage.getItem('v_shift_ref') || `2026-05-24`; 
         let paydaySetting = parseInt(localStorage.getItem('v_payday')) || 15;
         let activeNoteDateKey = "";
 
-        // Tema Ayarı
+        // GİDERLER: Artık full date yerine sadece `day` tutacağız (Tüm aylarda tekrarlanması için)
+        let budgetExpenses = JSON.parse(localStorage.getItem('v_budget')) || [];
+        let activeNotifications = []; 
+
         function toggleTheme() {
             document.documentElement.classList.toggle('dark');
             const isDark = document.documentElement.classList.contains('dark');
@@ -500,243 +602,344 @@
         }
 
         window.onload = () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                if (splash) { splash.style.opacity = '0'; setTimeout(() => { splash.style.display = 'none'; }, 500); }
+            }, 2000);
+
             if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
                 document.getElementById('theme-icon').innerText = '☀️';
             }
             
-            // Ayarlar Kutusuna Verileri Bas
             document.getElementById('ayarlar-dongu').value = shiftSetting;
             document.getElementById('ayarlar-tarih').value = shiftRefDate;
             document.getElementById('ayarlar-maas-gunu').value = paydaySetting;
             document.getElementById('start-date').valueAsDate = CURRENT_DATE;
 
             document.getElementById('mesai-maas').value = localStorage.getItem('v_maas') || '';
-            document.getElementById('mesai-ucret').value = localStorage.getItem('v_ucret') || '';
-            document.getElementById('mesai-saat').value = localStorage.getItem('v_saat') || '';
+            document.getElementById('mesai-saat-1').value = localStorage.getItem('v_saat1') || '';
+            document.getElementById('mesai-ucret-1').value = localStorage.getItem('v_ucret1') || '';
+            document.getElementById('mesai-saat-2').value = localStorage.getItem('v_saat2') || '';
+            document.getElementById('mesai-ucret-2').value = localStorage.getItem('v_ucret2') || '';
             document.getElementById('mesai-yol-ucret').value = localStorage.getItem('v_yol_ucret') || '';
             document.getElementById('mesai-yol-gun').value = localStorage.getItem('v_yol_gun') || '';
             document.getElementById('mesai-yemek-ucret').value = localStorage.getItem('v_yemek_ucret') || '';
             document.getElementById('mesai-yemek-gun').value = localStorage.getItem('v_yemek_gun') || '';
             document.getElementById('izin-toplam-hak').value = localStorage.getItem('v_izin_hakkim') || '';
             
-            setMultiplier(selectedMultiplier);
+            updateMultBtns();
+
             initDashboard();
             startLiveClock();
+            checkNotifications();
+            renderBudget();
         }
 
-        // Kusursuz Vardiya Hesaplama Motoru
-        function getShift(targetDate) {
-            const refParts = shiftRefDate.split('-');
-            if(refParts.length !== 3) return "Hata";
+        // YENİLİK: BOŞ KALAN DEĞER GİRİŞİ SİSTEMİ
+        function setMult(type, val) {
+            if(type === 1) { mult1 = val; localStorage.setItem('v_mult1', val); }
+            else { mult2 = val; localStorage.setItem('v_mult2', val); }
+            updateMultBtns();
+        }
+        function customMult(type) {
+            const val = parseFloat(document.getElementById(`mesai-carpan-${type}`).value);
+            if(!isNaN(val)) {
+                if(type === 1) { mult1 = val; localStorage.setItem('v_mult1', val); }
+                else { mult2 = val; localStorage.setItem('v_mult2', val); }
+                updateMultBtns(type, true);
+            }
+        }
+        function updateMultBtns(forceCustomType = 0, isTyping = false) {
+            document.querySelectorAll('.mult-btn-1').forEach(b => b.className = "mult-btn-1 py-2 bg-white dark:bg-[#1e293b] text-slate-600 dark:text-slate-300 rounded-[12px] text-xs font-bold w-full truncate border border-slate-200 dark:border-slate-700");
+            let btn1 = document.getElementById(`btn-m1-${mult1.toFixed(1)}`);
+            if (btn1 && forceCustomType !== 1) { 
+                btn1.className = "mult-btn-1 py-2 bg-blue-500 text-white rounded-[12px] text-xs font-black shadow-sm w-full truncate"; 
+                document.getElementById('mesai-carpan-1').value = ""; // Buton aktifse input boş kalır
+            } else if(!isTyping) { document.getElementById('mesai-carpan-1').value = mult1; }
             
-            // Saatleri tamamen sıfırlayarak sadece gün farkı buluyoruz
+            document.querySelectorAll('.mult-btn-2').forEach(b => b.className = "mult-btn-2 py-2 bg-white dark:bg-[#1e293b] text-slate-600 dark:text-slate-300 rounded-[12px] text-xs font-bold w-full truncate border border-slate-200 dark:border-slate-700");
+            let btn2 = document.getElementById(`btn-m2-${mult2.toFixed(1)}`);
+            if (btn2 && forceCustomType !== 2) { 
+                btn2.className = "mult-btn-2 py-2 bg-indigo-500 text-white rounded-[12px] text-xs font-black shadow-sm w-full truncate"; 
+                document.getElementById('mesai-carpan-2').value = ""; // Buton aktifse input boş kalır
+            } else if(!isTyping) { document.getElementById('mesai-carpan-2').value = mult2; }
+        }
+
+        // BİLDİRİM SİSTEMİ MOTORU (Evrensel Ay Günlerine Göre)
+        function checkNotifications() {
+            let notifs = [];
+            let clearedNotifs = JSON.parse(localStorage.getItem('v_cleared_notifs')) || [];
+            let today = new Date(); let tmrw = new Date(); tmrw.setDate(tmrw.getDate() + 1);
+
+            let todayDay = today.getDate();
+            let tmrwDay = tmrw.getDate();
+
+            budgetExpenses.forEach(exp => {
+                if(!exp.day) return;
+                let id = 'exp_' + exp.id;
+                if(clearedNotifs.includes(id)) return; 
+
+                // Ay sonu kontrolü (Örn: Fatura 31'inde ama Şubat ayındayız)
+                let daysInTodayMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+                let actualTargetDayToday = exp.day > daysInTodayMonth ? daysInTodayMonth : exp.day;
+
+                let daysInTmrwMonth = new Date(tmrw.getFullYear(), tmrw.getMonth() + 1, 0).getDate();
+                let actualTargetDayTmrw = exp.day > daysInTmrwMonth ? daysInTmrwMonth : exp.day;
+
+                if (todayDay === actualTargetDayToday) {
+                    notifs.push({ id: id, icon: '💳', title: 'Ödeme Günü!', text: `Bugün ${exp.name} ödemeniz var. Tutar: ${exp.amount} ₺`, color: 'text-rose-500', bg: 'bg-rose-50 dark:bg-rose-900/20' });
+                } else if (tmrwDay === actualTargetDayTmrw) {
+                    notifs.push({ id: id, icon: '⚠️', title: 'Yaklaşan Ödeme', text: `Yarın ${exp.name} son ödeme tarihi. Tutar: ${exp.amount} ₺`, color: 'text-orange-500', bg: 'bg-orange-50 dark:bg-orange-900/20' });
+                }
+            });
+
+            let todayKey = `${CURRENT_YEAR}-${CURRENT_DATE.getMonth()+1}-${CURRENT_DATE.getDate()}`;
+            if(appNotes[todayKey]) {
+                 let id = 'note_' + todayKey;
+                 if(!clearedNotifs.includes(id)) {
+                     notifs.push({ id: id, icon: '📝', title: 'Vardiya Notu', text: `Bugün için notunuz var: "${appNotes[todayKey].substring(0,25)}..."`, color: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-900/20' });
+                 }
+            }
+
+            activeNotifications = notifs;
+            const badge = document.getElementById('notif-badge');
+            if(notifs.length > 0) badge.classList.remove('hidden'); else badge.classList.add('hidden');
+        }
+
+        function openNotificationModal() {
+            const listEl = document.getElementById('notification-list'); listEl.innerHTML = '';
+            if(activeNotifications.length === 0) {
+                listEl.innerHTML = `<div class="text-center p-5 text-slate-400 font-bold text-sm">Şu an için yeni sistem uyarısı veya bildiriminiz bulunmuyor. ✅</div>`;
+            } else {
+                activeNotifications.forEach(n => {
+                    listEl.innerHTML += `<div class="p-4 rounded-[20px] ${n.bg} flex gap-3 items-start"><span class="text-2xl">${n.icon}</span><div><h4 class="${n.color} font-black text-xs uppercase tracking-widest">${n.title}</h4><p class="text-slate-700 dark:text-slate-200 font-bold text-sm mt-1">${n.text}</p></div></div>`;
+                });
+            }
+            document.getElementById('notification-modal').classList.remove('hidden');
+        }
+
+        function closeNotificationModal() { document.getElementById('notification-modal').classList.add('hidden'); }
+        function clearAllNotifications() {
+            if(activeNotifications.length === 0) { closeNotificationModal(); return; }
+            let clearedNotifs = JSON.parse(localStorage.getItem('v_cleared_notifs')) || [];
+            activeNotifications.forEach(n => clearedNotifs.push(n.id));
+            localStorage.setItem('v_cleared_notifs', JSON.stringify(clearedNotifs));
+            checkNotifications(); closeNotificationModal();
+        }
+
+        // AKILLI BÜTÇE MOTORU (YENİLİK: Evrensel Ay Günü Mantığı)
+        function renderBudget() {
+            let lastCalcSalary = parseFloat(localStorage.getItem('v_last_salary')) || parseFloat(document.getElementById('mesai-maas').value) || 0;
+            document.querySelectorAll('#budget-maas-txt').forEach(el => { el.innerText = lastCalcSalary.toLocaleString('tr-TR') + ' ₺'; });
+
+            let totalExp = 0; const listEl = document.getElementById('budget-list'); listEl.innerHTML = '';
+
+            if (budgetExpenses.length === 0) {
+                listEl.innerHTML = '<li class="text-xs font-bold text-slate-400 text-center py-5 bg-slate-50 dark:bg-darkinput rounded-[20px] border border-slate-100 dark:border-slate-700">Henüz bir fatura/gider eklemediniz.</li>';
+            }
+
+            budgetExpenses.sort((a,b) => a.day - b.day);
+
+            budgetExpenses.forEach((exp) => {
+                totalExp += exp.amount; 
+                let dateStr = `Her ayın ${exp.day}. günü`;
+
+                listEl.innerHTML += `
+                    <li class="flex justify-between items-center p-4 bg-slate-50 dark:bg-darkinput rounded-[20px] border border-slate-100 dark:border-slate-700">
+                        <div class="flex flex-col truncate pr-2">
+                            <span class="font-black text-sm text-slate-800 dark:text-white truncate">${exp.name}</span>
+                            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Düzenli Ödeme: ${dateStr}</span>
+                        </div>
+                        <div class="flex items-center gap-3 shrink-0">
+                            <span class="font-black text-rose-500 text-sm sm:text-base">-${exp.amount} ₺</span>
+                            <button onclick="deleteBudgetExpense('${exp.id}')" class="w-8 h-8 bg-white dark:bg-[#1e293b] text-rose-500 rounded-[12px] font-black flex items-center justify-center active:scale-95 shadow-sm border border-rose-100 dark:border-rose-900/30">✕</button>
+                        </div>
+                    </li>
+                `;
+            });
+
+            document.getElementById('budget-total-expense').innerText = totalExp.toLocaleString('tr-TR') + ' ₺';
+            let kalan = lastCalcSalary - totalExp; let kalanEl = document.getElementById('budget-kalan');
+            kalanEl.innerText = kalan.toLocaleString('tr-TR') + ' ₺';
+            
+            const donutCircle = document.getElementById('donut-expense');
+            if (donutCircle) {
+                const totalC = 251.2; let percent = 0;
+                if(lastCalcSalary > 0) { percent = (totalExp / lastCalcSalary) * 100; }
+                percent = Math.min(100, Math.max(0, percent));
+                
+                if (kalan < 0) {
+                    kalanEl.classList.replace('text-emerald-500', 'text-rose-500');
+                    donutCircle.setAttribute('stroke', '#ef4444');
+                    donutCircle.style.strokeDashoffset = 0;
+                } else {
+                    kalanEl.classList.replace('text-rose-500', 'text-emerald-500');
+                    donutCircle.setAttribute('stroke', '#10b981');
+                    donutCircle.style.strokeDashoffset = totalC - (percent / 100) * totalC;
+                }
+            }
+        }
+
+        function addBudgetExpense() {
+            const categorySelect = document.getElementById('budget-category');
+            const name = categorySelect.value;
+            const amount = parseFloat(document.getElementById('budget-amount').value);
+            const dateVal = document.getElementById('budget-date').value;
+
+            if(isNaN(amount) || amount <= 0 || !dateVal) { alert("Lütfen takvimden geçerli bir tarih ve tutar girin."); return; }
+
+            // Sadece 'GÜN' bilgisini alıyoruz, böylece her ay otomatik işler
+            const dayOfMonth = parseInt(dateVal.split('-')[2]);
+
+            const newExp = { id: Date.now().toString(), name: name, amount: amount, day: dayOfMonth };
+            budgetExpenses.push(newExp);
+            localStorage.setItem('v_budget', JSON.stringify(budgetExpenses));
+            
+            document.getElementById('budget-amount').value = '';
+            document.getElementById('budget-date').value = '';
+            
+            renderBudget(); checkNotifications(); 
+            if (document.getElementById('section-takvim-detay').classList.contains('active')) { showCalendar(activeMonthIndex, activeMonthName); }
+        }
+
+        function deleteBudgetExpense(id) {
+            budgetExpenses = budgetExpenses.filter(e => e.id !== id);
+            localStorage.setItem('v_budget', JSON.stringify(budgetExpenses));
+            renderBudget(); checkNotifications();
+            if (document.getElementById('section-takvim-detay').classList.contains('active')) { showCalendar(activeMonthIndex, activeMonthName); }
+        }
+
+        function getShift(targetDate) {
+            const refParts = shiftRefDate.split('-'); if(refParts.length !== 3) return "Hata";
             const r = Date.UTC(parseInt(refParts[0]), parseInt(refParts[1]) - 1, parseInt(refParts[2]));
             const t = Date.UTC(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
-            
             const diffDays = Math.floor((t - r) / (1000 * 60 * 60 * 24));
-
             let cycle = [];
             if(shiftSetting === 'default') cycle = ['Gündüz', 'Gündüz', 'Gece', 'Gece', 'İzin', 'İzin'];
             else if(shiftSetting === '4g2i') cycle = ['Gündüz', 'Gündüz', 'Gündüz', 'Gündüz', 'İzin', 'İzin'];
             else if(shiftSetting === 'sabit_g') return targetDate.getDay() === 0 ? 'İzin' : 'Gündüz';
             else if(shiftSetting === 'sabit_ge') return targetDate.getDay() === 0 ? 'İzin' : 'Gece';
-
-            const len = cycle.length;
-            let idx = diffDays % len;
-            if (idx < 0) idx = len + idx; 
+            const len = cycle.length; let idx = diffDays % len; if (idx < 0) idx = len + idx; 
             return cycle[idx];
         }
 
         function ayarlariKaydet() {
-            const yeniDongu = document.getElementById('ayarlar-dongu').value;
-            const yeniTarih = document.getElementById('ayarlar-tarih').value;
-            const yeniMaas = document.getElementById('ayarlar-maas-gunu').value;
-
+            const yeniDongu = document.getElementById('ayarlar-dongu').value; const yeniTarih = document.getElementById('ayarlar-tarih').value; const yeniMaas = document.getElementById('ayarlar-maas-gunu').value;
             if (!yeniTarih) { alert("Lütfen başlangıç tarihi seçin."); return; }
-
-            shiftSetting = yeniDongu;
-            shiftRefDate = yeniTarih;
-            paydaySetting = parseInt(yeniMaas) || 15;
-
-            localStorage.setItem('v_shift_setting', shiftSetting);
-            localStorage.setItem('v_shift_ref', shiftRefDate);
-            localStorage.setItem('v_payday', paydaySetting);
+            shiftSetting = yeniDongu; shiftRefDate = yeniTarih; paydaySetting = parseInt(yeniMaas) || 15;
+            localStorage.setItem('v_shift_setting', shiftSetting); localStorage.setItem('v_shift_ref', shiftRefDate); localStorage.setItem('v_payday', paydaySetting);
             
             localStorage.setItem('v_maas', document.getElementById('mesai-maas').value);
-            localStorage.setItem('v_ucret', document.getElementById('mesai-ucret').value);
-            localStorage.setItem('v_saat', document.getElementById('mesai-saat').value);
-            localStorage.setItem('v_yol_ucret', document.getElementById('mesai-yol-ucret').value);
-            localStorage.setItem('v_yol_gun', document.getElementById('mesai-yol-gun').value);
-            localStorage.setItem('v_yemek_ucret', document.getElementById('mesai-yemek-ucret').value);
-            localStorage.setItem('v_yemek_gun', document.getElementById('mesai-yemek-gun').value);
+            localStorage.setItem('v_saat1', document.getElementById('mesai-saat-1').value); localStorage.setItem('v_ucret1', document.getElementById('mesai-ucret-1').value);
+            localStorage.setItem('v_saat2', document.getElementById('mesai-saat-2').value); localStorage.setItem('v_ucret2', document.getElementById('mesai-ucret-2').value);
+            localStorage.setItem('v_yol_ucret', document.getElementById('mesai-yol-ucret').value); localStorage.setItem('v_yol_gun', document.getElementById('mesai-yol-gun').value);
+            localStorage.setItem('v_yemek_ucret', document.getElementById('mesai-yemek-ucret').value); localStorage.setItem('v_yemek_gun', document.getElementById('mesai-yemek-gun').value);
             localStorage.setItem('v_izin_hakkim', document.getElementById('izin-toplam-hak').value);
 
             initDashboard();
-            if (document.getElementById('section-takvim-detay').classList.contains('active')) {
-                showCalendar(activeMonthIndex, activeMonthName);
-            }
-            
+            if (document.getElementById('section-takvim-detay').classList.contains('active')) { showCalendar(activeMonthIndex, activeMonthName); }
             showSection('menu');
         }
 
-        // CANLI DASHBOARD
         function initDashboard() {
-            const y = CURRENT_YEAR;
-            const m = CURRENT_DATE.getMonth();
-            const d = CURRENT_DATE.getDate();
-            
+            const y = CURRENT_YEAR; const m = CURRENT_DATE.getMonth(); const d = CURRENT_DATE.getDate();
             const shiftT = getShift(new Date(y, m, d));
-            document.getElementById('dash-today').innerText = shiftT;
-            document.getElementById('dash-tomorrow').innerText = getShift(new Date(y, m, d + 1));
+            document.getElementById('dash-today').innerText = shiftT; document.getElementById('dash-tomorrow').innerText = getShift(new Date(y, m, d + 1));
 
-            // Sıradaki İzin
-            let daysToLeave = 0; 
-            let checkDate = new Date(y, m, d);
-            for(let i = 1; i <= 30; i++) { 
-                checkDate.setDate(checkDate.getDate() + 1); 
-                if(getShift(checkDate) === 'İzin') { daysToLeave = i; break; } 
-            }
-            
-            if (shiftT === 'İzin') document.getElementById('dash-leave').innerText = "İzindesin 🎉";
-            else if (daysToLeave === 1) document.getElementById('dash-leave').innerText = "Yarın";
-            else document.getElementById('dash-leave').innerText = daysToLeave + " Gün Kaldı";
-
-            // Bu Ayki Durum
-            let cGunduz = 0, cGece = 0;
-            const daysInMonth = new Date(y, m + 1, 0).getDate();
-            for(let day = 1; day <= daysInMonth; day++) {
-                const s = getShift(new Date(y, m, day));
-                if(s === 'Gündüz') cGunduz++; else if(s === 'Gece') cGece++;
-            }
+            let cGunduz = 0, cGece = 0; const daysInMonth = new Date(y, m + 1, 0).getDate();
+            for(let day = 1; day <= daysInMonth; day++) { const s = getShift(new Date(y, m, day)); if(s === 'Gündüz') cGunduz++; else if(s === 'Gece') cGece++; }
             document.getElementById('dash-month-summary').innerText = `${cGunduz} Gündüz, ${cGece} Gece`;
 
-            // Maaşa Kalan Gün
-            let nextPay = new Date(y, m, paydaySetting);
-            if (d > paydaySetting) nextPay = new Date(y, m + 1, paydaySetting);
+            let nextPay = new Date(y, m, paydaySetting); if (d > paydaySetting) nextPay = new Date(y, m + 1, paydaySetting);
             const diffPay = Math.ceil((nextPay - new Date(y, m, d)) / (1000 * 60 * 60 * 24));
             document.getElementById('dash-payday').innerText = diffPay === 0 ? "Bugün! 💰" : `${diffPay} Gün Kaldı`;
 
             updateShiftProgress(shiftT);
         }
 
-        function startLiveClock() {
-            setInterval(() => {
-                const now = new Date();
-                const timeStr = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute:'2-digit' });
-                document.getElementById('live-clock').innerText = timeStr;
-            }, 1000);
-        }
+        function startLiveClock() { setInterval(() => { document.getElementById('live-clock').innerText = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute:'2-digit' }); }, 1000); }
 
         function updateShiftProgress(shiftToday) {
-            const container = document.getElementById('shift-progress-container');
-            const bar = document.getElementById('shift-progress-bar');
-            const txt = document.getElementById('shift-progress-text');
-            const desc = document.getElementById('shift-progress-desc');
-
-            if (shiftToday !== 'Gündüz' && shiftToday !== 'Gece') {
-                container.classList.add('hidden');
-                return;
-            }
-
+            const container = document.getElementById('shift-progress-container'); const bar = document.getElementById('shift-progress-bar'); const txt = document.getElementById('shift-progress-text'); const desc = document.getElementById('shift-progress-desc');
+            if (shiftToday !== 'Gündüz' && shiftToday !== 'Gece') { container.classList.add('hidden'); return; }
             container.classList.remove('hidden');
-            
             const calcProgress = () => {
-                const now = new Date();
-                const h = now.getHours();
-                const m = now.getMinutes();
-                const currentMins = (h * 60) + m;
-                let percent = 0;
-
+                const now = new Date(); const h = now.getHours(); const m = now.getMinutes(); const currentMins = (h * 60) + m; let percent = 0;
                 if (shiftToday === 'Gündüz') {
-                    if (currentMins >= 480 && currentMins <= 1200) {
-                        percent = ((currentMins - 480) / 720) * 100;
-                        desc.innerText = "Mesaiye devam, kolay gelsin!";
-                        bar.className = "bg-blue-500 h-3 rounded-full progress-bar-striped transition-all duration-1000";
-                    } else if (currentMins > 1200) { percent = 100; desc.innerText = "Mesai bitti, dinlenme vakti."; bar.className = "bg-slate-400 h-3 rounded-full transition-all"; }
+                    if (currentMins >= 480 && currentMins <= 1200) { percent = ((currentMins - 480) / 720) * 100; desc.innerText = "Mesaiye devam, kolay gelsin!"; bar.className = "bg-blue-500 h-3 rounded-full progress-bar-striped transition-all duration-1000"; } 
+                    else if (currentMins > 1200) { percent = 100; desc.innerText = "Mesai bitti, dinlenme vakti."; bar.className = "bg-slate-400 h-3 rounded-full transition-all"; }
                     else { percent = 0; desc.innerText = "Mesai henüz başlamadı."; bar.className = "bg-slate-300 h-3 rounded-full transition-all"; }
                 } else {
-                    if (currentMins >= 1200) { 
-                        percent = ((currentMins - 1200) / 720) * 100;
-                        desc.innerText = "Gece mesaisi devam ediyor.";
-                        bar.className = "bg-indigo-500 h-3 rounded-full progress-bar-striped transition-all duration-1000";
-                    } else if (currentMins <= 480) { 
-                        percent = (((currentMins + 1440) - 1200) / 720) * 100;
-                        desc.innerText = "Gece bitiyor, az kaldı!";
-                        bar.className = "bg-indigo-500 h-3 rounded-full progress-bar-striped transition-all duration-1000";
-                    } else { percent = 100; desc.innerText = "Mesai dışındasınız."; bar.className = "bg-slate-400 h-3 rounded-full transition-all"; }
+                    if (currentMins >= 1200) { percent = ((currentMins - 1200) / 720) * 100; desc.innerText = "Gece mesaisi devam ediyor."; bar.className = "bg-indigo-500 h-3 rounded-full progress-bar-striped transition-all duration-1000"; } 
+                    else if (currentMins <= 480) { percent = (((currentMins + 1440) - 1200) / 720) * 100; desc.innerText = "Gece bitiyor, az kaldı!"; bar.className = "bg-indigo-500 h-3 rounded-full progress-bar-striped transition-all duration-1000"; } 
+                    else { percent = 100; desc.innerText = "Mesai dışındasınız."; bar.className = "bg-slate-400 h-3 rounded-full transition-all"; }
                 }
-
-                percent = Math.max(0, Math.min(100, percent));
-                bar.style.width = `${percent}%`;
-                txt.innerText = `%${Math.round(percent)}`;
+                percent = Math.max(0, Math.min(100, percent)); bar.style.width = `${percent}%`; txt.innerText = `%${Math.round(percent)}`;
             };
-
-            calcProgress();
-            setInterval(calcProgress, 60000); 
+            calcProgress(); setInterval(calcProgress, 60000); 
         }
 
-        // MÜKEMMEL SAYFA GEÇİŞ MOTORU
         function showSection(id) {
             document.querySelectorAll('.app-page').forEach(s => s.classList.remove('active'));
             document.getElementById('section-' + id).classList.add('active');
             window.scrollTo(0, 0); 
             if(id === 'takvim-aylar') renderMonths();
+            if(id === 'butce') renderBudget(); 
         }
 
         function renderMonths() {
-            const container = document.getElementById('month-list');
-            container.innerHTML = "";
+            const container = document.getElementById('month-list'); container.innerHTML = "";
             const aylar = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
             aylar.forEach((m, i) => {
                 const btn = document.createElement('button');
                 btn.className = "py-4 sm:py-5 glass-card text-xs sm:text-sm font-black text-slate-800 dark:text-slate-100 active:scale-95 transition-transform flex items-center justify-center truncate w-full px-1";
-                btn.innerText = m;
-                btn.onclick = () => showCalendar(i, m);
-                container.appendChild(btn);
+                btn.innerText = m; btn.onclick = () => showCalendar(i, m); container.appendChild(btn);
             });
         }
 
+        // YENİLİK: TAKVİM FATURA ENTEGRASYONU
         function showCalendar(mIndex, mName) {
-            activeMonthIndex = mIndex;
-            activeMonthName = mName;
-            showSection('takvim-detay');
-            document.getElementById('month-name').innerText = mName + " " + CURRENT_YEAR;
+            activeMonthIndex = mIndex; activeMonthName = mName;
+            showSection('takvim-detay'); document.getElementById('month-name').innerText = mName + " " + CURRENT_YEAR;
             
             const grid = document.getElementById('calendar-grid');
             const holidayBox = document.getElementById('holiday-box');
             const holidayList = document.getElementById('holiday-list');
             
             let cGunduz = 0, cGece = 0, cIzin = 0;
-            
-            grid.innerHTML = `
-                <div class="text-[10px] sm:text-xs font-black text-slate-400 mb-2 text-center">Pt</div>
-                <div class="text-[10px] sm:text-xs font-black text-slate-400 mb-2 text-center">Sa</div>
-                <div class="text-[10px] sm:text-xs font-black text-slate-400 mb-2 text-center">Ça</div>
-                <div class="text-[10px] sm:text-xs font-black text-slate-400 mb-2 text-center">Pe</div>
-                <div class="text-[10px] sm:text-xs font-black text-slate-400 mb-2 text-center">Cu</div>
-                <div class="text-[10px] sm:text-xs font-black text-slate-400 mb-2 text-center">Ct</div>
-                <div class="text-[10px] sm:text-xs font-black text-slate-400 mb-2 text-center">Pz</div>
-            `;
+            grid.innerHTML = "Pt Sa Ça Pe Cu Ct Pz".split(' ').map(d=>`<div class="text-[10px] sm:text-xs font-black text-slate-400 mb-2 text-center">${d}</div>`).join('');
             
             const daysInMonth = new Date(CURRENT_YEAR, mIndex + 1, 0).getDate();
             const firstDayIndex = (new Date(CURRENT_YEAR, mIndex, 1).getDay() + 6) % 7; 
-            
             for(let i = 0; i < firstDayIndex; i++) grid.appendChild(document.createElement('div'));
-            let monthlyHolidays = [];
+            
+            let monthlyEvents = [];
 
             for(let d = 1; d <= daysInMonth; d++) {
                 const shift = getShift(new Date(CURRENT_YEAR, mIndex, d));
                 
-                // YENİLİK: Özel Gün Kontrolü (2026 Tatillerine Göre)
                 const holidayName = HOLIDAYS_2026[`${mIndex+1}-${d}`];
-                if (holidayName) monthlyHolidays.push({ day: d, name: holidayName });
+                if (holidayName) { monthlyEvents.push({ type: 'holiday', day: d, name: holidayName }); }
+
+                // FATURA ENTEGRASYONU
+                let dayBills = budgetExpenses.filter(e => {
+                    if(!e.day) return false;
+                    let targetDay = e.day;
+                    if(targetDay > daysInMonth) targetDay = daysInMonth; // Ay 30 çekiyorsa 31'ine eklenen faturayı 30'da göster
+                    return targetDay === d;
+                });
+                
+                let billIndicatorHTML = "";
+                if (dayBills.length > 0) {
+                    let emojis = [...new Set(dayBills.map(b => b.name.trim().slice(-2).trim()))].slice(0, 3);
+                    billIndicatorHTML = `<div class="calendar-icons-wrapper drop-shadow-md text-[9px] sm:text-[11px]">${emojis.join('')}</div>`;
+                    dayBills.forEach(b => monthlyEvents.push({ type: 'bill', day: d, name: b.name, amount: b.amount }));
+                }
 
                 if (shift === 'Gündüz') cGunduz++; else if (shift === 'Gece') cGece++; else cIzin++;
 
                 const dateKey = `${CURRENT_YEAR}-${mIndex+1}-${d}`;
                 const hasNote = appNotes[dateKey] ? true : false;
-
                 const div = document.createElement('div');
                 
                 let baseClass = "relative flex flex-col items-center justify-center rounded-[12px] sm:rounded-[16px] w-full h-[58px] sm:h-[68px] cursor-pointer active:scale-95 transition-transform overflow-hidden px-0.5 ";
@@ -744,175 +947,127 @@
                                  shift === 'Gece' ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400' : 
                                  'bg-slate-50 dark:bg-darkinput text-slate-500';
 
-                let holidayIndicator = holidayName ? `<span class="absolute top-1.5 right-1.5 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-rose-500 rounded-full"></span>` : "";
-                let noteIndicator = hasNote ? `<span class="absolute top-1.5 left-1.5 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full"></span>` : "";
+                let topIndicatorsHTML = `<div class="absolute top-1.5 left-0 right-0 flex justify-center gap-1 px-1">`;
+                if (holidayName) topIndicatorsHTML += `<span class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-rose-500 rounded-full"></span>`;
+                if (hasNote) topIndicatorsHTML += `<span class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full"></span>`;
+                topIndicatorsHTML += `</div>`;
 
-                div.className = baseClass + shiftClass;
-                div.onclick = () => openNoteModal(d, mIndex, mName);
+                div.className = baseClass + shiftClass; div.onclick = () => openNoteModal(d, mIndex, mName);
                 
                 div.innerHTML = `
-                    ${holidayIndicator}${noteIndicator}
-                    <span class="text-[16px] sm:text-[18px] font-black leading-none mb-0.5">${d}</span>
+                    ${topIndicatorsHTML}
+                    <span class="text-[16px] sm:text-[18px] font-black leading-none mb-0.5 mt-1">${d}</span>
                     <span class="text-[8px] sm:text-[10px] font-black uppercase text-center w-full leading-tight tracking-normal">${shift}</span>
+                    ${billIndicatorHTML}
                 `;
                 grid.appendChild(div);
             }
 
-            document.getElementById('stat-gunduz').innerText = cGunduz;
-            document.getElementById('stat-gece').innerText = cGece;
-            document.getElementById('stat-izin').innerText = cIzin;
+            document.getElementById('stat-gunduz').innerText = cGunduz; document.getElementById('stat-gece').innerText = cGece; document.getElementById('stat-izin').innerText = cIzin;
 
-            // YENİLİK: Ayın İçindeki Özel Günlerin Gösterilmesi
-            if (monthlyHolidays.length > 0) {
-                holidayBox.classList.remove('hidden');
-                holidayList.innerHTML = "";
-                monthlyHolidays.forEach(h => {
-                    const li = document.createElement('li');
-                    li.className = "flex gap-2 w-full truncate items-center";
-                    li.innerHTML = `<span class="text-rose-500 font-black shrink-0">•</span> <span class="truncate w-full"><strong class="font-black">${h.day} ${mName}:</strong> ${h.name}</span>`;
-                    holidayList.appendChild(li);
+            if (monthlyEvents.length > 0) {
+                holidayBox.classList.remove('hidden'); holidayList.innerHTML = "";
+                monthlyEvents.sort((a,b) => a.day - b.day);
+
+                monthlyEvents.forEach(ev => {
+                    if (ev.type === 'holiday') {
+                        holidayList.innerHTML += `<li class="flex gap-2 w-full truncate items-center"><span class="text-rose-500 font-black shrink-0 text-lg">•</span> <span class="truncate w-full text-slate-800 dark:text-slate-200"><strong class="font-black text-rose-500">${ev.day} ${mName}:</strong> ${ev.name}</span></li>`;
+                    } else if (ev.type === 'bill') {
+                        let icon = ev.name.trim().slice(-2).trim();
+                        holidayList.innerHTML += `<li class="flex gap-2 w-full truncate items-center"><span class="text-indigo-500 font-black shrink-0 text-lg">${icon}</span> <span class="truncate w-full text-slate-800 dark:text-slate-200"><strong class="font-black text-indigo-500">${ev.day} ${mName}:</strong> ${ev.name.slice(0,-2)} Ödemesi (${ev.amount} ₺)</span></li>`;
+                    }
                 });
             } else holidayBox.classList.add('hidden');
         }
 
-        // WhatsApp ve Kopyalama
         function shareWhatsApp() {
             let textData = `📅 *${activeMonthName} ${CURRENT_YEAR} Vardiya Planı:*\n\n`;
             for (let d = 1; d <= new Date(CURRENT_YEAR, activeMonthIndex + 1, 0).getDate(); d++) {
-                const shift = getShift(new Date(CURRENT_YEAR, activeMonthIndex, d));
-                let icon = shift === 'Gündüz' ? '☀️' : (shift === 'Gece' ? '🌙' : '🏖️');
-                textData += `${d} ${activeMonthName}: ${icon} ${shift}\n`;
+                const shift = getShift(new Date(CURRENT_YEAR, activeMonthIndex, d)); let icon = shift === 'Gündüz' ? '☀️' : (shift === 'Gece' ? '🌙' : '🏖️'); textData += `${d} ${activeMonthName}: ${icon} ${shift}\n`;
             }
             textData += `\n📊 *Özet:* ${document.getElementById('stat-gunduz').innerText} Gündüz, ${document.getElementById('stat-gece').innerText} Gece, ${document.getElementById('stat-izin').innerText} İzin`;
-            
-            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(textData)}`;
-            window.open(whatsappUrl, '_blank');
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(textData)}`, '_blank');
         }
 
         function copyToClipboard() {
             let textData = `📅 ${activeMonthName} ${CURRENT_YEAR} Vardiya:\n`;
-            for (let d = 1; d <= new Date(CURRENT_YEAR, activeMonthIndex + 1, 0).getDate(); d++) {
-                textData += `${d}: ${getShift(new Date(CURRENT_YEAR, activeMonthIndex, d))}\n`;
-            }
+            for (let d = 1; d <= new Date(CURRENT_YEAR, activeMonthIndex + 1, 0).getDate(); d++) { textData += `${d}: ${getShift(new Date(CURRENT_YEAR, activeMonthIndex, d))}\n`; }
             if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(textData).then(() => {
-                    const btn = document.getElementById('copy-btn'); const old = btn.innerHTML;
-                    btn.innerHTML = '✅'; setTimeout(() => { btn.innerHTML = old; }, 2000);
-                });
+                navigator.clipboard.writeText(textData).then(() => { const btn = document.getElementById('copy-btn'); const old = btn.innerHTML; btn.innerHTML = '✅'; setTimeout(() => { btn.innerHTML = old; }, 2000); });
             } else {
-                const el = document.createElement('textarea');
-                el.value = textData; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
+                const el = document.createElement('textarea'); el.value = textData; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
                 const btn = document.getElementById('copy-btn'); const old = btn.innerHTML; btn.innerHTML = '✅'; setTimeout(() => { btn.innerHTML = old; }, 2000);
             }
         }
 
-        // Not İşlemleri
-        function openNoteModalForToday() {
-            openNoteModal(CURRENT_DATE.getDate(), CURRENT_DATE.getMonth(), ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"][CURRENT_DATE.getMonth()]);
-        }
+        function openNoteModalForToday() { openNoteModal(CURRENT_DATE.getDate(), CURRENT_DATE.getMonth(), ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"][CURRENT_DATE.getMonth()]); }
         function openNoteModal(day, monthIdx, monthName) {
-            activeNoteDateKey = `${CURRENT_YEAR}-${monthIdx+1}-${day}`;
-            document.getElementById('note-modal-date').innerText = `${day} ${monthName} ${CURRENT_YEAR}`;
-            document.getElementById('note-input').value = appNotes[activeNoteDateKey] || '';
-            document.getElementById('note-modal').classList.remove('hidden');
+            activeNoteDateKey = `${CURRENT_YEAR}-${monthIdx+1}-${day}`; document.getElementById('note-modal-date').innerText = `${day} ${monthName} ${CURRENT_YEAR}`;
+            document.getElementById('note-input').value = appNotes[activeNoteDateKey] || ''; document.getElementById('note-modal').classList.remove('hidden');
         }
         function closeNoteModal() { document.getElementById('note-modal').classList.add('hidden'); }
         function saveNote() {
-            const text = document.getElementById('note-input').value.trim();
-            if(text) appNotes[activeNoteDateKey] = text; else delete appNotes[activeNoteDateKey];
-            localStorage.setItem('v_notes', JSON.stringify(appNotes));
-            closeNoteModal(); if(document.getElementById('section-takvim-detay').classList.contains('active')) showCalendar(activeMonthIndex, activeMonthName);
+            const text = document.getElementById('note-input').value.trim(); if(text) appNotes[activeNoteDateKey] = text; else delete appNotes[activeNoteDateKey];
+            localStorage.setItem('v_notes', JSON.stringify(appNotes)); closeNoteModal(); checkNotifications();
+            if(document.getElementById('section-takvim-detay').classList.contains('active')) showCalendar(activeMonthIndex, activeMonthName);
         }
         function deleteNote() {
-            delete appNotes[activeNoteDateKey];
-            localStorage.setItem('v_notes', JSON.stringify(appNotes));
-            closeNoteModal(); if(document.getElementById('section-takvim-detay').classList.contains('active')) showCalendar(activeMonthIndex, activeMonthName);
+            delete appNotes[activeNoteDateKey]; localStorage.setItem('v_notes', JSON.stringify(appNotes)); closeNoteModal(); checkNotifications();
+            if(document.getElementById('section-takvim-detay').classList.contains('active')) showCalendar(activeMonthIndex, activeMonthName);
         }
 
-        // Yıllık Rapor
         function generateYearlyReport() {
-            showSection('yillik-rapor');
-            document.getElementById('report-title').innerText = `${CURRENT_YEAR} Yıllık Analiz`;
-            let totalGunduz = 0, totalGece = 0, totalIzin = 0;
-            const bas = new Date(CURRENT_YEAR, 0, 1), bit = new Date(CURRENT_YEAR, 11, 31);
-            for (let d = new Date(bas); d <= bit; d.setDate(d.getDate() + 1)) {
-                const s = getShift(new Date(d));
-                if(s === 'Gündüz') totalGunduz++; else if(s === 'Gece') totalGece++; else totalIzin++;
+            showSection('yillik-rapor'); document.getElementById('report-title').innerText = `${CURRENT_YEAR} Yıllık Analiz`; let totalGunduz = 0, totalGece = 0, totalIzin = 0;
+            for (let d = new Date(CURRENT_YEAR, 0, 1); d <= new Date(CURRENT_YEAR, 11, 31); d.setDate(d.getDate() + 1)) {
+                const s = getShift(new Date(d)); if(s === 'Gündüz') totalGunduz++; else if(s === 'Gece') totalGece++; else totalIzin++;
             }
-            document.getElementById('yil-gunduz').innerText = totalGunduz;
-            document.getElementById('yil-gece').innerText = totalGece;
-            document.getElementById('yil-izin').innerText = totalIzin;
+            document.getElementById('yil-gunduz').innerText = totalGunduz; document.getElementById('yil-gece').innerText = totalGece; document.getElementById('yil-izin').innerText = totalIzin;
         }
 
-        // Hesaplamalar (İzin)
         function hesaplaIzin() {
-            const startStr = document.getElementById('start-date').value; const gun = parseInt(document.getElementById('izin-gun').value);
-            const toplamHak = parseInt(document.getElementById('izin-toplam-hak').value) || 0;
-            const sonucKutu = document.getElementById('izin-sonuc');
-            
-            if(!startStr || isNaN(gun) || gun < 1) {
-                sonucKutu.classList.remove('hidden'); 
-                sonucKutu.innerHTML = `<div class="input-box !bg-rose-50 dark:!bg-rose-900/30 text-center w-full"><span class="text-rose-500 font-black w-full text-center truncate">Tarih ve Gün Girin</span></div>`;
-                return;
-            }
-            const start = new Date(startStr); start.setDate(start.getDate() + gun + 2);
-            
-            let bakiyeHTML = "";
+            const startStr = document.getElementById('start-date').value; const gun = parseInt(document.getElementById('izin-gun').value); const toplamHak = parseInt(document.getElementById('izin-toplam-hak').value) || 0; const sonucKutu = document.getElementById('izin-sonuc');
+            if(!startStr || isNaN(gun) || gun < 1) { sonucKutu.classList.remove('hidden'); sonucKutu.innerHTML = `<div class="input-box !bg-rose-50 dark:!bg-rose-900/30 text-center w-full"><span class="text-rose-500 font-black w-full text-center truncate">Tarih ve Gün Girin</span></div>`; return; }
+            const start = new Date(startStr); start.setDate(start.getDate() + gun + 2); let bakiyeHTML = "";
             if (toplamHak > 0) {
-                let kalanHak = Math.max(0, toplamHak - gun); let yuzde = Math.max(0, (kalanHak / toplamHak) * 100);
-                let barColor = yuzde > 50 ? 'bg-emerald-500' : (yuzde > 20 ? 'bg-orange-400' : 'bg-rose-500');
+                let kalanHak = Math.max(0, toplamHak - gun); let yuzde = Math.max(0, (kalanHak / toplamHak) * 100); let barColor = yuzde > 50 ? 'bg-emerald-500' : (yuzde > 20 ? 'bg-orange-400' : 'bg-rose-500');
                 bakiyeHTML = `<div class="input-box !bg-white dark:!bg-darkcard mt-3 w-full"><div class="flex justify-between items-center text-[10px] font-black text-purple-500 mb-2 w-full"><span class="truncate">Kalan Bakiye</span><span>${kalanHak} / ${toplamHak}</span></div><div class="w-full bg-slate-100 dark:bg-darkinput rounded-full h-2.5 overflow-hidden"><div class="${barColor} h-2.5 rounded-full transition-all duration-1000" style="width: ${yuzde}%"></div></div></div>`;
             }
-            
             sonucKutu.classList.remove('hidden');
-            const dateStr = start.toLocaleDateString('tr-TR', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
-            
-            sonucKutu.innerHTML = `
-                <div class="input-box !bg-purple-50 dark:!bg-purple-900/30 text-center w-full flex flex-col items-center p-4">
-                    <div class="text-[10px] font-black uppercase tracking-widest text-purple-500 mb-1 w-full text-center truncate">İşe Dönüş Tarihi</div>
-                    <div class="text-base sm:text-lg font-black text-purple-700 dark:text-purple-300 w-full block text-center truncate">${dateStr}</div>
-                </div>
-                ${bakiyeHTML}
-            `;
+            sonucKutu.innerHTML = `<div class="input-box !bg-purple-50 dark:!bg-purple-900/30 text-center w-full flex flex-col items-center p-4"><div class="text-[10px] font-black uppercase tracking-widest text-purple-500 mb-1 w-full text-center truncate">İşe Dönüş Tarihi</div><div class="text-base sm:text-lg font-black text-purple-700 dark:text-purple-300 w-full block text-center truncate">${start.toLocaleDateString('tr-TR', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}</div></div>${bakiyeHTML}`;
         }
 
-        // Hesaplamalar (Mesai)
-        function setMultiplier(val) { 
-            selectedMultiplier = val; 
-            localStorage.setItem('v_multiplier', val);
-            document.getElementById('mesai-carpan').value = val; 
-            updateMultButtons(); 
-        }
-        function customMultiplierInput() { 
-            const val = parseFloat(document.getElementById('mesai-carpan').value); 
-            if(!isNaN(val)) { selectedMultiplier = val; updateMultButtons(true); } 
-        }
-        function updateMultButtons(isC = false) {
-            document.querySelectorAll('.mult-btn').forEach(btn => btn.className = "mult-btn py-3 bg-slate-100 dark:bg-darkinput text-slate-600 dark:text-slate-300 rounded-[16px] text-xs font-bold w-full truncate");
-            if (!isC) { const aBtn = document.getElementById(`btn-mult-${selectedMultiplier.toFixed(1)}`); if (aBtn) aBtn.className = "mult-btn py-3 bg-emerald-500 text-white rounded-[16px] text-xs font-black shadow-sm w-full truncate"; }
-        }
-
+        // YENİLİK: BOŞ BIRAKILAN MESAİLER SIFIR SAYILIR HATA VERMEZ
         function hesaplaMesai() {
-            const saat = parseFloat(document.getElementById('mesai-saat').value) || 0, ucret = parseFloat(document.getElementById('mesai-ucret').value) || 0, maas = parseFloat(document.getElementById('mesai-maas').value) || 0;
-            const yolUcret = parseFloat(document.getElementById('mesai-yol-ucret').value) || 0, yolGun = parseFloat(document.getElementById('mesai-yol-gun').value) || 0;
-            const yemekUcret = parseFloat(document.getElementById('mesai-yemek-ucret').value) || 0, yemekGun = parseFloat(document.getElementById('mesai-yemek-gun').value) || 0;
+            const maas = parseFloat(document.getElementById('mesai-maas').value) || 0;
+            
+            const saat1 = parseFloat(document.getElementById('mesai-saat-1').value) || 0;
+            const ucret1 = parseFloat(document.getElementById('mesai-ucret-1').value) || 0;
+            const carpan1Value = parseFloat(document.getElementById('mesai-carpan-1').value);
+            const m1Final = isNaN(carpan1Value) ? mult1 : carpan1Value; // Kutuda değer varsa onu al, yoksa butondakini al
+            
+            const saat2 = parseFloat(document.getElementById('mesai-saat-2').value) || 0;
+            const ucret2 = parseFloat(document.getElementById('mesai-ucret-2').value) || 0;
+            const carpan2Value = parseFloat(document.getElementById('mesai-carpan-2').value);
+            const m2Final = isNaN(carpan2Value) ? mult2 : carpan2Value;
+
+            const yolUcret = parseFloat(document.getElementById('mesai-yol-ucret').value) || 0;
+            const yolGun = parseFloat(document.getElementById('mesai-yol-gun').value) || 0;
+            const yemekUcret = parseFloat(document.getElementById('mesai-yemek-ucret').value) || 0;
+            const yemekGun = parseFloat(document.getElementById('mesai-yemek-gun').value) || 0;
             
             const sonucKutu = document.getElementById('mesai-sonuc');
 
-            if(saat === 0 && ucret === 0 && maas === 0 && yolUcret*yolGun === 0 && yemekUcret*yemekGun === 0) {
-                sonucKutu.classList.remove('hidden'); 
-                sonucKutu.innerHTML = `<div class="input-box !bg-rose-50 dark:!bg-rose-900/30 text-center w-full"><span class="text-rose-500 font-black w-full text-center truncate">Değer Girin</span></div>`; 
-                return;
+            if(maas === 0 && saat1 === 0 && ucret1 === 0 && saat2 === 0 && ucret2 === 0 && yolUcret*yolGun === 0 && yemekUcret*yemekGun === 0) {
+                sonucKutu.classList.remove('hidden'); sonucKutu.innerHTML = `<div class="input-box !bg-rose-50 dark:!bg-rose-900/30 text-center w-full"><span class="text-rose-500 font-black w-full text-center truncate">Lütfen Hesaplamak İçin Değer Girin</span></div>`; return;
             }
-            const genelToplam = maas + (saat * ucret * selectedMultiplier) + (yolUcret*yolGun) + (yemekUcret*yemekGun);
+            
+            const genelToplam = maas + (saat1 * ucret1 * m1Final) + (saat2 * ucret2 * m2Final) + (yolUcret*yolGun) + (yemekUcret*yemekGun);
+            
+            localStorage.setItem('v_last_salary', genelToplam);
+            if (document.getElementById('section-butce').classList.contains('active')) renderBudget(); 
             
             sonucKutu.classList.remove('hidden');
-            sonucKutu.innerHTML = `
-                <div class="input-box !bg-emerald-50 dark:!bg-emerald-900/30 text-center w-full flex flex-col items-center p-4">
-                    <div class="text-[10px] font-black uppercase tracking-widest text-emerald-500 mb-1 w-full text-center truncate">Toplam Hakediş</div>
-                    <div class="text-2xl font-black text-emerald-700 dark:text-emerald-300 w-full block text-center truncate">${genelToplam.toLocaleString('tr-TR')} ₺</div>
-                </div>
-            `;
+            sonucKutu.innerHTML = `<div class="input-box !bg-emerald-50 dark:!bg-emerald-900/30 text-center w-full flex flex-col items-center p-4"><div class="text-[10px] font-black uppercase tracking-widest text-emerald-500 mb-1 w-full text-center truncate">Toplam Hakediş</div><div class="text-2xl font-black text-emerald-700 dark:text-emerald-300 w-full block text-center truncate">${genelToplam.toLocaleString('tr-TR')} ₺</div></div>`;
         }
     </script>
 </body>
