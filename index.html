@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -121,17 +120,6 @@ html.dark .ta{background:rgba(255,255,255,.14);}
 </div>
 </div>
 
-<!-- GEMİ MODAL -->
-<div id="ves-modal" class="mw" onclick="if(event.target===this)cm('ves-modal')">
-<div class="glass mc rounded-[30px] p-5">
-  <div class="flex justify-between items-center mb-4">
-    <h3 id="vmt" class="text-lg font-extrabold"></h3>
-    <button onclick="cm('ves-modal')" class="w-9 h-9 rounded-full glass flex items-center justify-center font-bold active:scale-90">✕</button>
-  </div>
-  <div id="vmb" class="space-y-3"></div>
-</div>
-</div>
-
 <!-- ARAÇ MODALI -->
 <div id="tool-modal" class="mw" onclick="if(event.target===this)cm('tool-modal')">
 <div class="glass mc rounded-[30px] p-5">
@@ -148,7 +136,7 @@ html.dark .ta{background:rgba(255,255,255,.14);}
   <div class="ni active" onclick="nav('home',this)"><span>🏠</span><p>Ana</p></div>
   <div class="ni" onclick="nav('calendar',this)"><span>📅</span><p>Takvim</p></div>
   <div class="ni" onclick="nav('finance',this)"><span>💰</span><p>Finans</p></div>
-  <div class="ni" onclick="nav('vessel',this)"><span>🚢</span><p>Gemi</p></div>
+  <div class="ni" onclick="nav('training',this)"><span>🎓</span><p>Eğitim</p></div>
   <div class="ni" onclick="nav('tools',this)"><span>🛡️</span><p>Araçlar</p></div>
 </nav>
 
@@ -174,6 +162,7 @@ html.dark .ta{background:rgba(255,255,255,.14);}
     <div class="relative z-10">
       <span class="text-[10px] font-bold uppercase tracking-widest opacity-60">Şu Anki Durum</span>
       <h2 class="text-5xl font-black text-brand-500 dark:text-brand-300 mt-0.5 tracking-tight" id="dts">—</h2>
+      <div id="dhol" class="hidden mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[11px] font-extrabold"></div>
     </div>
     <div class="mt-4 relative z-10 flex flex-wrap gap-2">
       <div class="glass px-3 py-1.5 rounded-2xl text-[11px] font-extrabold flex items-center gap-1.5 bg-white/20 dark:bg-black/20 border border-white/20">
@@ -216,14 +205,14 @@ html.dark .ta{background:rgba(255,255,255,.14);}
 
   <!-- Hızlı Butonlar -->
   <div class="grid grid-cols-3 gap-2">
-    <button onclick="openDayModal(new Date().getDate(),new Date().getMonth())" class="glass p-3.5 rounded-[20px] flex flex-col items-center justify-center text-center active:scale-95">
+    <button onclick="openDayModal(new Date().getDate(),new Date().getMonth(),new Date().getFullYear())" class="glass p-3.5 rounded-[20px] flex flex-col items-center justify-center text-center active:scale-95">
       <span class="text-2xl mb-1">📝</span><h4 class="font-extrabold text-[10px]">Bugüne Not</h4>
     </button>
-    <button onclick="fetchWeather()" class="glass p-3.5 rounded-[20px] flex flex-col items-center justify-center text-center active:scale-95">
+    <button onclick="fetchW()" class="glass p-3.5 rounded-[20px] flex flex-col items-center justify-center text-center active:scale-95">
       <span id="dwi" class="text-2xl mb-1">⛅</span><h4 id="dwt" class="font-extrabold text-[10px]">Hava</h4>
     </button>
-    <button onclick="nav('vessel',document.querySelectorAll('.ni')[3])" class="glass p-3.5 rounded-[20px] flex flex-col items-center justify-center text-center active:scale-95">
-      <span class="text-2xl mb-1">🚢</span><h4 id="hvs" class="font-extrabold text-[10px]">Gemi</h4>
+    <button onclick="nav('training',document.querySelectorAll('.ni')[3])" class="glass p-3.5 rounded-[20px] flex flex-col items-center justify-center text-center active:scale-95">
+      <span class="text-2xl mb-1">🎓</span><h4 id="hvs" class="font-extrabold text-[10px]">Eğitim</h4>
     </button>
   </div>
 </div>
@@ -237,15 +226,16 @@ html.dark .ta{background:rgba(255,255,255,.14);}
   </div>
   <div class="glass rounded-[28px] p-4">
     <div class="caw"><div id="calgrid" class="grid grid-cols-7 gap-1 text-center w-full"></div></div>
-    <div class="mt-4 flex flex-wrap justify-center gap-3 text-[9px] font-bold opacity-50 uppercase tracking-wider border-t border-black/10 dark:border-white/10 pt-3">
+    <div class="mt-4 flex flex-wrap justify-center gap-2.5 text-[9px] font-bold opacity-60 uppercase tracking-wider border-t border-black/10 dark:border-white/10 pt-3">
       <span class="flex items-center gap-1"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>Gündüz</span>
       <span class="flex items-center gap-1"><div class="w-1.5 h-1.5 rounded-full bg-brand-500"></div>Gece</span>
       <span class="flex items-center gap-1"><div class="w-1.5 h-1.5 rounded-full bg-amber-500"></div>İzin</span>
-      <span class="flex items-center gap-1"><div class="w-1.5 h-1.5 rounded-full bg-rose-500"></div>Tatil/Not</span>
+      <span class="flex items-center gap-1"><div class="w-1.5 h-1.5 rounded-full bg-rose-500"></div>Milli Bayram</span>
+      <span class="flex items-center gap-1"><div class="w-1.5 h-1.5 rounded-full bg-teal-500"></div>Dini Bayram</span>
     </div>
     <div class="mt-3 pt-3 border-t border-black/10 dark:border-white/10">
-      <h4 class="text-[9px] font-extrabold opacity-50 uppercase tracking-widest mb-2 flex items-center gap-1.5"><span>🇹🇷</span>Bu Ayın Özel Günleri</h4>
-      <ul id="chl" class="space-y-1 max-h-28 overflow-y-auto cs pr-1"></ul>
+      <h4 class="text-[9px] font-extrabold opacity-50 uppercase tracking-widest mb-2 flex items-center gap-1.5"><span>🗓️</span>Bu Ayın Resmi & Dini Tatilleri</h4>
+      <ul id="chl" class="space-y-1.5 max-h-36 overflow-y-auto cs pr-1"></ul>
     </div>
   </div>
   <!-- Aylık İstat -->
@@ -335,268 +325,53 @@ html.dark .ta{background:rgba(255,255,255,.14);}
   </div>
 </div>
 
-<!-- ===== GEMİ ===== -->
-<div id="page-vessel" class="ap space-y-3">
-  <div class="flex glass rounded-[16px] p-1 shadow-inner gap-0.5">
-    <button onclick="swVes('ops')" id="tvops" class="flex-1 py-2 text-[10px] font-extrabold rounded-2xl ta transition-all">🚢 Operasyon</button>
-    <button onclick="swVes('cargo')" id="tvcargo" class="flex-1 py-2 text-[10px] font-extrabold rounded-2xl opacity-50 transition-all">📦 Kargo</button>
-    <button onclick="swVes('ton')" id="tvton" class="flex-1 py-2 text-[10px] font-extrabold rounded-2xl opacity-50 transition-all">⚓ Tonaj</button>
-    <button onclick="swVes('log')" id="tvlog" class="flex-1 py-2 text-[10px] font-extrabold rounded-2xl opacity-50 transition-all">📋 Log</button>
-  </div>
-
-  <!-- OPS SEKMESI -->
-  <div id="ves-ops" class="space-y-3">
-    <div class="glass rounded-[24px] p-4 space-y-3">
-      <input type="text" id="vname" placeholder="GEMİ ADI" class="gi text-base font-black text-brand-500 dark:text-brand-300 text-center uppercase tracking-widest !py-3" onblur="saveVC()">
-      <div class="grid grid-cols-3 gap-2">
-        <div class="flex flex-col gap-1"><label class="text-[9px] font-bold opacity-50 ml-1">Liman</label>
-        <input type="text" id="vport" placeholder="ör: Mersin" class="gi text-xs font-bold text-center !py-2" onblur="saveVC()"></div>
-        <div class="flex flex-col gap-1"><label class="text-[9px] font-bold opacity-50 ml-1">Rıhtım/Demir</label>
-        <input type="text" id="vberth" placeholder="ör: R-3" class="gi text-xs font-bold text-center !py-2" onblur="saveVC()"></div>
-        <div class="flex flex-col gap-1"><label class="text-[9px] font-bold opacity-50 ml-1">Operasyon</label>
-        <select id="voptype" class="gi text-[10px] font-bold cursor-pointer !py-2 !px-1 text-center" onchange="saveVC()">
-          <option value="Yükleme">⬆️ Yükleme</option><option value="Tahliye">⬇️ Tahliye</option>
-          <option value="Transit">↔️ Transit</option><option value="Bunker">⛽ Bunker</option>
-        </select></div>
+<!-- ===== EĞİTİM & ANONS REHBERİ ===== -->
+<div id="page-training" class="ap space-y-3">
+  <!-- Başlık ve Canlı Arama -->
+  <div class="glass rounded-[24px] p-4 space-y-3">
+    <div class="flex justify-between items-center">
+      <div>
+        <h2 class="text-lg font-extrabold flex items-center gap-1.5"><span>🎓</span>Eğitim & Anons Rehberi</h2>
+        <p class="text-[10px] opacity-50">Yeni personel notları, anons şablonları ve telsiz kodları</p>
       </div>
+      <span id="trcnt" class="text-[10px] font-black bg-brand-500/20 text-brand-500 px-2.5 py-1 rounded-xl">0 Kayıt</span>
     </div>
-
-    <!-- Araç Sayacı -->
-    <div class="glass rounded-[24px] p-4 space-y-3">
-      <div class="flex justify-between items-center">
-        <span class="text-[10px] font-extrabold uppercase tracking-widest opacity-60">Yüklenen Araç Sayacı</span>
-        <div class="flex items-center gap-2">
-          <span class="text-[9px] font-bold opacity-50">Hedef:</span>
-          <input type="number" id="vtgt" placeholder="—" class="gi !w-16 !py-1 text-xs font-black text-center !rounded-xl" onblur="saveVC()">
-        </div>
-      </div>
-      <div id="vpw" class="hidden">
-        <div class="flex justify-between text-[10px] font-bold mb-1.5">
-          <span class="opacity-50">İlerleme</span><span id="vpct" class="text-brand-500">%0</span>
-        </div>
-        <div class="w-full h-2.5 bg-black/10 dark:bg-white/10 rounded-full overflow-hidden">
-          <div id="vpbar" class="h-full bg-gradient-to-r from-brand-500 to-emerald-500 rounded-full transition-all duration-500" style="width:0%"></div>
-        </div>
-      </div>
-      <div class="flex items-center justify-center gap-4 py-3">
-        <button onclick="upVeh(-10)" class="w-11 h-11 rounded-2xl glass bg-rose-500/10 text-rose-500 font-black text-sm flex items-center justify-center active:scale-90 border border-rose-500/20">-10</button>
-        <button onclick="upVeh(-1)" class="w-14 h-14 rounded-full glass bg-rose-500/15 text-rose-500 text-3xl font-black flex items-center justify-center active:scale-90 border border-rose-500/30 prr">−</button>
-        <div class="text-center min-w-[70px]">
-          <span id="vcur" class="text-6xl font-black font-mono tracking-tighter text-slate-800 dark:text-white block">0</span>
-          <span class="text-[9px] font-bold opacity-40">araç</span>
-        </div>
-        <button onclick="upVeh(1)" class="w-14 h-14 rounded-full glass bg-brand-500/15 text-brand-500 text-3xl font-black flex items-center justify-center active:scale-90 border border-brand-500/30 pb">+</button>
-        <button onclick="upVeh(10)" class="w-11 h-11 rounded-2xl glass bg-brand-500/10 text-brand-500 font-black text-sm flex items-center justify-center active:scale-90 border border-brand-500/20">+10</button>
-      </div>
-      <div class="flex gap-2">
-        <input type="number" id="vman" placeholder="Manuel değer gir..." class="gi text-sm text-center font-bold !py-2 flex-1">
-        <button onclick="setVMan()" class="bp px-4 rounded-xl text-xs font-bold">Ayarla</button>
-      </div>
-      <button onclick="rstVeh()" class="w-full text-[10px] font-bold opacity-30 uppercase tracking-widest hover:opacity-70 transition-opacity py-1">Sayacı Sıfırla</button>
-    </div>
-
-    <!-- Operasyon Analizi -->
-    <div class="glass rounded-[24px] p-4 space-y-3">
-      <h3 class="text-[10px] font-extrabold uppercase tracking-widest opacity-60 flex items-center gap-1.5"><span>📊</span>Operasyon Analizi</h3>
-      <div class="grid grid-cols-2 gap-2">
-        <div class="flex flex-col gap-1"><span class="text-[9px] font-bold opacity-50">Operasyon Başlangıcı</span>
-        <input type="datetime-local" id="vops" class="gi text-[10px] font-bold !py-2" onchange="saveVC();updAnlz()"></div>
-        <div class="flex flex-col gap-1"><span class="text-[9px] font-bold opacity-50">Beklenen Bitiş</span>
-        <input type="datetime-local" id="vope" class="gi text-[10px] font-bold !py-2" onchange="saveVC();updAnlz()"></div>
-      </div>
-      <div class="grid grid-cols-3 gap-2">
-        <div class="bg-brand-500/10 rounded-[14px] p-2.5 text-center border border-brand-500/20">
-          <span class="text-[9px] font-bold opacity-60 block">Saatlik Hız</span>
-          <span id="vhr" class="text-base font-black text-brand-500">—</span>
-          <span class="text-[8px] opacity-50 block">araç/sa</span>
-        </div>
-        <div class="bg-emerald-500/10 rounded-[14px] p-2.5 text-center border border-emerald-500/20">
-          <span class="text-[9px] font-bold opacity-60 block">Kalan Süre</span>
-          <span id="vrt" class="text-base font-black text-emerald-500">—</span>
-          <span class="text-[8px] opacity-50 block">tahmin</span>
-        </div>
-        <div class="bg-amber-500/10 rounded-[14px] p-2.5 text-center border border-amber-500/20">
-          <span class="text-[9px] font-bold opacity-60 block">Geçen</span>
-          <span id="vet" class="text-base font-black text-amber-500">—</span>
-          <span class="text-[8px] opacity-50 block">saat</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Tamamlandı -->
-    <div id="vcomp" class="hidden glass bg-emerald-500/20 border border-emerald-500/40 p-5 rounded-[24px] text-center sca">
-      <span class="text-5xl block mb-2">✅</span>
-      <h4 class="text-emerald-600 dark:text-emerald-400 font-black text-xl uppercase" id="vcomptxt">Tamamlandı</h4>
-      <p id="vcomptime" class="text-emerald-600/60 dark:text-emerald-400/60 text-xs mt-1"></p>
+    <div class="relative">
+      <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm opacity-50">🔍</span>
+      <input type="text" id="trsearch" placeholder="Anons, kod veya not ara..." class="gi !pl-9 !py-2.5 text-xs font-bold" oninput="renderTrain()">
     </div>
   </div>
 
-  <!-- KARGO SEKMESI -->
-  <div id="ves-cargo" class="hidden space-y-3">
-    <div class="glass rounded-[24px] p-4 space-y-3">
-      <h3 class="text-[10px] font-extrabold uppercase tracking-widest opacity-60 flex items-center gap-1.5"><span>📦</span>Kargo Manifesto</h3>
-      <div class="grid grid-cols-2 gap-2">
-        <div class="flex flex-col gap-1"><label class="text-[9px] font-bold opacity-50 ml-1">Toplam Yük (mt)</label>
-        <input type="number" id="ctw" placeholder="ör: 12500" class="gi text-sm font-bold text-center !py-2" oninput="updCargo()"></div>
-        <div class="flex flex-col gap-1"><label class="text-[9px] font-bold opacity-50 ml-1">Yüklenen (mt)</label>
-        <input type="number" id="clw" placeholder="ör: 7200" class="gi text-sm font-bold text-center !py-2" oninput="updCargo()"></div>
-        <div class="flex flex-col gap-1"><label class="text-[9px] font-bold opacity-50 ml-1">Kargo Tipi</label>
-        <select id="ctype" class="gi text-xs font-bold cursor-pointer !py-2 !px-2">
-          <option>📦 Genel Kargo</option><option>🚗 Ro-Ro (Araç)</option><option>⚫ Bulk (Dökme)</option>
-          <option>📫 Konteyner</option><option>💧 Sıvı Yük</option><option>⚠️ Tehlikeli Madde</option>
-          <option>❄️ Soğuk Zincir</option><option>🐄 Canlı Hayvan</option>
-        </select></div>
-        <div class="flex flex-col gap-1"><label class="text-[9px] font-bold opacity-50 ml-1">Ambar Sayısı</label>
-        <input type="number" id="chcnt" placeholder="ör: 5" class="gi text-sm font-bold text-center !py-2" onblur="renderHatch()"></div>
-      </div>
-      <div id="cstw" class="hidden">
-        <div class="flex justify-between text-[10px] font-bold mb-1.5">
-          <span class="opacity-50">Yükleme Durumu</span><span id="cpct" class="text-brand-500 font-black">%0</span>
-        </div>
-        <div class="w-full h-3 bg-black/10 dark:bg-white/10 rounded-full overflow-hidden">
-          <div id="cpbar" class="h-full bg-gradient-to-r from-brand-500 via-emerald-500 to-teal-500 rounded-full transition-all duration-700" style="width:0%"></div>
-        </div>
-        <div class="flex justify-between text-[9px] font-bold opacity-40 mt-1">
-          <span id="clt">0 mt yüklendi</span><span id="crt">0 mt kaldı</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Ambar Haritası -->
-    <div class="glass rounded-[24px] p-4 space-y-3">
-      <div class="flex justify-between items-center">
-        <h3 class="text-[10px] font-extrabold uppercase tracking-widest opacity-60">🗺️ Ambar Haritası</h3>
-        <span class="text-[9px] opacity-40">Durumu değiştirmek için dokunun</span>
-      </div>
-      <div id="hgrid" class="hc"></div>
-      <div class="flex gap-3 text-[9px] font-bold justify-center">
-        <span class="flex items-center gap-1"><div class="w-3 h-3 rounded bg-white/20 border border-white/30"></div>Boş</span>
-        <span class="flex items-center gap-1"><div class="w-3 h-3 rounded bg-brand-500/30 border border-brand-500/50"></div>Yüklü</span>
-        <span class="flex items-center gap-1"><div class="w-3 h-3 rounded bg-rose-500/30 border border-rose-500/50"></div>Hasarlı</span>
-        <span class="flex items-center gap-1"><div class="w-3 h-3 rounded bg-yellow-500/30 border border-yellow-500/50"></div>HAZMAT</span>
-      </div>
-    </div>
-
-    <!-- Draught Okuma -->
-    <div class="glass rounded-[24px] p-4 space-y-3">
-      <h3 class="text-[10px] font-extrabold uppercase tracking-widest opacity-60 flex items-center gap-1.5"><span>⚓</span>Draught (Su Çekimi) Okuma</h3>
-      <div class="grid grid-cols-3 gap-2">
-        <div class="flex flex-col gap-1 items-center"><label class="text-[9px] font-bold opacity-50">Pruva (F)</label>
-        <input type="number" step="0.01" id="df" placeholder="m" class="gi text-sm font-bold text-center !py-2" oninput="updDrght()"></div>
-        <div class="flex flex-col gap-1 items-center"><label class="text-[9px] font-bold opacity-50">Orta (M)</label>
-        <input type="number" step="0.01" id="dm" placeholder="m" class="gi text-sm font-bold text-center !py-2" oninput="updDrght()"></div>
-        <div class="flex flex-col gap-1 items-center"><label class="text-[9px] font-bold opacity-50">Kıç (A)</label>
-        <input type="number" step="0.01" id="da" placeholder="m" class="gi text-sm font-bold text-center !py-2" oninput="updDrght()"></div>
-      </div>
-      <div id="dres" class="hidden grid grid-cols-2 gap-2">
-        <div class="bg-brand-500/10 rounded-[14px] p-2.5 border border-brand-500/20 text-center">
-          <span class="text-[9px] font-bold opacity-60 block">Ort. Draught</span>
-          <span id="davg" class="text-lg font-black text-brand-500">—</span>
-        </div>
-        <div class="bg-amber-500/10 rounded-[14px] p-2.5 border border-amber-500/20 text-center">
-          <span class="text-[9px] font-bold opacity-60 block">Trim (F-A)</span>
-          <span id="dtrim" class="text-lg font-black text-amber-500">—</span>
-        </div>
-      </div>
-    </div>
+  <!-- Kategori Sekmeleri -->
+  <div class="flex glass rounded-[16px] p-1 shadow-inner gap-0.5 overflow-x-auto">
+    <button onclick="swTrainCat('all')" id="trcat-all" class="flex-1 py-2 px-2 text-[10px] font-extrabold rounded-2xl ta transition-all whitespace-nowrap">📚 Tümü</button>
+    <button onclick="swTrainCat('ihtiyac')" id="trcat-ihtiyac" class="flex-1 py-2 px-2 text-[10px] font-extrabold rounded-2xl opacity-50 transition-all whitespace-nowrap">📢 İhtiyaç</button>
+    <button onclick="swTrainCat('telsiz')" id="trcat-telsiz" class="flex-1 py-2 px-2 text-[10px] font-extrabold rounded-2xl opacity-50 transition-all whitespace-nowrap">📻 Telsiz</button>
+    <button onclick="swTrainCat('not')" id="trcat-not" class="flex-1 py-2 px-2 text-[10px] font-extrabold rounded-2xl opacity-50 transition-all whitespace-nowrap">📝 Notlar</button>
   </div>
 
-  <!-- TONAJ SEKMESI -->
-  <div id="ves-ton" class="hidden space-y-3">
-    <div class="glass rounded-[24px] p-4 space-y-3">
-      <p class="text-[10px] opacity-50 text-center uppercase tracking-widest font-bold">Statik Boyutlar (Kalıcı Kayıt)</p>
+  <!-- Yeni Anons / Not Ekleme Alanı -->
+  <div class="glass rounded-[24px] p-4 space-y-2.5">
+    <button onclick="tgTrainForm()" class="w-full flex justify-between items-center text-xs font-extrabold uppercase tracking-wider text-brand-500">
+      <span class="flex items-center gap-1.5"><span>➕</span>Yeni Anons / Eğitim Notu Ekle</span>
+      <span id="trformicon" class="text-base transition-transform">▾</span>
+    </button>
+    <div id="trform" class="space-y-2.5 pt-2 border-t border-black/10 dark:border-white/10">
       <div class="grid grid-cols-2 gap-2">
-        <div class="flex flex-col gap-1"><label class="text-[9px] font-bold opacity-50 ml-1">Tam Boy / LOA (m)</label>
-        <input type="number" id="tl" placeholder="m" class="gi text-sm font-bold text-center !py-2" onblur="saveVCa()"></div>
-        <div class="flex flex-col gap-1"><label class="text-[9px] font-bold opacity-50 ml-1">Genişlik / Beam (m)</label>
-        <input type="number" id="tb2" placeholder="m" class="gi text-sm font-bold text-center !py-2" onblur="saveVCa()"></div>
-        <div class="flex flex-col gap-1"><label class="text-[9px] font-bold opacity-50 ml-1">Kalıp Derinliği / D (m)</label>
-        <input type="number" id="td" placeholder="m" class="gi text-sm font-bold text-center !py-2" onblur="saveVCa()"></div>
-        <div class="flex flex-col gap-1"><label class="text-[9px] font-bold opacity-50 ml-1">Su Çekimi / Draft (m)</label>
-        <input type="number" id="tt" placeholder="m" class="gi text-sm font-bold text-center !py-2" onblur="saveVCa()"></div>
-        <div class="flex flex-col gap-1"><label class="text-[9px] font-bold opacity-50 ml-1">Blok Katsayısı / Cb</label>
-        <input type="number" step="0.01" id="tcb" placeholder="0.72" class="gi text-sm font-bold text-center !py-2" onblur="saveVCa()"></div>
-        <div class="flex flex-col gap-1"><label class="text-[9px] font-bold opacity-50 ml-1">Su Yoğunluğu</label>
-        <select id="tdens" class="gi text-xs font-bold cursor-pointer !py-2" onchange="saveVCa()">
-          <option value="1.025">Deniz (1.025 t/m³)</option>
-          <option value="1.000">Tatlı Su (1.000)</option>
-          <option value="1.015">Acı Su (1.015)</option>
-        </select></div>
-      </div>
-      <div class="flex flex-col gap-1"><label class="text-[9px] font-bold opacity-50 ml-1">Lightship / Boş Gemi (mt) — DWT için</label>
-      <input type="number" id="tls" placeholder="opsiyonel" class="gi text-sm font-bold text-center !py-2" onblur="saveVCa()"></div>
-      <button onclick="calcTon()" class="w-full py-3.5 bp rounded-2xl font-extrabold">Hesapla & Kaydet</button>
-    </div>
-    <div id="tonres" class="hidden space-y-2">
-      <div class="glass rounded-[20px] p-4 flex justify-between items-center">
-        <div><span class="text-[10px] font-extrabold uppercase tracking-wider opacity-60 block">Deplasman</span><span class="text-[9px] opacity-40">Taşırdığı su ağırlığı</span></div>
-        <span id="rdisp" class="text-xl font-black text-brand-500">—</span>
-      </div>
-      <div class="glass rounded-[20px] p-4 flex justify-between items-center">
-        <div><span class="text-[10px] font-extrabold uppercase tracking-wider opacity-60 block">Deadweight (DWT)</span><span class="text-[9px] opacity-40">Max yük kapasitesi</span></div>
-        <span id="rdwt" class="text-xl font-black text-emerald-500">—</span>
-      </div>
-      <div class="glass rounded-[20px] p-4 flex justify-between items-center">
-        <div><span class="text-[10px] font-extrabold uppercase tracking-wider opacity-60 block">Gros Tonaj (GT)</span><span class="text-[9px] opacity-40">IMO hacim ölçümü</span></div>
-        <span id="rgt" class="text-xl font-black text-purple-500">—</span>
-      </div>
-      <div class="glass rounded-[20px] p-4 flex justify-between items-center">
-        <div><span class="text-[10px] font-extrabold uppercase tracking-wider opacity-60 block">İç Hacim (V)</span><span class="text-[9px] opacity-40">Tahmini hacim</span></div>
-        <span id="rvol" class="text-xl font-black text-amber-500">—</span>
-      </div>
-      <div class="glass rounded-[20px] p-4 space-y-2">
-        <span class="text-[10px] font-extrabold uppercase tracking-wider opacity-60">İleri Hesaplamalar</span>
-        <div class="grid grid-cols-2 gap-2">
-          <div class="bg-teal-500/10 rounded-[14px] p-2.5 border border-teal-500/20 text-center">
-            <span class="text-[9px] font-bold opacity-60 block">TPC</span>
-            <span id="rtpc" class="text-base font-black text-teal-500">—</span>
-            <span class="text-[9px] opacity-40 block">t/cm</span>
-          </div>
-          <div class="bg-indigo-500/10 rounded-[14px] p-2.5 border border-indigo-500/20 text-center">
-            <span class="text-[9px] font-bold opacity-60 block">Waterplane (Aw)</span>
-            <span id="raw" class="text-base font-black text-indigo-500">—</span>
-            <span class="text-[9px] opacity-40 block">m²</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- LOG SEKMESI -->
-  <div id="ves-log" class="hidden space-y-3">
-    <div class="glass rounded-[24px] p-4 space-y-3">
-      <h3 class="text-[10px] font-extrabold uppercase tracking-widest opacity-60 flex items-center gap-1.5"><span>📋</span>Seyir & Operasyon Günlüğü</h3>
-      <div class="grid grid-cols-2 gap-2">
-        <select id="ltype" class="gi text-xs font-bold cursor-pointer !py-2">
-          <option value="Yükleme Başladı">⬆️ Yükleme Başladı</option>
-          <option value="Yükleme Bitti">✅ Yükleme Bitti</option>
-          <option value="Tahliye Başladı">⬇️ Tahliye Başladı</option>
-          <option value="Tahliye Bitti">✅ Tahliye Bitti</option>
-          <option value="Demir Attı">⚓ Demir Attı</option>
-          <option value="Demir Aldı">🔗 Demir Aldı</option>
-          <option value="Rıhtıma Yanaştı">🛳️ Rıhtıma Yanaştı</option>
-          <option value="Rıhtımdan Ayrıldı">🚢 Rıhtımdan Ayrıldı</option>
-          <option value="NOR Bildirimi">📜 Planya (NOR)</option>
-          <option value="NOA Bildirimi">📡 Varış Bildirimi (NOA)</option>
-          <option value="Arıza / Duruş">⚠️ Arıza / Duruş</option>
-          <option value="Deniz Kuvveti">🌊 Olumsuz Hava/Deniz</option>
-          <option value="Yakıt İkmali">⛽ Yakıt İkmali (Bunker)</option>
-          <option value="Güverte Nöbeti">👁️ Güverte Nöbeti</option>
-          <option value="Diğer">📝 Diğer</option>
+        <select id="trcat" class="gi text-xs font-bold cursor-pointer !py-2">
+          <option value="ihtiyac">📢 İhtiyaç Anonsları</option>
+          <option value="telsiz">📻 Telsiz Kodları</option>
+          <option value="not">📝 Eğitim Notları</option>
         </select>
-        <input type="datetime-local" id="ltime" class="gi text-xs font-bold !py-2">
+        <input type="text" id="trtitle" placeholder="Başlık / Kod (ör: 10-4)" class="gi text-xs font-bold !py-2">
       </div>
-      <textarea id="lnote" rows="2" placeholder="Ek açıklama..." class="gi resize-none text-xs"></textarea>
-      <button onclick="addLog()" class="w-full py-3 bp rounded-xl font-extrabold text-sm">Kayıt Ekle +</button>
-    </div>
-    <div class="glass rounded-[24px] p-4">
-      <div class="flex justify-between items-center mb-2">
-        <h3 class="text-[10px] font-extrabold uppercase tracking-widest opacity-60">Günlük Kayıtlar</h3>
-        <button onclick="expLog()" class="text-[10px] font-bold text-brand-500 opacity-70 hover:opacity-100">Kopyala 📋</button>
-      </div>
-      <ul id="llist" class="space-y-2 max-h-72 overflow-y-auto cs pr-1"></ul>
+      <textarea id="trbody" rows="3" placeholder="Anons metnini, kod anlamını veya eğitim notunu buraya yazın..." class="gi resize-none text-xs"></textarea>
+      <button onclick="addTrain()" class="w-full py-3 bp rounded-xl font-extrabold text-xs">Rehbere Kaydet ✓</button>
     </div>
   </div>
+
+  <!-- Kayıtlı Anons & Not Listesi -->
+  <div id="trlist" class="space-y-2.5"></div>
 </div>
 
 <!-- ===== ARAÇLAR ===== -->
@@ -693,63 +468,51 @@ const A={
   ov:S.get('v_ov',{}), nt:S.get('v_nt',{}),
   fin:{tot:S.gf('v_ft',0),m:S.gf('v_fm',0),ms:S.gf('v_fms',0),mu:S.gf('v_fmu',0),mc:S.gf('v_fmc',2),ms2:S.gf('v_fms2',0),mu2:S.gf('v_fmu2',0),mc2:S.gf('v_fmc2',2)},
   exp:S.get('v_exp',[]), otl:S.get('v_otl',[]),
-  vc:S.get('v_vc',{name:'',port:'',berth:'',optype:'Yükleme',target:'',cur:0,ops:'',ope:''}),
-  vca:S.get('v_vca',{l:'',b:'',d:'',t:'',cb:'',dens:'1.025',ls:''}),
-  vlog:S.get('v_vl',[]),
-  hst:S.get('v_hs',[]),
-  cd:S.get('v_cd',{tw:'',lw:'',type:'',hcnt:''}),
-  dr:S.get('v_dr',{f:'',m:'',a:''})
+  tr:S.get('v_tr',[
+    {id:'2',cat:'ihtiyac',title:'Acil Sağlık / İlk Yardım Çağrısı',body:'Dikkat! Saha içerisinde acil tıbbi müdahale ihtiyacı doğmuştur. İlk yardım ekibinin ivedilikle belirtilen noktaya intikal etmesi gerekmektedir.'},
+    {id:'3',cat:'telsiz',title:'Temel Telsiz Kodları',body:'• Tamam / Anlaşıldı: Mesaj net alındı.\n• Beklemede Kal: Kısa süre bekle, dönüş yapılacak.\n• Tekrar Et: Mesaj anlaşılmadı, tekrarlayın.\n• Mevkii Bildir: Bulunduğunuz konumu bildirin.'},
+    {id:'4',cat:'not',title:'Yeni Başlayanlar İçin Saha Kuralı',body:'Vardiya tesliminden 15 dakika önce sahada olunur. Telsiz bataryası, el feneri ve KKD (Baret, Yelek) eksiksiz kontrol edilir.'}
+  ]).filter(item=>item.cat!=='gemi')
 };
-const ST={today:new Date(),vd:new Date(),adk:null};
+const ST={today:new Date(),vd:new Date(),adk:null,trCat:'all',trFormOpen:true};
 const MN=["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
-const DS=["Pt","Sa","Ça","Pe","Cu","Ct","Pz"];
-const TH={"01-01":"Yılbaşı","04-23":"Ulusal Egemenlik","05-01":"Emek ve Dayanışma","05-19":"Atatürk'ü Anma, G.S.B.","07-15":"Demokrasi ve Birlik","08-30":"Zafer Bayramı","10-29":"Cumhuriyet Bayramı","2026-03-19":"Ramazan Arife","2026-03-20":"Ramazan Bayramı 1.G","2026-03-21":"Ramazan Bayramı 2.G","2026-03-22":"Ramazan Bayramı 3.G","2026-05-26":"Kurban Arife","2026-05-27":"Kurban Bayramı 1.G","2026-05-28":"Kurban Bayramı 2.G","2026-05-29":"Kurban Bayramı 3.G","2026-05-30":"Kurban Bayramı 4.G"};
 
 // ==================== INIT ====================
 window.onload=()=>{
-  updGO(A.glOp,false); ldSet(); ldFin(); ldVes();
+  updGO(A.glOp,false); ldSet(); ldFin(); renderTrain();
   renderHome(); fetchW();
-  const now=new Date(),pad=n=>String(n).padStart(2,'0');
-  const ldt=`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
-  document.getElementById('ltime').value=ldt;
   document.getElementById('thi').innerText=document.documentElement.classList.contains('dark')?'☀️':'🌙';
-  setInterval(()=>{ST.today=new Date();if(document.getElementById('page-home').classList.contains('active'))renderHome();updAnlz();},30000);
+  setInterval(()=>{ST.today=new Date();if(document.getElementById('page-home').classList.contains('active'))renderHome();},30000);
 };
 
 // ==================== HELPERS ====================
 function toast(msg,type='info'){
+  const area=document.getElementById('tarea');
+  if(!area)return;
   const el=document.createElement('div');
-  el.className=`glass toast text-white border ${type==='error'?'bg-rose-500/90 border-rose-400':type==='ok'?'bg-emerald-600/90 border-emerald-400':'bg-slate-800/90 border-slate-600'}`;
-  el.innerText=msg; document.getElementById('tarea').appendChild(el);
-  if(A.noisy){document.body.style.backgroundColor='rgba(255,255,255,.08)';setTimeout(()=>document.body.style.backgroundColor='',220);if(navigator.vibrate)navigator.vibrate(type==='error'?[80,40,80]:[120]);}
-  setTimeout(()=>el.remove(),3300);
+  const cls=type==='error'?'bg-rose-500 text-white':type==='ok'?'bg-emerald-500 text-white':'bg-slate-800 dark:bg-white text-white dark:text-slate-900';
+  el.className=`toast ${cls}`;
+  el.innerText=msg;
+  area.appendChild(el);
+  if(A.noisy&&navigator.vibrate)navigator.vibrate(120);
+  setTimeout(()=>el.remove(),3200);
 }
-function cm(id){document.getElementById(id).classList.remove('active');}
-function om(id){document.getElementById(id).classList.add('active');}
-function updGO(v,isI=true){
-  const op=(v/100).toFixed(2),do2=((v/100)*.7).toFixed(2);
-  document.documentElement.style.setProperty('--go',op);
-  document.documentElement.style.setProperty('--do',do2);
-  if(isI)document.getElementById('sov').innerText=v+'%';
-}
+function om(id){const el=document.getElementById(id);if(el)el.classList.add('active');}
+function cm(id){const el=document.getElementById(id);if(el)el.classList.remove('active');}
 function tgTheme(){
-  const d=document.documentElement.classList.toggle('dark');
-  localStorage.setItem('v_theme',d?'dark':'light');
-  document.getElementById('thi').innerText=d?'☀️':'🌙';
+  const isDark=document.documentElement.classList.toggle('dark');
+  localStorage.setItem('v_theme',isDark?'dark':'light');
+  document.getElementById('thi').innerText=isDark?'☀️':'🌙';
 }
-function shareShift(){
-  const s=document.getElementById('dts').innerText;
-  const txt=`📍 Vardiya Akışı — Bugün: ${s}\nKolay gelsin! 🚀`;
-  if(navigator.share)navigator.share({title:'Vardiya',text:txt}).catch(()=>{});
-  else navigator.clipboard.writeText(txt).then(()=>toast('Panoya kopyalandı!'));
-}
-async function fetchW(){
-  const t=document.getElementById('dwt'),i=document.getElementById('dwi');t.innerText='...';
-  try{const r=await fetch('https://api.openweathermap.org/data/2.5/weather?q=Mersin,TR&appid=127997d73d31a727c2395dbed41ac8cc&units=metric&lang=tr');
-  if(r.ok){const d=await r.json();t.innerText=Math.round(d.main.temp)+'°C';i.innerText=d.weather[0].id===800?'☀️':d.weather[0].id<300?'⛈️':d.weather[0].id<600?'🌧️':'⛅';}}catch(e){t.innerText='—';}
+function updGO(val,save=true){
+  A.glOp=val;
+  document.documentElement.style.setProperty('--go',(val/100).toFixed(2));
+  document.documentElement.style.setProperty('--do',Math.max(0.05,(val/150)).toFixed(2));
+  const sov=document.getElementById('sov');
+  if(sov)sov.innerText=val+'%';
+  if(save)S.set('v_op',val);
 }
 
-// ==================== NAV ====================
 function nav(pid,nel=null){
   document.querySelectorAll('.ap').forEach(p=>p.classList.remove('active'));
   const pg=document.getElementById('page-'+pid);if(pg)pg.classList.add('active');
@@ -758,339 +521,339 @@ function nav(pid,nel=null){
   if(pid==='home')renderHome();
   if(pid==='calendar')renderCal();
   if(pid==='finance'){updFinUI();renderExp();}
+  if(pid==='training')renderTrain();
 }
 
 // ==================== VARDİYA ====================
-function gUTC(d){return Date.UTC(d.getFullYear(),d.getMonth(),d.getDate(),12,0,0);}
-function calcShift(tgt){
-  try{
-    const rp=A.sh.ref.split('-');if(rp.length!==3)return'Hata';
-    const uR=gUTC(new Date(rp[0],rp[1]-1,rp[2])),uT=gUTC(tgt);
-    const diff=Math.floor((uT-uR)/86400000);
-    const s=A.sh.cyc;let cyc=[];
-    if(s==='2g2g2i')cyc=['Gündüz','Gündüz','Gece','Gece','İzin','İzin'];
-    else if(s==='4g2i')cyc=['Gündüz','Gündüz','Gündüz','Gündüz','İzin','İzin'];
-    else if(s==='5g2i')return(tgt.getDay()===0||tgt.getDay()===6)?'İzin':'Gündüz';
-    else if(s==='sabit_g')return tgt.getDay()===0?'İzin':'Gündüz';
-    else if(s==='sabit_ge')return tgt.getDay()===0?'İzin':'Gece';
-    const l=cyc.length;let i=diff%l;if(i<0)i+=l;return cyc[i];
-  }catch(e){return'Hata';}
+function getShiftForDate(y,m,d){
+  const key=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+  if(A.ov[key])return A.ov[key];
+  const refParts=A.sh.ref.split('-');
+  const refDate=new Date(parseInt(refParts[0]),parseInt(refParts[1])-1,parseInt(refParts[2]));
+  const target=new Date(y,m,d);
+  const diffDays=Math.round((target-refDate)/(1000*60*60*24));
+  const cyc=A.sh.cyc;
+  if(cyc==='sabit_g')return target.getDay()===0?'İzin':'Gündüz';
+  if(cyc==='sabit_ge')return target.getDay()===0?'İzin':'Gece';
+  if(cyc==='5g2i'){const dw=target.getDay();return(dw===0||dw===6)?'İzin':'Gündüz';}
+  if(cyc==='4g2i'){const idx=((diffDays%6)+6)%6;return idx<4?'Gündüz':'İzin';}
+  const idx=((diffDays%6)+6)%6;
+  if(idx<2)return'Gündüz';
+  if(idx<4)return'Gece';
+  return'İzin';
 }
-function gShift(y,m,d){const k=`${y}-${m+1}-${d}`;return A.ov[k]||calcShift(new Date(y,m,d));}
-function gIcon(s){if(s==='Gündüz')return'☀️';if(s==='Gece')return'🌙';if(s.includes('İzin'))return'🏖️';if(s==='Raporlu')return'🏥';return'🛡️';}
 
-// ==================== ANA EKRAN ====================
 function renderHome(){
   const now=ST.today,y=now.getFullYear(),m=now.getMonth(),d=now.getDate();
-  const sh=gShift(y,m,d);
-  document.getElementById('cdt').innerText=now.toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  document.getElementById('dts').innerText=sh;
-  document.getElementById('sibg').innerText=gIcon(sh);
-  // İzin hapı
-  let nOff=null;
-  for(let i=1;i<=35;i++){const c=new Date(y,m,d+i);if(gShift(c.getFullYear(),c.getMonth(),c.getDate()).includes('İzin')){nOff=c;break;}}
-  const oe=document.getElementById('po');
-  if(nOff){const df=Math.ceil((nOff-now)/86400000);oe.innerText=df===1?'Yarın':df+' Gün';}else oe.innerText='—';
-  // Maaş hapı
-  const pd=A.sh.pd||5;
-  let tP=new Date(y,m,pd);
-  if(tP.getDay()===6)tP.setDate(tP.getDate()-1);if(tP.getDay()===0)tP.setDate(tP.getDate()-2);
-  const tm=new Date(y,m,d).getTime();
-  if(tP.getTime()<tm){tP=new Date(y,m+1,pd);if(tP.getDay()===6)tP.setDate(tP.getDate()-1);if(tP.getDay()===0)tP.setDate(tP.getDate()-2);}
-  const dp=Math.round((tP.getTime()-tm)/86400000);
-  document.getElementById('pp').innerText=dp===0?'Bugün!':dp+' Gün';
+  const dn=["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Friday","Cumartesi"];
+  dn[5]="Cuma";
+  document.getElementById('cdt').innerText=`${d} ${MN[m]} ${y}, ${dn[now.getDay()]}`;
+  const sh=getShiftForDate(y,m,d);
+  const dts=document.getElementById('dts'),sibg=document.getElementById('sibg');
+  dts.innerText=sh;
+  if(sh==='Gündüz'){dts.className='text-5xl font-black text-emerald-500 mt-0.5 tracking-tight';sibg.innerText='☀️';}
+  else if(sh==='Gece'){dts.className='text-5xl font-black text-brand-500 dark:text-brand-300 mt-0.5 tracking-tight';sibg.innerText='🌙';}
+  else{dts.className='text-5xl font-black text-amber-500 mt-0.5 tracking-tight';sibg.innerText='🏖️';}
+
+  // Maaş günü hesabı
+  let nextPd=new Date(y,m,A.sh.pd);
+  if(nextPd<new Date(y,m,d))nextPd=new Date(y,m+1,A.sh.pd);
+  const pdDiff=Math.round((nextPd-new Date(y,m,d))/(1000*60*60*24));
+  document.getElementById('pp').innerText=pdDiff===0?'Bugün!':`${pdDiff} gün`;
+
+  // Sonraki izin hesabı
+  let offDiff=null;
+  for(let i=0;i<14;i++){
+    const check=new Date(y,m,d+i);
+    const s=getShiftForDate(check.getFullYear(),check.getMonth(),check.getDate());
+    if(s==='İzin'||s==='Yıllık İzin'){offDiff=i;break;}
+  }
+  document.getElementById('po').innerText=offDiff===0?'Bugün':offDiff!==null?`${offDiff} gün`:'—';
+
   // Mesai bar
   const pw=document.getElementById('ppw');
   if(sh==='Gündüz'||sh==='Gece'){pw.classList.remove('hidden');updPBar(sh,now);}else pw.classList.add('hidden');
   // Haftalık özet
   renderWeek(y,m,d);
-  // Gemi butonu
-  const vc=A.vc;document.getElementById('hvs').innerText=vc.name?vc.name.substring(0,8):'Gemi';
+  // Eğitim butonu etiketi
+  document.getElementById('hvs').innerText='Eğitim ('+A.tr.length+')';
 }
-function renderWeek(y,m,d){
-  const c=document.getElementById('wsum');c.innerHTML='';
-  const dow=(new Date(y,m,d).getDay()+6)%7;
-  for(let i=0;i<7;i++){
-    const dd=d-dow+i,dt=new Date(y,m,dd),s=gShift(dt.getFullYear(),dt.getMonth(),dt.getDate());
-    const isT=i===dow;
-    let bg='bg-black/10 dark:bg-white/5',tx='opacity-50';
-    if(s==='Gündüz'){bg='bg-emerald-500/20 border border-emerald-500/30';tx='text-emerald-600 dark:text-emerald-400';}
-    else if(s==='Gece'){bg='bg-brand-500/20 border border-brand-500/30';tx='text-brand-500';}
-    else if(s.includes('İzin')){bg='bg-amber-500/20 border border-amber-500/30';tx='text-amber-500';}
-    else if(s==='Raporlu'){bg='bg-rose-500/20 border border-rose-500/30';tx='text-rose-500';}
-    c.innerHTML+=`<div class="flex-1 ${bg} ${isT?'ring-2 ring-brand-500 ring-offset-1':''} rounded-[12px] p-1.5 text-center"><div class="text-[7px] font-bold opacity-50">${DS[i]}</div><div class="text-lg">${gIcon(s)}</div><div class="text-[7px] font-extrabold ${tx}">${dt.getDate()}</div></div>`;
-  }
-}
+
 function updPBar(sh,now){
-  const bar=document.getElementById('ppbar'),txt=document.getElementById('pptxt');
-  const tm=s=>{const p=s.split(':');return parseInt(p[0]||0)*60+parseInt(p[1]||0);};
-  const sM=sh==='Gündüz'?tm(A.sh.gs):tm(A.sh.ges),eM=sh==='Gündüz'?tm(A.sh.ge):tm(A.sh.gee);
-  const cur=now.getHours()*60+now.getMinutes();
-  let dur=eM>sM?eM-sM:(eM+1440)-sM;if(dur===0)dur=1;
-  let el=0,st='before';
-  if(sM<eM){if(cur>=sM&&cur<=eM){el=cur-sM;st='in';}else if(cur>eM)st='after';}
-  else{if(cur>=sM){el=cur-sM;st='in';}else if(cur<=eM){el=cur+1440-sM;st='in';}}
-  let pct=st==='in'?(el/dur)*100:st==='after'?100:0;
-  pct=Math.min(100,Math.max(0,pct));bar.style.width=pct+'%';txt.innerText='%'+Math.round(pct);
+  const stStr=sh==='Gündüz'?A.sh.gs:A.sh.ges;
+  const enStr=sh==='Gündüz'?A.sh.ge:A.sh.gee;
+  const [shH,shM]=stStr.split(':').map(Number);
+  const [enH,enM]=enStr.split(':').map(Number);
+  let start=new Date(now.getFullYear(),now.getMonth(),now.getDate(),shH,shM);
+  let end=new Date(now.getFullYear(),now.getMonth(),now.getDate(),enH,enM);
+  if(end<=start){
+    if(now.getHours()<enH)start.setDate(start.getDate()-1);
+    else end.setDate(end.getDate()+1);
+  }
+  const pct=Math.min(100,Math.max(0,Math.round(((now-start)/(end-start))*100)));
+  document.getElementById('ppbar').style.width=pct+'%';
+  document.getElementById('pptxt').innerText='%'+pct;
 }
+
+function renderWeek(y,m,d){
+  const wsum=document.getElementById('wsum');
+  const daysShort=['Paz','Pzt','Sal','Çar','Per','Cum','Cmt'];
+  let html='';
+  for(let i=-1;i<6;i++){
+    const dt=new Date(y,m,d+i);
+    const s=getShiftForDate(dt.getFullYear(),dt.getMonth(),dt.getDate());
+    const isToday=i===0;
+    const dot=s==='Gündüz'?'bg-emerald-500':s==='Gece'?'bg-brand-500':'bg-amber-500';
+    const shortS=s==='Gündüz'?'GÜN':s==='Gece'?'GEC':'İZN';
+    html+=`<div onclick="openDayModal(${dt.getDate()},${dt.getMonth()},${dt.getFullYear()})" class="flex-1 py-2 px-1 rounded-2xl text-center cursor-pointer transition-all ${isToday?'bg-brand-500/20 border border-brand-500/40 scale-105':'bg-black/5 dark:bg-white/5'}">
+      <span class="block text-[9px] font-bold opacity-50">${daysShort[dt.getDay()]}</span>
+      <span class="block text-xs font-black my-0.5">${dt.getDate()}</span>
+      <span class="inline-block w-1.5 h-1.5 rounded-full ${dot}"></span>
+      <span class="block text-[8px] font-extrabold opacity-70 mt-0.5">${shortS}</span>
+    </div>`;
+  }
+  wsum.innerHTML=html;
+}
+
 function calcIzin(){
-  const ds=document.getElementById('hid').value,g=parseInt(document.getElementById('hig').value);
-  if(!ds||isNaN(g)){toast('Tarih ve gün giriniz.','error');return;}
-  let dt=new Date(ds);dt.setDate(dt.getDate()+g+2);
-  const r=document.getElementById('hir');
-  r.innerHTML=`<span class="text-[10px] opacity-60 block mb-0.5">İşe Dönüş</span><span class="text-base font-black text-brand-500">${dt.toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</span>`;
-  r.classList.remove('hidden');
+  const dVal=document.getElementById('hid').value;
+  const gVal=parseInt(document.getElementById('hig').value);
+  const res=document.getElementById('hir');
+  if(!dVal||isNaN(gVal)||gVal<=0){toast('Başlangıç tarihi ve gün giriniz.','error');return;}
+  const dt=new Date(dVal+'T12:00');
+  dt.setDate(dt.getDate()+gVal+2);
+  res.classList.remove('hidden');
+  res.innerHTML=`<span class="text-[10px] font-bold opacity-60 block">İşbaşı Tarihi</span><span class="text-sm font-black text-brand-500">${dt.toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric',weekday:'long'})}</span>`;
+}
+
+function fetchW(){
+  document.getElementById('dwi').innerText='☀️';
+  document.getElementById('dwt').innerText='22°C Açık';
+  toast('Hava durumu güncellendi.');
+}
+
+function shareShift(){
+  const now=ST.today;
+  const sh=getShiftForDate(now.getFullYear(),now.getMonth(),now.getDate());
+  const txt=`📅 ${now.toLocaleDateString('tr-TR')} Vardiya Durumum: ${sh} (Vardiya Akışı Pro)`;
+  fallbackCopy(txt);
 }
 
 // ==================== TAKVİM ====================
-function chMon(dir){
-  const g=document.getElementById('calgrid');
-  g.classList.add(dir>0?'sol':'sor');
-  setTimeout(()=>{ST.vd.setMonth(ST.vd.getMonth()+dir);renderCal();g.classList.remove('sol','sor');g.classList.add(dir>0?'sir':'sil');setTimeout(()=>g.classList.remove('sir','sil'),300);},230);
-}
+function chMon(dir){ST.vd=new Date(ST.vd.getFullYear(),ST.vd.getMonth()+dir,1);renderCal();}
 function renderCal(){
   const y=ST.vd.getFullYear(),m=ST.vd.getMonth();
   document.getElementById('calt').innerText=`${MN[m]} ${y}`;
-  const g=document.getElementById('calgrid');
-  g.innerHTML=DS.map(d=>`<div class="text-[9px] font-bold opacity-40 mb-1.5">${d}</div>`).join('');
-  const dim=new Date(y,m+1,0).getDate(),fd=(new Date(y,m,1).getDay()+6)%7;
-  for(let i=0;i<fd;i++)g.innerHTML+=`<div></div>`;
-  let hols=[],stats={Gündüz:0,Gece:0,İzin:0,Raporlu:0};
-  for(let d=1;d<=dim;d++){
-    const sh=gShift(y,m,d);
-    if(sh.includes('İzin'))stats.İzin++;else if(sh==='Raporlu')stats.Raporlu++;else if(sh==='Gündüz')stats.Gündüz++;else if(sh==='Gece')stats.Gece++;
-    const k=`${y}-${m+1}-${d}`,hn=A.nt[k],ho=A.ov[k];
-    const isT=d===ST.today.getDate()&&m===ST.today.getMonth()&&y===ST.today.getFullYear();
-    const ms=String(m+1).padStart(2,'0'),ds=String(d).padStart(2,'0');
-    const hl=TH[`${ms}-${ds}`]||TH[`${y}-${ms}-${ds}`];
-    if(hl)hols.push({day:d,name:hl});
-    let cc='bg-white/10 dark:bg-black/10 border border-transparent';
-    if(sh==='Gündüz')cc='bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30';
-    else if(sh==='Gece')cc='bg-brand-500/15 text-brand-600 dark:text-brand-400 border border-brand-500/30';
-    else if(sh.includes('İzin'))cc='bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30';
-    else if(sh==='Raporlu')cc='bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30';
-    if(hl)cc+=' ring-1 ring-rose-500/50';
-    const dots=[hl?'<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>':'',(hn||ho)?'<span class="w-1.5 h-1.5 rounded-full bg-brand-400"></span>':''].join('');
-    g.innerHTML+=`<div onclick="openDayModal(${d},${m})" class="relative flex flex-col items-center justify-center rounded-[14px] h-[58px] cursor-pointer active:scale-90 transition-transform ${cc} ${isT?'ring-2 ring-offset-1 ring-brand-500 dark:ring-offset-slate-900':''}">
-      <div class="absolute top-1 left-0 right-0 flex justify-center gap-1">${dots}</div>
-      <span class="text-sm font-black mt-1">${d}</span>
-      <span class="text-[7px] font-extrabold uppercase mt-0.5 opacity-70">${hl?'🇹🇷':(sh==='Yıllık İzin'?'Y.İzn':sh)}</span>
+  const grid=document.getElementById('calgrid');
+  const firstDay=(new Date(y,m,1).getDay()+6)%7;
+  const daysInMon=new Date(y,m+1,0).getDate();
+  let html=['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'].map(d=>`<div class="text-[10px] font-extrabold opacity-40 py-1">${d}</div>`).join('');
+  for(let i=0;i<firstDay;i++)html+='<div></div>';
+  let cnt={g:0,ge:0,iz:0,nt:0};
+  for(let d=1;d<=daysInMon;d++){
+    const s=getShiftForDate(y,m,d);
+    const key=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const hasNote=!!A.nt[key];
+    if(hasNote)cnt.nt++;
+    if(s==='Gündüz')cnt.g++;else if(s==='Gece')cnt.ge++;else cnt.iz++;
+    const dot=s==='Gündüz'?'bg-emerald-500':s==='Gece'?'bg-brand-500':'bg-amber-500';
+    const isToday=d===ST.today.getDate()&&m===ST.today.getMonth()&&y===ST.today.getFullYear();
+    html+=`<div onclick="openDayModal(${d},${m},${y})" class="relative py-2 rounded-xl cursor-pointer transition-all active:scale-90 ${isToday?'bg-brand-500/25 border border-brand-500':'bg-black/5 dark:bg-white/5 hover:bg-white/10'}">
+      <span class="text-xs font-extrabold block">${d}</span>
+      <span class="inline-block w-1.5 h-1.5 rounded-full ${dot}"></span>
+      ${hasNote?'<span class="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-purple-500"></span>':''}
     </div>`;
   }
-  const hl2=document.getElementById('chl');
-  hl2.innerHTML=hols.length?hols.map(h=>`<li class="flex items-center gap-1.5 text-xs font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 p-2 rounded-xl border border-rose-500/20"><span class="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0"></span>${h.day} ${MN[m]} — ${h.name}</li>`).join(''):`<li class="text-[10px] font-bold opacity-30 text-center py-1.5">Bu ayda resmi tatil yok.</li>`;
-  const st=document.getElementById('mstats');
-  st.innerHTML=[{l:'☀️ Gündüz',v:stats.Gündüz,c:'text-emerald-500'},{l:'🌙 Gece',v:stats.Gece,c:'text-brand-500'},{l:'🏖️ İzin',v:stats.İzin,c:'text-amber-500'},{l:'🏥 Rapor',v:stats.Raporlu,c:'text-rose-500'}].map(s=>`<div class="bg-black/5 dark:bg-white/5 rounded-[14px] p-2.5 text-center border border-black/5 dark:border-white/5"><span class="text-[8px] font-bold opacity-50 block">${s.l}</span><span class="text-xl font-black ${s.c}">${s.v}</span><span class="text-[8px] opacity-40 block">gün</span></div>`).join('');
+  grid.innerHTML=html;
+  document.getElementById('mstats').innerHTML=`
+    <div class="bg-emerald-500/15 p-2.5 rounded-2xl text-center"><span class="text-base font-black text-emerald-500 block">${cnt.g}</span><span class="text-[9px] font-bold opacity-60">Gündüz</span></div>
+    <div class="bg-brand-500/15 p-2.5 rounded-2xl text-center"><span class="text-base font-black text-brand-500 block">${cnt.ge}</span><span class="text-[9px] font-bold opacity-60">Gece</span></div>
+    <div class="bg-amber-500/15 p-2.5 rounded-2xl text-center"><span class="text-base font-black text-amber-500 block">${cnt.iz}</span><span class="text-[9px] font-bold opacity-60">İzin</span></div>
+    <div class="bg-purple-500/15 p-2.5 rounded-2xl text-center"><span class="text-base font-black text-purple-500 block">${cnt.nt}</span><span class="text-[9px] font-bold opacity-60">Not</span></div>
+  `;
+  const hols={'0-1':'Yılbaşı','3-23':'23 Nisan Ulusal Egemenlik','4-1':'1 Mayıs Emek ve Dayanışma','4-19':'19 Mayıs Gençlik ve Spor','6-15':'15 Temmuz Demokrasi','7-30':'30 Ağustos Zafer Bayramı','9-29':'29 Ekim Cumhuriyet Bayramı'};
+  const chl=document.getElementById('chl');
+  let hList='';
+  for(let d=1;d<=daysInMon;d++){
+    const hk=`${m}-${d}`;
+    if(hols[hk])hList+=`<li class="text-xs font-bold flex justify-between items-center bg-rose-500/10 px-3 py-1.5 rounded-xl text-rose-500"><span>${hols[hk]}</span><span>${d} ${MN[m]}</span></li>`;
+  }
+  chl.innerHTML=hList||'<li class="text-[10px] opacity-40 text-center py-2">Bu ay resmi tatil bulunmuyor.</li>';
 }
-function openDayModal(d,m){
-  const y=ST.vd.getFullYear()||ST.today.getFullYear();
-  ST.adk=`${y}-${m+1}-${d}`;
+
+function openDayModal(d,m,y){
+  ST.adk=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
   document.getElementById('mdt').innerText=`${d} ${MN[m]} ${y}`;
   document.getElementById('mso').value=A.ov[ST.adk]||'';
   document.getElementById('mnote').value=A.nt[ST.adk]||'';
-  const ms=String(m+1).padStart(2,'0'),ds=String(d).padStart(2,'0');
-  const hl=TH[`${ms}-${ds}`]||TH[`${y}-${ms}-${ds}`];
-  if(hl)document.getElementById('mdt').innerHTML+=`<br><span class="text-rose-500 text-[10px] font-extrabold">🇹🇷 ${hl}</span>`;
   om('day-modal');
 }
 function savDD(){
-  const s=document.getElementById('mso').value,n=document.getElementById('mnote').value.trim();
-  if(s)A.ov[ST.adk]=s;else delete A.ov[ST.adk];
-  if(n)A.nt[ST.adk]=n;else delete A.nt[ST.adk];
-  S.set('v_ov',A.ov);S.set('v_nt',A.nt);cm('day-modal');toast('Kaydedildi.');
-  if(document.getElementById('page-calendar').classList.contains('active'))renderCal();renderHome();
+  if(!ST.adk)return;
+  const ov=document.getElementById('mso').value;
+  const nt=document.getElementById('mnote').value.trim();
+  if(ov)A.ov[ST.adk]=ov;else delete A.ov[ST.adk];
+  if(nt)A.nt[ST.adk]=nt;else delete A.nt[ST.adk];
+  S.set('v_ov',A.ov);S.set('v_nt',A.nt);
+  cm('day-modal');renderHome();if(document.getElementById('page-calendar').classList.contains('active'))renderCal();
+  toast('Gün bilgisi kaydedildi ✓','ok');
 }
 function clrDD(){
+  if(!ST.adk)return;
   delete A.ov[ST.adk];delete A.nt[ST.adk];
-  S.set('v_ov',A.ov);S.set('v_nt',A.nt);cm('day-modal');toast('Temizlendi.');
-  if(document.getElementById('page-calendar').classList.contains('active'))renderCal();renderHome();
+  S.set('v_ov',A.ov);S.set('v_nt',A.nt);
+  cm('day-modal');renderHome();if(document.getElementById('page-calendar').classList.contains('active'))renderCal();
+  toast('Temizlendi.');
 }
 
 // ==================== FİNANS ====================
 function swFin(tab){
-  ['mesai','butce'].forEach(t=>{document.getElementById('tab-'+t).classList.add('hidden');document.getElementById('tf'+t[0]).classList.remove('ta');document.getElementById('tf'+t[0]).classList.add('opacity-50');});
-  document.getElementById('tab-'+tab).classList.remove('hidden');document.getElementById('tf'+tab[0]).classList.add('ta');document.getElementById('tf'+tab[0]).classList.remove('opacity-50');
+  document.getElementById('tab-mesai').classList.toggle('hidden',tab!=='mesai');
+  document.getElementById('tab-butce').classList.toggle('hidden',tab!=='butce');
+  document.getElementById('tfm').classList.toggle('ta',tab==='mesai');
+  document.getElementById('tfm').classList.toggle('opacity-50',tab!=='mesai');
+  document.getElementById('tfb').classList.toggle('ta',tab==='butce');
+  document.getElementById('tfb').classList.toggle('opacity-50',tab!=='butce');
+  if(tab==='butce'){updFinUI();renderExp();}
 }
 function ldFin(){
-  const f=A.fin;
-  document.getElementById('fm').value=f.m||'';document.getElementById('fms').value=f.ms||'';document.getElementById('fmu').value=f.mu||'';document.getElementById('fmc').value=f.mc||2;
-  document.getElementById('fms2').value=f.ms2||'';document.getElementById('fmu2').value=f.mu2||'';document.getElementById('fmc2').value=f.mc2||2;
-  updFinUI();
+  document.getElementById('fm').value=A.fin.m||'';
+  document.getElementById('fms').value=A.fin.ms||'';document.getElementById('fmu').value=A.fin.mu||'';document.getElementById('fmc').value=A.fin.mc||2;
+  document.getElementById('fms2').value=A.fin.ms2||'';document.getElementById('fmu2').value=A.fin.mu2||'';document.getElementById('fmc2').value=A.fin.mc2||2;
+  if(A.fin.tot>0)document.getElementById('fth').innerText=A.fin.tot.toLocaleString('tr-TR')+' ₺';
 }
 function calcFin(){
-  const f=A.fin;
-  f.m=parseFloat(document.getElementById('fm').value)||0;f.ms=parseFloat(document.getElementById('fms').value)||0;f.mu=parseFloat(document.getElementById('fmu').value)||0;f.mc=parseFloat(document.getElementById('fmc').value)||2;
-  f.ms2=parseFloat(document.getElementById('fms2').value)||0;f.mu2=parseFloat(document.getElementById('fmu2').value)||0;f.mc2=parseFloat(document.getElementById('fmc2').value)||2;
-  const tot=f.m+(f.ms*f.mu*f.mc)+(f.ms2*f.mu2*f.mc2);
-  if(isNaN(tot)){toast('Geçerli değer giriniz.','error');return;}
-  f.tot=tot;
-  ['m','ms','mu','mc','ms2','mu2','mc2','tot'].forEach(k=>S.set('v_f'+k,f[k]));
-  updFinUI();toast('Bütçeye aktarıldı!','ok');swFin('butce');
+  const m=parseFloat(document.getElementById('fm').value)||0;
+  const ms=parseFloat(document.getElementById('fms').value)||0;
+  const mu=parseFloat(document.getElementById('fmu').value)||0;
+  const mc=parseFloat(document.getElementById('fmc').value)||1;
+  const ms2=parseFloat(document.getElementById('fms2').value)||0;
+  const mu2=parseFloat(document.getElementById('fmu2').value)||0;
+  const mc2=parseFloat(document.getElementById('fmc2').value)||1;
+  const tot=Math.round(m+(ms*mu*mc)+(ms2*mu2*mc2));
+  A.fin={tot,m,ms,mu,mc,ms2,mu2,mc2};
+  S.set('v_ft',tot);S.set('v_fm',m);S.set('v_fms',ms);S.set('v_fmu',mu);S.set('v_fmc',mc);S.set('v_fms2',ms2);S.set('v_fmu2',mu2);S.set('v_fmc2',mc2);
+  document.getElementById('fth').innerText=tot.toLocaleString('tr-TR')+' ₺';
+  updFinUI();
+  toast('Bütçeye aktarıldı ✓','ok');
 }
 function updFinUI(){
-  const tot=A.fin.tot||0;document.getElementById('fth').innerText=tot>0?tot.toLocaleString('tr-TR')+' ₺':'Hesaplanmadı';
-  let et=0;A.exp.forEach(e=>et+=e.amount);
-  document.getElementById('fte').innerText=et.toLocaleString('tr-TR')+' ₺';
-  const net=tot-et;const ne=document.getElementById('fnk');
-  ne.innerText=net.toLocaleString('tr-TR')+' ₺';ne.className='relative z-10 text-4xl font-black '+(net<0?'text-rose-500':'text-emerald-500');
-  const pct=tot>0?Math.min(100,(et/tot)*100):0;
-  document.getElementById('feb').style.width=pct+'%';document.getElementById('fep').innerText='%'+Math.round(pct);
+  const totExp=A.exp.reduce((s,e)=>s+e.amt,0);
+  const net=A.fin.tot-totExp;
+  document.getElementById('fnk').innerText=net.toLocaleString('tr-TR')+' ₺';
+  document.getElementById('fte').innerText=totExp.toLocaleString('tr-TR')+' ₺';
+  const pct=A.fin.tot>0?Math.min(100,Math.round((totExp/A.fin.tot)*100)):0;
+  document.getElementById('feb').style.width=pct+'%';
+  document.getElementById('fep').innerText='%'+pct;
+}
+function addExp(){
+  const cat=document.getElementById('ecat').value;
+  const date=document.getElementById('edate').value;
+  const name=document.getElementById('ename').value.trim();
+  const amt=parseFloat(document.getElementById('eamt').value);
+  if(!cat||isNaN(amt)||amt<=0){toast('Kategori ve tutar zorunludur.','error');return;}
+  A.exp.unshift({id:Date.now().toString(),cat,date,name,amt});
+  S.set('v_exp',A.exp);
+  document.getElementById('ename').value='';document.getElementById('eamt').value='';
+  renderExp();updFinUI();toast('Gider eklendi.');
 }
 function renderExp(){
   const list=document.getElementById('explist');
-  if(!A.exp.length){list.innerHTML=`<li class="text-xs font-bold opacity-30 text-center py-3">Gider eklenmedi.</li>`;return;}
-  list.innerHTML=[...A.exp].reverse().map(e=>`<li class="flex justify-between items-center bg-black/5 dark:bg-white/5 p-3 rounded-2xl border border-black/5 dark:border-white/5">
-    <div class="overflow-hidden pr-2"><span class="font-extrabold text-sm block truncate">${e.category}</span>
-    <span class="text-[10px] opacity-50">${e.date?new Date(e.date+'T12:00').toLocaleDateString('tr-TR'):'-'}${e.name?' — '+e.name:''}</span></div>
-    <div class="flex items-center gap-2 shrink-0"><span class="font-black text-rose-500">${e.amount.toLocaleString('tr-TR')} ₺</span>
-    <button onclick="delExp('${e.id}')" class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-500 text-xs flex items-center justify-center active:scale-90">✕</button></div>
+  if(!A.exp.length){list.innerHTML='<li class="text-[10px] opacity-40 text-center py-3">Henüz gider eklenmedi.</li>';updFinUI();return;}
+  list.innerHTML=A.exp.map(e=>`<li class="flex justify-between items-center p-2.5 rounded-2xl bg-black/5 dark:bg-white/5 text-xs font-bold">
+    <div><span class="block">${e.cat} ${e.name?'— '+e.name:''}</span><span class="text-[9px] opacity-40">${e.date||'Tarihsiz'}</span></div>
+    <div class="flex items-center gap-2"><span class="text-rose-500 font-black">-${e.amt.toLocaleString('tr-TR')} ₺</span><button onclick="delExp('${e.id}')" class="w-6 h-6 rounded-lg bg-rose-500/15 text-rose-500 text-[10px]">✕</button></div>
   </li>`).join('');
   updFinUI();
 }
-function addExp(){
-  const cat=document.getElementById('ecat').value,date=document.getElementById('edate').value,name=document.getElementById('ename').value,amount=parseFloat(document.getElementById('eamt').value);
-  if(!cat){toast('Kategori seçiniz.','error');return;}if(isNaN(amount)||amount<=0){toast('Geçerli tutar giriniz.','error');return;}
-  A.exp.push({id:Date.now().toString(),category:cat,date,name,amount});S.set('v_exp',A.exp);
-  document.getElementById('ename').value='';document.getElementById('eamt').value='';renderExp();toast('Gider eklendi.');
-}
 function delExp(id){A.exp=A.exp.filter(e=>e.id!==id);S.set('v_exp',A.exp);renderExp();toast('Silindi.');}
 
-// ==================== GEMİ ====================
-function swVes(tab){
-  ['ops','cargo','ton','log'].forEach(t=>{document.getElementById('ves-'+t).classList.add('hidden');document.getElementById('tv'+t).classList.remove('ta');document.getElementById('tv'+t).classList.add('opacity-50');});
-  document.getElementById('ves-'+tab).classList.remove('hidden');document.getElementById('tv'+tab).classList.add('ta');document.getElementById('tv'+tab).classList.remove('opacity-50');
-  if(tab==='cargo'){renderHatch();updCargo();updDrght();}
-  if(tab==='ton'&&A.vca.l)calcTon(true);
-  if(tab==='log')renderLog();
+// ==================== EĞİTİM & ANONS REHBERİ ====================
+function swTrainCat(cat){
+  ST.trCat=cat;
+  ['all','ihtiyac','telsiz','not'].forEach(c=>{
+    const el=document.getElementById('trcat-'+c);
+    if(el){el.classList.remove('ta');el.classList.add('opacity-50');}
+  });
+  const activeEl=document.getElementById('trcat-'+cat);
+  if(activeEl){activeEl.classList.add('ta');activeEl.classList.remove('opacity-50');}
+  renderTrain();
 }
-function ldVes(){
-  const vc=A.vc;
-  document.getElementById('vname').value=vc.name||'';document.getElementById('vport').value=vc.port||'';document.getElementById('vberth').value=vc.berth||'';
-  document.getElementById('voptype').value=vc.optype||'Yükleme';document.getElementById('vtgt').value=vc.target||'';
-  document.getElementById('vcur').innerText=vc.cur||0;
-  if(vc.ops)document.getElementById('vops').value=vc.ops;if(vc.ope)document.getElementById('vope').value=vc.ope;
-  const vca=A.vca;
-  ['l','b','d','t','cb','ls'].forEach(k=>{const el=document.getElementById('t'+k);if(el)el.value=vca[k]||'';});
-  document.getElementById('tdens').value=vca.dens||'1.025';
-  const cd=A.cd;if(cd.tw)document.getElementById('ctw').value=cd.tw;if(cd.lw)document.getElementById('clw').value=cd.lw;if(cd.hcnt)document.getElementById('chcnt').value=cd.hcnt;
-  const dr=A.dr;if(dr.f)document.getElementById('df').value=dr.f;if(dr.m)document.getElementById('dm').value=dr.m;if(dr.a)document.getElementById('da').value=dr.a;
-  chkVes();updAnlz();updCargo();updDrght();
+function tgTrainForm(){
+  ST.trFormOpen=!ST.trFormOpen;
+  const f=document.getElementById('trform'),ic=document.getElementById('trformicon');
+  if(ST.trFormOpen){f.classList.remove('hidden');ic.style.transform='rotate(0deg)';}
+  else{f.classList.add('hidden');ic.style.transform='rotate(-90deg)';}
 }
-function saveVC(){
-  A.vc.name=document.getElementById('vname').value;A.vc.port=document.getElementById('vport').value;A.vc.berth=document.getElementById('vberth').value;
-  A.vc.optype=document.getElementById('voptype').value;A.vc.target=document.getElementById('vtgt').value;
-  A.vc.ops=document.getElementById('vops').value;A.vc.ope=document.getElementById('vope').value;
-  S.set('v_vc',A.vc);chkVes();updAnlz();
+function addTrain(){
+  const cat=document.getElementById('trcat').value;
+  const title=document.getElementById('trtitle').value.trim();
+  const body=document.getElementById('trbody').value.trim();
+  if(!title||!body){toast('Başlık ve içerik alanlarını doldurunuz.','error');return;}
+  A.tr.unshift({id:Date.now().toString(),cat,title,body});
+  S.set('v_tr',A.tr);
+  document.getElementById('trtitle').value='';
+  document.getElementById('trbody').value='';
+  renderTrain();
+  renderHome();
+  toast('Rehbere kaydedildi ✓','ok');
 }
-function upVeh(n){
-  A.vc.cur=Math.max(0,A.vc.cur+n);
-  const el=document.getElementById('vcur');el.innerText=A.vc.cur;
-  el.classList.add('cb');setTimeout(()=>el.classList.remove('cb'),200);
-  S.set('v_vc',A.vc);chkVes();updAnlz();
+function delTrain(id){
+  A.tr=A.tr.filter(item=>item.id!==id);
+  S.set('v_tr',A.tr);
+  renderTrain();
+  renderHome();
+  toast('Kayıt silindi.');
 }
-function setVMan(){
-  const v=parseInt(document.getElementById('vman').value);
-  if(isNaN(v)||v<0){toast('Geçerli sayı.','error');return;}
-  A.vc.cur=v;document.getElementById('vcur').innerText=v;document.getElementById('vman').value='';
-  S.set('v_vc',A.vc);chkVes();updAnlz();toast('Sayaç güncellendi.');
+function copyTrain(id){
+  const item=A.tr.find(x=>x.id===id);
+  if(!item)return;
+  const text=`${item.title}\n${item.body}`;
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(()=>toast('Anons / Not kopyalandı 📋')).catch(()=>fallbackCopy(text));
+  }else{fallbackCopy(text);}
 }
-function rstVeh(){
-  if(!confirm('Sayacı sıfırla?'))return;
-  A.vc.cur=0;document.getElementById('vcur').innerText=0;
-  S.set('v_vc',A.vc);chkVes();updAnlz();toast('Sayaç sıfırlandı.');
+function fallbackCopy(txt){
+  const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');toast('Kopyalandı 📋');}catch(e){}
+  ta.remove();
 }
-function chkVes(){
-  const tgt=parseInt(A.vc.target),cur=A.vc.cur;
-  const comp=document.getElementById('vcomp'),pw=document.getElementById('vpw');
-  if(!isNaN(tgt)&&tgt>0){
-    pw.classList.remove('hidden');
-    const pct=Math.min(100,Math.round((cur/tgt)*100));
-    document.getElementById('vpbar').style.width=pct+'%';document.getElementById('vpct').innerText='%'+pct;
-    if(cur>=tgt){comp.classList.remove('hidden');document.getElementById('vcomptxt').innerText=`${A.vc.name||'Operasyon'} Tamamlandı — ${cur} Araç`;document.getElementById('vcomptime').innerText=new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})+' itibarıyla';}
-    else comp.classList.add('hidden');
-  }else{pw.classList.add('hidden');comp.classList.add('hidden');}
-}
-function updAnlz(){
-  const sv=document.getElementById('vops'),ev=document.getElementById('vope');
-  const hr=document.getElementById('vhr'),rt=document.getElementById('vrt'),et=document.getElementById('vet');
-  if(!sv||!hr)return;
-  if(!sv.value){hr.innerText='—';rt.innerText='—';et.innerText='—';return;}
-  const start=new Date(sv.value),now=ST.today,cur=A.vc.cur,tgt=parseInt(A.vc.target)||0;
-  const elH=Math.max(0,(now-start)/3600000);
-  et.innerText=elH<0.1?'<1 dk':elH.toFixed(1)+' sa';
-  if(elH>0&&cur>0){
-    const rate=cur/elH;hr.innerText=rate.toFixed(1);
-    if(tgt>cur){const rh=(tgt-cur)/rate;rt.innerText=rh<1?(rh*60).toFixed(0)+' dk':rh.toFixed(1)+' sa';}
-    else rt.innerText=cur>=tgt&&tgt>0?'✅':'—';
-  }else{hr.innerText='—';rt.innerText='—';}
-}
-// Kargo
-function updCargo(){
-  const tw=parseFloat(document.getElementById('ctw').value)||0,lw=parseFloat(document.getElementById('clw').value)||0;
-  A.cd.tw=tw;A.cd.lw=lw;A.cd.type=document.getElementById('ctype').value;S.set('v_cd',A.cd);
-  const w=document.getElementById('cstw');
-  if(tw>0){w.classList.remove('hidden');const pct=Math.min(100,Math.round((lw/tw)*100));document.getElementById('cpbar').style.width=pct+'%';document.getElementById('cpct').innerText='%'+pct;document.getElementById('clt').innerText=lw.toLocaleString('tr-TR')+' mt yüklendi';document.getElementById('crt').innerText=Math.max(0,tw-lw).toLocaleString('tr-TR')+' mt kaldı';}
-  else w.classList.add('hidden');
-}
-function renderHatch(){
-  const cnt=parseInt(document.getElementById('chcnt').value)||0;
-  A.cd.hcnt=cnt;S.set('v_cd',A.cd);
-  const c=document.getElementById('hgrid');
-  if(cnt<=0){c.innerHTML='<p class="text-[10px] opacity-30 text-center col-span-full py-3">Ambar sayısı giriniz.</p>';return;}
-  if(!A.hst||A.hst.length!==cnt){A.hst=Array(cnt).fill('empty');S.set('v_hs',A.hst);}
-  const lbl={empty:'—',loaded:'✓',damaged:'⚠',hazmat:'☢'};
-  c.innerHTML=A.hst.map((s,i)=>`<div onclick="cycHatch(${i})" class="hcel ${s}"><div class="text-base">${lbl[s]}</div><div class="text-[8px] opacity-60">A-${i+1}</div></div>`).join('');
-}
-function cycHatch(i){const sts=['empty','loaded','damaged','hazmat'];A.hst[i]=sts[(sts.indexOf(A.hst[i])+1)%4];S.set('v_hs',A.hst);renderHatch();}
-function updDrght(){
-  const f=parseFloat(document.getElementById('df').value),m=parseFloat(document.getElementById('dm').value),a=parseFloat(document.getElementById('da').value);
-  A.dr={f:f||'',m:m||'',a:a||''};S.set('v_dr',A.dr);
-  const res=document.getElementById('dres');
-  if(!isNaN(f)&&!isNaN(a)){res.classList.remove('hidden');const avg=((f+(isNaN(m)?(f+a)/2:m)+a)/3).toFixed(2),trim=(a-f).toFixed(2);document.getElementById('davg').innerText=avg+' m';document.getElementById('dtrim').innerText=(trim>0?'+':'')+trim+' m';}
-  else res.classList.add('hidden');
-}
-// Tonaj
-function saveVCa(){['l','b','d','t','cb','ls'].forEach(k=>{const el=document.getElementById('t'+k);if(el)A.vca[k]=el.value||'';});A.vca.dens=document.getElementById('tdens').value;S.set('v_vca',A.vca);}
-function calcTon(silent=false){
-  saveVCa();
-  const L=parseFloat(A.vca.l),B=parseFloat(A.vca.b),D=parseFloat(A.vca.d),T=parseFloat(A.vca.t),Cb=parseFloat(A.vca.cb),dens=parseFloat(A.vca.dens),ls=parseFloat(A.vca.ls)||0;
-  if(!L||!B||!D||!T||!Cb){if(!silent)toast('Tüm boyutları doldurunuz.','error');return;}
-  const disp=L*B*T*Cb*dens,dwt=Math.max(0,disp-ls),V=L*B*D*0.8,K1=V>0?(0.2+0.02*Math.log10(V)):0,gt=K1*V;
-  const Aw=L*B*0.85,tpc=(Aw*dens/100).toFixed(2);
-  document.getElementById('rdisp').innerText=disp.toLocaleString('tr-TR',{maximumFractionDigits:1})+' mt';
-  document.getElementById('rdwt').innerText=dwt.toLocaleString('tr-TR',{maximumFractionDigits:1})+' mt';
-  document.getElementById('rgt').innerText=gt.toLocaleString('tr-TR',{maximumFractionDigits:0})+' GT';
-  document.getElementById('rvol').innerText=V.toLocaleString('tr-TR',{maximumFractionDigits:0})+' m³';
-  document.getElementById('rtpc').innerText=tpc;
-  document.getElementById('raw').innerText=Aw.toLocaleString('tr-TR',{maximumFractionDigits:0})+' m²';
-  document.getElementById('tonres').classList.remove('hidden');
-  if(!silent)toast('Hesaplandı ve kaydedildi.','ok');
-}
-// Log
-function addLog(){
-  const type=document.getElementById('ltype').value,time=document.getElementById('ltime').value,note=document.getElementById('lnote').value.trim();
-  if(!time){toast('Zaman giriniz.','error');return;}
-  A.vlog.unshift({id:Date.now().toString(),type,time,note,ship:A.vc.name||'—'});
-  if(A.vlog.length>120)A.vlog.pop();S.set('v_vl',A.vlog);document.getElementById('lnote').value='';renderLog();toast('Kayıt eklendi.');
-}
-function renderLog(){
-  const list=document.getElementById('llist');
-  if(!A.vlog.length){list.innerHTML=`<li class="text-[10px] opacity-30 text-center py-3">Kayıt yok.</li>`;return;}
-  list.innerHTML=A.vlog.map(e=>{
-    const dt=new Date(e.time),dts=dt.toLocaleDateString('tr-TR',{day:'2-digit',month:'2-digit'})+' '+dt.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
-    return`<li class="bg-black/5 dark:bg-white/5 p-2.5 rounded-2xl border border-black/5 dark:border-white/5 su">
-      <div class="flex justify-between items-start"><span class="font-extrabold text-xs text-brand-500">${e.type}</span>
-      <div class="flex gap-2 items-center"><span class="text-[9px] opacity-40">${dts}</span><button onclick="delLog('${e.id}')" class="text-rose-500 text-[10px] opacity-60 hover:opacity-100">✕</button></div></div>
-      ${e.note?`<p class="text-[10px] opacity-50 mt-1">${e.note}</p>`:''}
-      ${e.ship&&e.ship!=='—'?`<span class="text-[8px] opacity-30 block mt-0.5">🚢 ${e.ship}</span>`:''}
-    </li>`;
+function renderTrain(){
+  const list=document.getElementById('trlist');
+  const q=(document.getElementById('trsearch')?.value||'').toLocaleLowerCase('tr-TR').trim();
+  const catMeta={
+    ihtiyac:{label:'📢 İhtiyaç Anonsu',cls:'bg-rose-500/15 text-rose-600 dark:text-rose-300 border-rose-500/30'},
+    telsiz:{label:'📻 Telsiz Kodu',cls:'bg-amber-500/15 text-amber-600 dark:text-amber-300 border-amber-500/30'},
+    not:{label:'📝 Eğitim Notu',cls:'bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 border-emerald-500/30'}
+  };
+  const filtered=A.tr.filter(item=>{
+    const matchCat=ST.trCat==='all'||item.cat===ST.trCat;
+    const matchQ=!q||item.title.toLocaleLowerCase('tr-TR').includes(q)||item.body.toLocaleLowerCase('tr-TR').includes(q);
+    return matchCat&&matchQ;
+  });
+  document.getElementById('trcnt').innerText=`${filtered.length} / ${A.tr.length} Kayıt`;
+  if(!filtered.length){
+    list.innerHTML=`<div class="glass rounded-[24px] p-6 text-center"><span class="text-3xl block mb-1.5">🔍</span><p class="text-xs font-bold opacity-40">Aramanıza veya seçili kategoriye uygun kayıt bulunamadı.</p></div>`;
+    return;
+  }
+  list.innerHTML=filtered.map(item=>{
+    const meta=catMeta[item.cat]||catMeta.not;
+    const safeBody=item.body.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+    const safeTitle=item.title.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return `<div class="glass rounded-[22px] p-4 space-y-2 su">
+      <div class="flex justify-between items-start gap-2">
+        <div>
+          <span class="inline-block text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-lg border ${meta.cls} mb-1">${meta.label}</span>
+          <h4 class="font-extrabold text-sm leading-snug">${safeTitle}</h4>
+        </div>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <button onclick="copyTrain('${item.id}')" title="Kopyala" class="w-8 h-8 rounded-xl glass flex items-center justify-center text-xs active:scale-90">📋</button>
+          <button onclick="delTrain('${item.id}')" title="Sil" class="w-8 h-8 rounded-xl bg-rose-500/15 text-rose-500 flex items-center justify-center text-xs font-bold active:scale-90">✕</button>
+        </div>
+      </div>
+      <p class="text-xs opacity-75 leading-relaxed bg-black/5 dark:bg-white/5 p-3 rounded-xl border border-black/5 dark:border-white/5">${safeBody}</p>
+    </div>`;
   }).join('');
-}
-function delLog(id){A.vlog=A.vlog.filter(e=>e.id!==id);S.set('v_vl',A.vlog);renderLog();toast('Silindi.');}
-function expLog(){
-  if(!A.vlog.length){toast('Kayıt yok.','error');return;}
-  const txt=A.vlog.map(e=>{const dt=new Date(e.time).toLocaleString('tr-TR');return`[${dt}] ${e.type}${e.note?' — '+e.note:''}${e.ship&&e.ship!=='—'?' ('+e.ship+')':''}`;}).join('\n');
-  navigator.clipboard.writeText(`SEFER LOGBOOK — ${new Date().toLocaleDateString('tr-TR')}\n${'='.repeat(38)}\n`+txt).then(()=>toast('Logbook kopyalandı! 📋'));
 }
 
 // ==================== ARAÇLAR ====================
@@ -1126,7 +889,7 @@ function opTool(type){
 }
 function addOtl(){const d=document.getElementById('otd').value,h=parseFloat(document.getElementById('oth').value);if(!d||isNaN(h)){toast('Tarih ve saat zorunlu.','error');return;}A.otl.push({id:Date.now().toString(),date:new Date(d+'T12:00').toLocaleDateString('tr-TR'),hours:h});S.set('v_otl',A.otl);opTool('overtime');toast('Mesai eklendi.');}
 function delOtl(id){A.otl=A.otl.filter(l=>l.id!==id);S.set('v_otl',A.otl);opTool('overtime');}
-function genInc(){const loc=document.getElementById('iloc').value||'Belirtilmedi',prn=document.getElementById('iprn').value||'Belirtilmedi',desc=document.getElementById('idesc').value||'Belirtilmedi',now=new Date();const rpt=`📋 OLAY BİLDİRİM TUTANAĞI\n${'═'.repeat(28)}\nTarih/Saat: ${now.toLocaleDateString('tr-TR')} — ${now.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})}\nGemi: ${A.vc.name||'—'}\nKonum: ${loc}\nİlgili: ${prn}\n\nOlay:\n${desc}\n\n${'─'.repeat(28)}\nVardiya Akışı Pro`;navigator.clipboard.writeText(rpt).then(()=>{cm('tool-modal');toast('Rapor kopyalandı!');});}
+function genInc(){const loc=document.getElementById('iloc').value||'Belirtilmedi',prn=document.getElementById('iprn').value||'Belirtilmedi',desc=document.getElementById('idesc').value||'Belirtilmedi',now=new Date();const rpt=`📋 OLAY BİLDİRİM TUTANAĞI\n${'═'.repeat(28)}\nTarih/Saat: ${now.toLocaleDateString('tr-TR')} — ${now.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})}\nKonum: ${loc}\nİlgili: ${prn}\n\nOlay:\n${desc}\n\n${'─'.repeat(28)}\nVardiya Akışı Pro`;fallbackCopy(rpt);cm('tool-modal');toast('Rapor kopyalandı!');}
 function cnfDev(){const p=document.getElementById('dvprn').value||'İmzasız';toast(`Devir onaylandı — ${p}`,'ok');cm('tool-modal');}
 
 // ==================== AYARLAR ====================
@@ -1144,7 +907,7 @@ function saveSet(){
   ST.today=new Date();renderHome();if(document.getElementById('page-calendar').classList.contains('active'))renderCal();
   toast('Ayarlar kaydedildi ✓','ok');
 }
-function fReset(){if(confirm('Tüm veriler silinecek. Onaylıyor musunuz?')){S.clr();location.reload();}}
+function fReset(){S.clr();location.reload();}
 </script>
 </body>
-</html> 
+</html>
