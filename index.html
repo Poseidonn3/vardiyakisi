@@ -59,11 +59,11 @@ html.dark .ni.active{color:#60a5fa;}
 .toast{padding:10px 22px;border-radius:28px;font-size:13px;font-weight:700;text-align:center;animation:ta 3.2s forwards;box-shadow:0 10px 25px rgba(0,0,0,.25);white-space:nowrap;}
 @keyframes ta{0%{opacity:0;transform:translateY(-16px) scale(.9);}10%{opacity:1;transform:translateY(0) scale(1);}88%{opacity:1;}100%{opacity:0;transform:translateY(-16px);}}
 .caw{overflow:hidden;position:relative;width:100%;}
-.sol{animation:slol .25s forwards ease-in;}.sor{animation:slor .25s forwards ease-in;}
-.sil{animation:slil .28s forwards ease-out;}.sir{animation:slir .28s forwards ease-out;}
-@keyframes slol{to{transform:translateX(-100%);opacity:0;}}@keyframes slor{to{transform:translateX(100%);opacity:0;}}
-@keyframes slil{from{transform:translateX(-100%);opacity:0;}to{transform:translateX(0);opacity:1;}}
-@keyframes slir{from{transform:translateX(100%);opacity:0;}to{transform:translateX(0);opacity:1;}}
+.sol{animation:slol .22s forwards cubic-bezier(.4,0,.2,1);}.sor{animation:slor .22s forwards cubic-bezier(.4,0,.2,1);}
+.sil{animation:slil .34s forwards cubic-bezier(.22,1,.36,1);}.sir{animation:slir .34s forwards cubic-bezier(.22,1,.36,1);}
+@keyframes slol{to{transform:translateX(-28px) scale(.98);opacity:0;}}@keyframes slor{to{transform:translateX(28px) scale(.98);opacity:0;}}
+@keyframes slil{from{transform:translateX(-28px) scale(.98);opacity:0;}to{transform:translateX(0) scale(1);opacity:1;}}
+@keyframes slir{from{transform:translateX(28px) scale(.98);opacity:0;}to{transform:translateX(0) scale(1);opacity:1;}}
 input[type="date"]::-webkit-calendar-picker-indicator,input[type="time"]::-webkit-calendar-picker-indicator,input[type="datetime-local"]::-webkit-calendar-picker-indicator{filter:invert(.5);cursor:pointer;}
 html.dark input[type="date"]::-webkit-calendar-picker-indicator,html.dark input[type="time"]::-webkit-calendar-picker-indicator,html.dark input[type="datetime-local"]::-webkit-calendar-picker-indicator{filter:invert(1);}
 input[type=range]{-webkit-appearance:none;width:100%;background:transparent;}
@@ -476,6 +476,44 @@ const A={
 };
 const ST={today:new Date(),vd:new Date(),adk:null,trCat:'all',trFormOpen:true};
 const MN=["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+const FIXED_HOLS={
+  '0-1':'Yılbaşı',
+  '3-23':'23 Nisan Ulusal Egemenlik ve Çocuk Bayramı',
+  '4-1':'1 Mayıs Emek ve Dayanışma Günü',
+  '4-19':'19 Mayıs Atatürk\'ü Anma, Gençlik ve Spor Bayramı',
+  '6-15':'15 Temmuz Demokrasi ve Millî Birlik Günü',
+  '7-30':'30 Ağustos Zafer Bayramı',
+  '9-28':'29 Ekim Cumhuriyet Bayramı Arifesi',
+  '9-29':'29 Ekim Cumhuriyet Bayramı'
+};
+const REL_HOLS={
+  // 2025
+  '2025-03-29':'Ramazan Bayramı Arifesi','2025-03-30':'Ramazan Bayramı 1. Gün','2025-03-31':'Ramazan Bayramı 2. Gün','2025-04-01':'Ramazan Bayramı 3. Gün',
+  '2025-06-05':'Kurban Bayramı Arifesi','2025-06-06':'Kurban Bayramı 1. Gün','2025-06-07':'Kurban Bayramı 2. Gün','2025-06-08':'Kurban Bayramı 3. Gün','2025-06-09':'Kurban Bayramı 4. Gün',
+  // 2026
+  '2026-03-19':'Ramazan Bayramı Arifesi','2026-03-20':'Ramazan Bayramı 1. Gün','2026-03-21':'Ramazan Bayramı 2. Gün','2026-03-22':'Ramazan Bayramı 3. Gün',
+  '2026-05-26':'Kurban Bayramı Arifesi','2026-05-27':'Kurban Bayramı 1. Gün','2026-05-28':'Kurban Bayramı 2. Gün','2026-05-29':'Kurban Bayramı 3. Gün','2026-05-30':'Kurban Bayramı 4. Gün',
+  // 2027
+  '2027-03-08':'Ramazan Bayramı Arifesi','2027-03-09':'Ramazan Bayramı 1. Gün','2027-03-10':'Ramazan Bayramı 2. Gün','2027-03-11':'Ramazan Bayramı 3. Gün',
+  '2027-05-15':'Kurban Bayramı Arifesi','2027-05-16':'Kurban Bayramı 1. Gün','2027-05-17':'Kurban Bayramı 2. Gün','2027-05-18':'Kurban Bayramı 3. Gün','2027-05-19':'Kurban Bayramı 4. Gün',
+  // 2028
+  '2028-02-26':'Ramazan Bayramı Arifesi','2028-02-27':'Ramazan Bayramı 1. Gün','2028-02-28':'Ramazan Bayramı 2. Gün','2028-02-29':'Ramazan Bayramı 3. Gün',
+  '2028-05-04':'Kurban Bayramı Arifesi','2028-05-05':'Kurban Bayramı 1. Gün','2028-05-06':'Kurban Bayramı 2. Gün','2028-05-07':'Kurban Bayramı 3. Gün','2028-05-08':'Kurban Bayramı 4. Gün',
+  // 2029
+  '2029-02-14':'Ramazan Bayramı Arifesi','2029-02-15':'Ramazan Bayramı 1. Gün','2029-02-16':'Ramazan Bayramı 2. Gün','2029-02-17':'Ramazan Bayramı 3. Gün',
+  '2029-04-23':'Kurban Bayramı Arifesi','2029-04-24':'Kurban Bayramı 1. Gün','2029-04-25':'Kurban Bayramı 2. Gün','2029-04-26':'Kurban Bayramı 3. Gün','2029-04-27':'Kurban Bayramı 4. Gün',
+  // 2030
+  '2030-02-04':'Ramazan Bayramı Arifesi','2030-02-05':'Ramazan Bayramı 1. Gün','2030-02-06':'Ramazan Bayramı 2. Gün','2030-02-07':'Ramazan Bayramı 3. Gün',
+  '2030-04-12':'Kurban Bayramı Arifesi','2030-04-13':'Kurban Bayramı 1. Gün','2030-04-14':'Kurban Bayramı 2. Gün','2030-04-15':'Kurban Bayramı 3. Gün','2030-04-16':'Kurban Bayramı 4. Gün'
+};
+function getHolidaysForDate(y,m,d){
+  const list=[];
+  const fk=`${m}-${d}`;
+  if(FIXED_HOLS[fk])list.push({name:FIXED_HOLS[fk],type:'milli'});
+  const rk=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+  if(REL_HOLS[rk])list.push({name:REL_HOLS[rk],type:'dini'});
+  return list;
+}
 
 // ==================== INIT ====================
 window.onload=()=>{
@@ -554,6 +592,17 @@ function renderHome(){
   if(sh==='Gündüz'){dts.className='text-5xl font-black text-emerald-500 mt-0.5 tracking-tight';sibg.innerText='☀️';}
   else if(sh==='Gece'){dts.className='text-5xl font-black text-brand-500 dark:text-brand-300 mt-0.5 tracking-tight';sibg.innerText='🌙';}
   else{dts.className='text-5xl font-black text-amber-500 mt-0.5 tracking-tight';sibg.innerText='🏖️';}
+
+  const dhol=document.getElementById('dhol');
+  const todayHols=getHolidaysForDate(y,m,d);
+  if(todayHols.length){
+    const isMilli=todayHols[0].type==='milli';
+    dhol.className=`mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[11px] font-extrabold ${isMilli?'bg-rose-500/15 text-rose-500 border border-rose-500/30':'bg-teal-500/15 text-teal-600 dark:text-teal-300 border border-teal-500/30'}`;
+    dhol.innerHTML=`<span>${isMilli?'🇹🇷':'🕌'}</span><span>${todayHols.map(h=>h.name).join(' • ')}</span>`;
+    dhol.classList.remove('hidden');
+  }else{
+    dhol.classList.add('hidden');
+  }
 
   // Maaş günü hesabı
   let nextPd=new Date(y,m,A.sh.pd);
@@ -640,7 +689,34 @@ function shareShift(){
 }
 
 // ==================== TAKVİM ====================
-function chMon(dir){ST.vd=new Date(ST.vd.getFullYear(),ST.vd.getMonth()+dir,1);renderCal();}
+let calAnimating=false;
+function chMon(dir){
+  if(calAnimating)return;
+  const grid=document.getElementById('calgrid');
+  const chl=document.getElementById('chl');
+  const mstats=document.getElementById('mstats');
+  if(!grid){ST.vd=new Date(ST.vd.getFullYear(),ST.vd.getMonth()+dir,1);renderCal();return;}
+  calAnimating=true;
+  const outCls=dir>0?'sol':'sor';
+  const inCls=dir>0?'sir':'sil';
+  grid.classList.remove('sil','sir','sol','sor');
+  grid.classList.add(outCls);
+  if(chl){chl.style.transition='opacity .22s ease, transform .22s ease';chl.style.opacity='0';chl.style.transform='translateY(6px)';}
+  if(mstats){mstats.style.transition='opacity .22s ease, transform .22s ease';mstats.style.opacity='0';mstats.style.transform='translateY(6px)';}
+  setTimeout(()=>{
+    ST.vd=new Date(ST.vd.getFullYear(),ST.vd.getMonth()+dir,1);
+    renderCal();
+    grid.classList.remove(outCls);
+    void grid.offsetWidth;
+    grid.classList.add(inCls);
+    if(chl){chl.style.opacity='1';chl.style.transform='translateY(0)';}
+    if(mstats){mstats.style.opacity='1';mstats.style.transform='translateY(0)';}
+    setTimeout(()=>{
+      grid.classList.remove(inCls);
+      calAnimating=false;
+    },340);
+  },210);
+}
 function renderCal(){
   const y=ST.vd.getFullYear(),m=ST.vd.getMonth();
   document.getElementById('calt').innerText=`${MN[m]} ${y}`;
@@ -650,19 +726,38 @@ function renderCal(){
   let html=['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'].map(d=>`<div class="text-[10px] font-extrabold opacity-40 py-1">${d}</div>`).join('');
   for(let i=0;i<firstDay;i++)html+='<div></div>';
   let cnt={g:0,ge:0,iz:0,nt:0};
+  let hList='';
   for(let d=1;d<=daysInMon;d++){
     const s=getShiftForDate(y,m,d);
     const key=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const hasNote=!!A.nt[key];
+    const dayHols=getHolidaysForDate(y,m,d);
+    const hasMilli=dayHols.some(h=>h.type==='milli');
+    const hasDini=dayHols.some(h=>h.type==='dini');
     if(hasNote)cnt.nt++;
     if(s==='Gündüz')cnt.g++;else if(s==='Gece')cnt.ge++;else cnt.iz++;
-    const dot=s==='Gündüz'?'bg-emerald-500':s==='Gece'?'bg-brand-500':'bg-amber-500';
+    const lbl=s==='Yıllık İzin'?'Y.İzin':s;
+    const lblCls=s==='Gündüz'?'text-emerald-600 dark:text-emerald-400':s==='Gece'?'text-brand-600 dark:text-brand-300':'text-amber-600 dark:text-amber-400';
     const isToday=d===ST.today.getDate()&&m===ST.today.getMonth()&&y===ST.today.getFullYear();
-    html+=`<div onclick="openDayModal(${d},${m},${y})" class="relative py-2 rounded-xl cursor-pointer transition-all active:scale-90 ${isToday?'bg-brand-500/25 border border-brand-500':'bg-black/5 dark:bg-white/5 hover:bg-white/10'}">
-      <span class="text-xs font-extrabold block">${d}</span>
-      <span class="inline-block w-1.5 h-1.5 rounded-full ${dot}"></span>
+    const holBorder=isToday?'bg-brand-500/25 border border-brand-500':hasMilli?'bg-rose-500/10 border border-rose-500/35':hasDini?'bg-teal-500/10 border border-teal-500/35':'bg-black/5 dark:bg-white/5 hover:bg-white/10';
+    let holDots='';
+    if(hasMilli||hasDini){
+      holDots='<span class="absolute top-1 left-1 flex gap-0.5">';
+      if(hasMilli)holDots+='<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>';
+      if(hasDini)holDots+='<span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>';
+      holDots+='</span>';
+    }
+    html+=`<div onclick="openDayModal(${d},${m},${y})" class="relative py-1.5 px-0.5 min-h-[48px] flex flex-col items-center justify-center rounded-xl cursor-pointer transition-all active:scale-90 overflow-hidden ${holBorder}">
+      ${holDots}
+      <span class="text-xs font-extrabold leading-none">${d}</span>
+      <span class="text-[8px] font-extrabold tracking-tighter leading-tight mt-1 w-full truncate text-center ${lblCls}">${lbl}</span>
       ${hasNote?'<span class="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-purple-500"></span>':''}
     </div>`;
+    dayHols.forEach(h=>{
+      const badgeCls=h.type==='milli'?'bg-rose-500/10 text-rose-500 border border-rose-500/20':'bg-teal-500/10 text-teal-600 dark:text-teal-300 border border-teal-500/20';
+      const icon=h.type==='milli'?'🇹🇷':'🕌';
+      hList+=`<li class="text-xs font-bold flex justify-between items-center gap-2 ${badgeCls} px-3 py-2 rounded-xl"><span class="flex items-center gap-1.5 truncate"><span>${icon}</span><span class="truncate">${h.name}</span></span><span class="shrink-0 text-[11px] font-extrabold">${d} ${MN[m]}</span></li>`;
+    });
   }
   grid.innerHTML=html;
   document.getElementById('mstats').innerHTML=`
@@ -671,19 +766,15 @@ function renderCal(){
     <div class="bg-amber-500/15 p-2.5 rounded-2xl text-center"><span class="text-base font-black text-amber-500 block">${cnt.iz}</span><span class="text-[9px] font-bold opacity-60">İzin</span></div>
     <div class="bg-purple-500/15 p-2.5 rounded-2xl text-center"><span class="text-base font-black text-purple-500 block">${cnt.nt}</span><span class="text-[9px] font-bold opacity-60">Not</span></div>
   `;
-  const hols={'0-1':'Yılbaşı','3-23':'23 Nisan Ulusal Egemenlik','4-1':'1 Mayıs Emek ve Dayanışma','4-19':'19 Mayıs Gençlik ve Spor','6-15':'15 Temmuz Demokrasi','7-30':'30 Ağustos Zafer Bayramı','9-29':'29 Ekim Cumhuriyet Bayramı'};
   const chl=document.getElementById('chl');
-  let hList='';
-  for(let d=1;d<=daysInMon;d++){
-    const hk=`${m}-${d}`;
-    if(hols[hk])hList+=`<li class="text-xs font-bold flex justify-between items-center bg-rose-500/10 px-3 py-1.5 rounded-xl text-rose-500"><span>${hols[hk]}</span><span>${d} ${MN[m]}</span></li>`;
-  }
-  chl.innerHTML=hList||'<li class="text-[10px] opacity-40 text-center py-2">Bu ay resmi tatil bulunmuyor.</li>';
+  chl.innerHTML=hList||'<li class="text-[10px] opacity-40 text-center py-2">Bu ay resmi veya dini tatil bulunmuyor.</li>';
 }
 
 function openDayModal(d,m,y){
   ST.adk=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-  document.getElementById('mdt').innerText=`${d} ${MN[m]} ${y}`;
+  const dayHols=getHolidaysForDate(y,m,d);
+  const holText=dayHols.length?' • '+dayHols.map(h=>h.name).join(' / '):'';
+  document.getElementById('mdt').innerText=`${d} ${MN[m]} ${y}${holText}`;
   document.getElementById('mso').value=A.ov[ST.adk]||'';
   document.getElementById('mnote').value=A.nt[ST.adk]||'';
   om('day-modal');
